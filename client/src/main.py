@@ -84,6 +84,35 @@ class MasterEntity(object):
 		self.pos = self.pos + s
 
 
+class ReplicaEntity(object):
+	def __init__(self, screen):
+		self.screen = screen
+		self.lt = time.time()
+		self.pos = Vector(*REPLICA_INIT_POS)
+		self.velocity = Vector()
+
+	def update(self, ctrl):
+		now = time.time()
+		self.lt, dt = now, now - self.lt
+		ctrl.normal()
+		self._update_physics(ctrl, dt)
+		pygame.draw.circle(self.screen, REPLICA_COLOR, self.pos.tuple(), ENTITY_RADIUS)
+
+	def _update_physics(self, ctrl, dt):
+		if ctrl.zero() and self.velocity.zero():
+			return
+		# f = f·dir - μ·mg·dir
+		f = ctrl * WORLD_F - self.velocity.normal() * ENTITY_FRICTION * ENTITY_MASS * WORLD_G
+		# a = f/m
+		a = f / ENTITY_MASS
+		# v = v0 + at
+		v = self.velocity + a * dt
+		# s = v0t + 1/2at2
+		s = self.velocity + a * 0.5 * (dt ** 2)
+		self.velocity = v
+		self.pos = self.pos + s
+
+
 def get_fps(t):
 	if t <= 0:
 		return 1
@@ -95,11 +124,16 @@ key_state = {
 	pygame.K_s: False,
 	pygame.K_a: False,
 	pygame.K_d: False,
+	pygame.K_i: False,
+	pygame.K_k: False,
+	pygame.K_j: False,
+	pygame.K_l: False,
 }
 
 
 def get_input_vec():
-	x, y = 0, 0
+	x1, y1 = 0, 0
+	x2, y2 = 0, 0
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
 			sys.exit()
@@ -108,14 +142,22 @@ def get_input_vec():
 		elif event.type == pygame.KEYUP:
 			key_state[event.key] = False
 	if key_state[pygame.K_w]:
-		y = -1
+		y1 = -1
 	if key_state[pygame.K_s]:
-		y = 1
+		y1 = 1
 	if key_state[pygame.K_a]:
-		x = -1
+		x1 = -1
 	if key_state[pygame.K_d]:
-		x = 1
-	return Vector(x, y)
+		x1 = 1
+	if key_state[pygame.K_i]:
+		y2 = -1
+	if key_state[pygame.K_k]:
+		y2 = 1
+	if key_state[pygame.K_j]:
+		x2 = -1
+	if key_state[pygame.K_l]:
+		x2 = 1
+	return Vector(x1, y1), Vector(x2, y2)
 
 
 def main():
@@ -129,17 +171,19 @@ def main():
 	screen.fill(SCREEN_BACKGROUND)
 
 	master_entity = MasterEntity(screen)
+	replica_entity = ReplicaEntity(screen)
 
 	fps = 0
 
 	while True:
 		# input
-		input_vec = get_input_vec()
+		input_vec1, input_vec2 = get_input_vec()
 		# clean scene
 		screen.fill(SCREEN_BACKGROUND)
 
 		# update all entity
-		master_entity.update(input_vec)
+		master_entity.update(input_vec1)
+		replica_entity.update(input_vec2)
 
 		# calc fps
 		fps_text = font.render('fps:{}'.format(fps), True, FPS_COLOR)
