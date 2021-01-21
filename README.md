@@ -12,15 +12,23 @@ client:pygame * 2 - server:go
 ## 模块引用关系
 ```mermaid
 graph TD
-     game --> const
+     game --> _global
+     game --> _input
+     game --> _const
      game --> entity
-     game --> global
 
-     entity --> const
-     entity --> comp_render
-     entity --> comp_physics
+     entity --> _math
+     entity --> _const
      entity --> comp_control
-     entity --> math
+     entity --> comp_physics
+     entity --> comp_render
 
-     comp_render --> global
+     comp_control --> _input
+     comp_control --> _math
+     comp_control --> _const
+
+     comp_physics --> _math
+     comp_physics --> _const
+
+     comp_render --> _global
 ```
