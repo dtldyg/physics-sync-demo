@@ -1,7 +1,7 @@
 # coding=utf-8
 
 import pygame
-import _global
+import client.game as game
 
 
 class CompRender(object):
@@ -9,4 +9,4 @@ class CompRender(object):
 		self.entity = entity
 
 	def update(self, _):
-		pygame.draw.circle(_global.screen, self.entity.color, self.entity.pos.tuple(), self.entity.radius)
+		pygame.draw.circle(game.screen, self.entity.color, self.entity.pos.tuple(), self.entity.radius)

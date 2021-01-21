@@ -1,8 +1,10 @@
-## physics-sync-demo
-Physics Simulation Blending demo - c/s物理同步demo
+# physics-sync-demo
 
-## 计划：
-client:pygame * 2 - server:go
+## 简介
+最小物理同步demo，参考自GDC2017看门狗2分享
+
+## 计划
+客户端:pygame * 2 - 服务器:python/go？
 1. 单机：PlayerEntity:圆，摩擦力，质量，wasd四个方向力
 2. 服务器实现，实现一个非预测状态同步模型
 3. 实现预测-回滚状态同步模型

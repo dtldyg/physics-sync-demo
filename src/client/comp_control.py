@@ -1,9 +1,9 @@
 # coding=utf-8
 
 import pygame
-import _input
-import _math
-import _const
+import client.event as event
+import common.const as const
+import common.math as math
 
 
 class CompControl(object):
@@ -12,16 +12,16 @@ class CompControl(object):
 
 	def update(self, _):
 		x, y = 0, 0
-		if _input.key_state(pygame.K_w):
+		if event.key_state(pygame.K_w):
 			y = -1
-		if _input.key_state(pygame.K_s):
+		if event.key_state(pygame.K_s):
 			y = 1
-		if _input.key_state(pygame.K_a):
+		if event.key_state(pygame.K_a):
 			x = -1
-		if _input.key_state(pygame.K_d):
+		if event.key_state(pygame.K_d):
 			x = 1
 		if x == 0 and y == 0:
-			force = _math.vector_zero
+			force = math.vector_zero
 		else:
-			force = _math.Vector(x, y).normal() * _const.ENTITY_FORCE
+			force = math.Vector(x, y).normal() * const.ENTITY_FORCE
 		self.entity.comp_physics.force = force

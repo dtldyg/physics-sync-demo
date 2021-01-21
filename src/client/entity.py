@@ -1,19 +1,19 @@
 # coding=utf-8
 
 import time
-import _math
-import _const
-import comp_control
-import comp_physics
-import comp_render
+import common.math as math
+import common.const as const
+import client.comp_control as comp_control
+import client.comp_physics as comp_physics
+import client.comp_render as comp_render
 
 
 class MasterEntity(object):
 	def __init__(self):
 		self.lt = time.time()
-		self.color = _const.MASTER_COLOR
-		self.radius = _const.ENTITY_RADIUS
-		self.pos = _math.Vector(*_const.MASTER_INIT_POS)
+		self.color = const.MASTER_COLOR
+		self.radius = const.ENTITY_RADIUS
+		self.pos = math.Vector(*const.MASTER_INIT_POS)
 		self.comp_control = comp_control.CompControl(self)
 		self.comp_physics = comp_physics.CompPhysics(self)
 		self.comp_render = comp_render.CompRender(self)
