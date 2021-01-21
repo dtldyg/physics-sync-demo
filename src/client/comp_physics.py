@@ -22,8 +22,24 @@ class CompPhysics(object):
 		v = self.velocity + a * dt
 		if v.length() > _const.ENTITY_MAX_V:
 			v = v.normal() * _const.ENTITY_MAX_V
-		# s = v·t
+		# s = v·t - similar to uniform motion
 		s = v * dt
 
-		self.velocity = v
-		self.entity.pos = self.entity.pos + s
+		to_v = v
+		to_s = self.entity.pos + s
+		# wall collision
+		if to_s.x + _const.ENTITY_RADIUS > _const.SCREEN_SIZE[0]:
+			to_v.x = -to_v.x
+			to_s.x = _const.ENTITY_RADIUS * 2 - _const.SCREEN_SIZE[0] * 2 - to_s.x
+		if to_s.y + _const.ENTITY_RADIUS > _const.SCREEN_SIZE[1]:
+			to_v.y = -to_v.y
+			to_s.y = _const.ENTITY_RADIUS * 2 - _const.SCREEN_SIZE[1] * 2 - to_s.y
+		if to_s.x < _const.ENTITY_RADIUS:
+			to_v.x = -to_v.x
+			to_s.x = _const.ENTITY_RADIUS * 2 - to_s.x
+		if to_s.y < _const.ENTITY_RADIUS:
+			to_v.y = -to_v.y
+			to_s.y = _const.ENTITY_RADIUS * 2 - to_s.y
+
+		self.velocity = to_v
+		self.entity.pos = to_s
