@@ -26,14 +26,14 @@ class CompPhysics(object):
 		s = v * dt
 
 		to_v = v
-		to_s = self.entity.pos + s
+		to_s = self.entity.comp_state.pos + s
 		# wall collision
 		if to_s.x + const.ENTITY_RADIUS > const.SCREEN_SIZE[0]:
 			to_v.x = -to_v.x
-			to_s.x = const.ENTITY_RADIUS * 2 - const.SCREEN_SIZE[0] * 2 - to_s.x
+			to_s.x = const.SCREEN_SIZE[0] * 2 - const.ENTITY_RADIUS * 2 - to_s.x
 		if to_s.y + const.ENTITY_RADIUS > const.SCREEN_SIZE[1]:
 			to_v.y = -to_v.y
-			to_s.y = const.ENTITY_RADIUS * 2 - const.SCREEN_SIZE[1] * 2 - to_s.y
+			to_s.y = const.SCREEN_SIZE[1] * 2 - const.ENTITY_RADIUS * 2 - to_s.y
 		if to_s.x < const.ENTITY_RADIUS:
 			to_v.x = -to_v.x
 			to_s.x = const.ENTITY_RADIUS * 2 - to_s.x
@@ -42,4 +42,4 @@ class CompPhysics(object):
 			to_s.y = const.ENTITY_RADIUS * 2 - to_s.y
 
 		self.velocity = to_v
-		self.entity.pos = to_s
+		self.entity.comp_state.pos = to_s

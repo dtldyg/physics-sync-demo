@@ -11,26 +11,40 @@
 4. 2P接入，外插值预测，内插值平滑
 5. 物理同步
 
-## 模块引用关系
+## 依赖关系
+
+### 模块依赖
 ```mermaid
 graph TD
-     game --> _global
-     game --> _input
-     game --> _const
-     game --> entity
+     main --> game
+     main --> event
+     main --> const
+     main --> entity
 
-     entity --> _math
-     entity --> _const
      entity --> comp_control
      entity --> comp_physics
+     entity --> comp_state
      entity --> comp_render
 
-     comp_control --> _input
-     comp_control --> _math
-     comp_control --> _const
+     comp_control --> event
+     comp_control --> math
+     comp_control --> const
 
-     comp_physics --> _math
-     comp_physics --> _const
+     comp_physics --> math
+     comp_physics --> const
 
-     comp_render --> _global
+     comp_state --> math
+     comp_state --> const
+
+     comp_render --> game
+     comp_render --> const
+```
+### 组件依赖
+```mermaid
+graph TD
+     comp_control --> comp_physics
+
+     comp_physics --> comp_state
+
+     comp_render --> comp_state
 ```

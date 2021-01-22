@@ -5,8 +5,8 @@ import pygame
 
 import client.game as game
 import client.event as event
-import client.entity as entity
 import common.const as const
+import client.entity as entity
 
 
 def get_fps(t):
