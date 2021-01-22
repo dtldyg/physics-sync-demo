@@ -33,15 +33,15 @@ class Game(object):
 					self.entities[client_id] = server_entity
 					# broadcast
 					del pkg['send_q']
-					self.to_others(client_id, pkg)
+					self.to_all(pkg)
 				elif pkg['cmd'] == 'over':
 					# broadcast
-					self.to_others(client_id, pkg)
+					self.to_all(pkg)
 					del self.entities[client_id]
 					del self.send_qs[client_id]
 				elif pkg['cmd'] == 'sync':
 					# broadcast
-					self.to_others(client_id, pkg)
+					self.to_all(pkg)
 					server_entity = self.entities[client_id]
 					server_entity.comp_state.pos = math.Vector(**pkg['p'])
 					server_entity.comp_physics.velocity = math.Vector(**pkg['v'])
@@ -63,8 +63,8 @@ class Game(object):
 
 	def to_others(self, my_id, pkg):
 		for client_id, send_q in self.send_qs.items():
-			# if client_id == my_id:
-			# 	continue
+			if client_id == my_id:
+				continue
 			send_q.put(pkg)
 
 
