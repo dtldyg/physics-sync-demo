@@ -1,7 +1,8 @@
 # coding=utf-8
 
 # Game
-FPS = 120
+CLIENT_FPS = 120
+SERVER_FPS = 10
 FPS_COLOR = (0, 255, 0, 255)  # green
 SCREEN_SIZE = (400, 400)
 SCREEN_BACKGROUND = (0, 0, 0, 255)  # black

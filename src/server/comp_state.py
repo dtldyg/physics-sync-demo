@@ -7,8 +7,7 @@ import common.math as math
 class CompState(object):
 	def __init__(self, entity):
 		self.entity = entity
-		if entity.is_master:
-			self.pos = math.Vector(*const.MASTER_INIT_POS)
+		self.pos = None
 
 	def update(self, _):
 		pass

@@ -41,14 +41,14 @@ def main():
 		now = time.time()
 		lt, dt = now, now - lt
 
-		# update all entity
+		# update all entities
 		master_entity.update(dt)
 
 		# calc fps
 		fps_text = font.render('fps:{}'.format(fps), True, const.FPS_COLOR)
 		screen.blit(fps_text, (0, 0))
 		# fps limit
-		fps = get_fps(clock.tick(const.FPS))
+		fps = get_fps(clock.tick(const.CLIENT_FPS))
 		# re-draw the scene
 		pygame.display.flip()
 

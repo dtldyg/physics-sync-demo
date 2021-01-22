@@ -1,14 +1,12 @@
 # coding=utf-8
 
-import common.const as const
 import common.math as math
 
 
-class CompState(object):
+class CompPhysics(object):
 	def __init__(self, entity):
 		self.entity = entity
-		if entity.is_master:
-			self.pos = math.Vector(*const.MASTER_INIT_POS)
+		self.velocity = math.Vector()
 
 	def update(self, _):
 		pass

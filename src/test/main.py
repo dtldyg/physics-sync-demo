@@ -1,12 +1,8 @@
 # coding=utf-8
 
-import time
-import pygame
+def foo(x=0, y=0):
+	print(x, y)
 
-pygame.init()
-screen = pygame.display.set_mode((200, 200))
-clock = pygame.time.Clock()
 
-screen.fill((255, 0, 0, 255))
-time.sleep(3)
-pygame.display.flip()
+d = {'x': 1, 'y': 2}
+foo(**d)
