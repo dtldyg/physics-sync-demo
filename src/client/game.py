@@ -22,7 +22,7 @@ def run_game():
 	pygame.init()
 	pygame.display.set_caption('Physics Sync - Demo')
 	# global screen
-	window.screen = pygame.display.set_mode(const.SCREEN_SIZE)
+	window.screen = pygame.display.set_mode((const.SCREEN_SIZE[0] + const.PANEL_WIDTH, const.SCREEN_SIZE[1]))
 	screen = window.screen
 
 	# all entities
@@ -39,6 +39,7 @@ def run_game():
 	while True:
 		# clean scene
 		screen.fill(const.SCREEN_BACKGROUND)
+		pygame.draw.line(screen, const.PANEL_COLOR, (const.SCREEN_SIZE[0], 0), const.SCREEN_SIZE, 1)
 		# refresh input event
 		if not event.refresh():
 			return
