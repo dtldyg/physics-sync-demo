@@ -6,7 +6,7 @@ _key_state = {}
 _mouse_state = {'active': False, 'trigger': {'down': {}, 'up': {}}}
 
 
-def refresh():
+def refresh(panel_gui):
 	_mouse_state['trigger']['down'].clear()
 	_mouse_state['trigger']['up'].clear()
 	for event in pygame.event.get():
@@ -24,6 +24,7 @@ def refresh():
 			_mouse_state['trigger']['down'][event.button] = None
 		elif event.type == pygame.MOUSEBUTTONUP:
 			_mouse_state['trigger']['up'][event.button] = None
+		panel_gui.process_events(event)
 	return True
 
 

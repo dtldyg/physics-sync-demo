@@ -9,7 +9,7 @@ FPS_COLOR = (0, 255, 0, 255)  # green
 SCREEN_SIZE = (400, 400)
 SCREEN_BACKGROUND = (0, 0, 0, 255)  # black
 # Panel
-PANEL_WIDTH = 200
+PANEL_WIDTH = 260
 PANEL_BACKGROUND = (30, 30, 30, 255)  # gray
 # Game
 CONTROL_LINE_COLOR = (255, 255, 255, 255)  # white

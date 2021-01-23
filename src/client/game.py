@@ -8,6 +8,7 @@ import client.window as window
 import client.event as event
 import client.entity as entity
 import client.io as io
+import client.gui as gui
 import common.const as const
 
 
@@ -24,9 +25,13 @@ def run_game():
 	# global screen
 	window_all = pygame.display.set_mode((const.SCREEN_SIZE[0] + const.PANEL_WIDTH, const.SCREEN_SIZE[1]))
 	screen = pygame.Surface(const.SCREEN_SIZE, pygame.SRCALPHA)
-	panel = pygame.Surface((const.PANEL_WIDTH, const.SCREEN_SIZE[1]), pygame.SRCALPHA)
+	panel = pygame.Surface((const.SCREEN_SIZE[0] + const.PANEL_WIDTH, const.SCREEN_SIZE[1]), pygame.SRCALPHA)
+	panel_bg = pygame.Surface((const.PANEL_WIDTH, const.SCREEN_SIZE[1]), pygame.SRCALPHA)
+	panel_bg.fill(const.PANEL_BACKGROUND)
 	window.screen = screen
 	window.panel = panel
+	# gui
+	panel_gui = gui.GUI()
 
 	# all entities
 	master_entity = entity.MasterEntity()
@@ -43,9 +48,9 @@ def run_game():
 		# clean scene
 		screen.fill(const.SCREEN_BACKGROUND)
 		# clean panel
-		panel.fill(const.PANEL_BACKGROUND)
+		panel.blit(panel_bg, (const.SCREEN_SIZE[0], 0))
 		# refresh input event
-		if not event.refresh():
+		if not event.refresh(panel_gui):
 			return
 		# calc dt
 		now = time.time()
@@ -70,6 +75,9 @@ def run_game():
 			master_entity.sync_out()
 			master_shadow_entity.sync_out()
 
+		# update gui
+		panel_gui.update(dt)
+
 		# calc fps
 		fps_text = font.render('fps:{}'.format(fps), True, const.FPS_COLOR)
 		screen.blit(fps_text, (0, 0))
@@ -77,5 +85,5 @@ def run_game():
 		fps = get_fps(clock.tick(const.CLIENT_FPS))
 		# re-draw the window
 		window_all.blit(screen, (0, 0))
-		window_all.blit(panel, (const.SCREEN_SIZE[0], 0))
+		window_all.blit(panel, (0, 0))
 		pygame.display.flip()
