@@ -33,6 +33,7 @@ graph TD
      entity --> comp_state
      entity --> comp_render
 
+     comp_control --> window
      comp_control --> event
      comp_control --> math
      comp_control --> const
@@ -54,6 +55,7 @@ graph TD
 ```mermaid
 graph TD
      comp_control --> comp_physics
+     comp_control --> comp_render
 
      comp_physics --> comp_state
 
