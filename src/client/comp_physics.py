@@ -20,7 +20,11 @@ class CompPhysics(object):
 		a = f / const.ENTITY_MASS
 		# v = v0 + a·t
 		v = self.velocity + a * dt
+		if self.force.zero() and self.velocity.length() <= a.length() * dt:
+			# to zero
+			v = math.Vector()
 		if v.length() > const.ENTITY_MAX_V:
+			# to max
 			v = v.normal() * const.ENTITY_MAX_V
 		# s = v·t - similar to uniform motion
 		s = v * dt

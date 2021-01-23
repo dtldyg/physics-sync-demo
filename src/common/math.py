@@ -24,7 +24,7 @@ class Vector(object):
 		return (self.x ** 2 + self.y ** 2) ** 0.5
 
 	def zero(self):
-		return self.x == 0 and self.y == 0
+		return abs(self.x) < 1e-6 and abs(self.y) < 1e-6
 
 	def normal(self):
 		length = self.length()
