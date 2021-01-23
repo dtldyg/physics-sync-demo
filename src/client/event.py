@@ -3,11 +3,12 @@
 import pygame
 
 _key_state = {}
-_mouse_active = False
+_mouse_state = {'active': False, 'press': {}, 'trigger': {'down': {}, 'up': {}}}
 
 
 def refresh():
-	global _mouse_active
+	_mouse_state['trigger']['down'].clear()
+	_mouse_state['trigger']['up'].clear()
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
 			return False
@@ -16,9 +17,15 @@ def refresh():
 		elif event.type == pygame.KEYUP:
 			_key_state[event.key] = False
 		elif event.type == pygame.WINDOWENTER:
-			_mouse_active = True
+			_mouse_state['active'] = True
 		elif event.type == pygame.WINDOWLEAVE:
-			_mouse_active = False
+			_mouse_state['active'] = False
+		elif event.type == pygame.MOUSEBUTTONDOWN:
+			_mouse_state['press'][event.button] = {}
+			_mouse_state['trigger']['down'][event.button] = None
+		elif event.type == pygame.MOUSEBUTTONUP:
+			del _mouse_state['press'][event.button]
+			_mouse_state['trigger']['up'][event.button] = None
 	return True
 
 
@@ -29,4 +36,16 @@ def key_state(key):
 
 
 def mouse_active():
-	return _mouse_active
+	return _mouse_state['active']
+
+
+def mouse_press(btn):
+	return btn in _mouse_state['press']
+
+
+def mouse_trigger_down(btn):
+	return btn in _mouse_state['trigger']['down']
+
+
+def mouse_trigger_up(btn):
+	return btn in _mouse_state['trigger']['up']

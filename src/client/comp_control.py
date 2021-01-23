@@ -33,6 +33,8 @@ class CompControl(object):
 				mouse_pos = pygame.mouse.get_pos()
 				cur_pos = int(self.entity.comp_state.pos.x), int(self.entity.comp_state.pos.y)
 				force_dir = math.Vector(*mouse_pos) - math.Vector(*cur_pos)
+		elif switch.CONTROL_MODE == switch.CONTROL_LINE:
+			if event.mouse_trigger_down(1)
 		else:
 			force_dir = math.vector_zero
 		force = force_dir.normal() * const.ENTITY_FORCE
