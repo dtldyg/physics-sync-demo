@@ -22,8 +22,11 @@ def run_game():
 	pygame.init()
 	pygame.display.set_caption('Physics Sync - Demo')
 	# global screen
-	window.screen = pygame.display.set_mode((const.SCREEN_SIZE[0] + const.PANEL_WIDTH, const.SCREEN_SIZE[1]))
-	screen = window.screen
+	window_all = pygame.display.set_mode((const.SCREEN_SIZE[0] + const.PANEL_WIDTH, const.SCREEN_SIZE[1]))
+	screen = pygame.Surface(const.SCREEN_SIZE, pygame.SRCALPHA)
+	panel = pygame.Surface((const.PANEL_WIDTH, const.SCREEN_SIZE[1]), pygame.SRCALPHA)
+	window.screen = screen
+	window.panel = panel
 
 	# all entities
 	master_entity = entity.MasterEntity()
@@ -39,7 +42,8 @@ def run_game():
 	while True:
 		# clean scene
 		screen.fill(const.SCREEN_BACKGROUND)
-		pygame.draw.line(screen, const.PANEL_COLOR, (const.SCREEN_SIZE[0], 0), const.SCREEN_SIZE, 1)
+		# clean panel
+		panel.fill(const.PANEL_BACKGROUND)
 		# refresh input event
 		if not event.refresh():
 			return
@@ -71,5 +75,7 @@ def run_game():
 		screen.blit(fps_text, (0, 0))
 		# fps limit
 		fps = get_fps(clock.tick(const.CLIENT_FPS))
-		# re-draw the scene
+		# re-draw the window
+		window_all.blit(screen, (0, 0))
+		window_all.blit(panel, (const.SCREEN_SIZE[0], 0))
 		pygame.display.flip()

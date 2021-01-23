@@ -1,14 +1,16 @@
 # coding=utf-8
 
 # Main
-SCREEN_SIZE = (400, 400)
-SCREEN_BACKGROUND = (0, 0, 0, 255)  # black
-PANEL_WIDTH = 200
-PANEL_COLOR = (255, 255, 255, 255)  # white
 CLIENT_FPS = 120
 SERVER_FPS = 10
 IO_FPS = 10
 FPS_COLOR = (0, 255, 0, 255)  # green
+# Screen
+SCREEN_SIZE = (400, 400)
+SCREEN_BACKGROUND = (0, 0, 0, 255)  # black
+# Panel
+PANEL_WIDTH = 200
+PANEL_BACKGROUND = (30, 30, 30, 255)  # gray
 # Game
 CONTROL_LINE_COLOR = (255, 255, 255, 255)  # white
 CONTROL_LINE_WIDTH = 1
