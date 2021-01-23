@@ -3,6 +3,7 @@
 import time
 import queue
 import pygame
+
 import common.const as const
 import common.math as math
 import server.entity as entity

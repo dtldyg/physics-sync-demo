@@ -1,8 +1,8 @@
 # coding=utf-8
 
-def foo(x=0, y=0):
-	print(x, y)
+import time
 
-
-d = {'x': 1, 'y': 2}
-foo(**d)
+now = time.time()
+time.sleep(1)
+dur = time.time() - now
+print(dur)

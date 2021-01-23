@@ -42,5 +42,5 @@ def run_conn_recv(sock):
 def run_socket():
 	sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 	sock.connect(('127.0.0.1', 9999))
-	threading.Thread(target=run_conn_send, args=(sock,)).start()
-	threading.Thread(target=run_conn_recv, args=(sock,)).start()
+	threading.Thread(target=run_conn_send, args=(sock,), daemon=True).start()
+	threading.Thread(target=run_conn_recv, args=(sock,), daemon=True).start()

@@ -21,6 +21,18 @@ class MasterEntity(object):
 		self.comp_state.update(dt)
 		self.comp_render.update(dt)
 
+	def sync_out(self):
+		self.comp_control.sync_out()
+		self.comp_physics.sync_out()
+		self.comp_state.sync_out()
+		self.comp_render.sync_out()
+
+	def sync_in(self, pkg):
+		self.comp_control.sync_in(pkg)
+		self.comp_physics.sync_in(pkg)
+		self.comp_state.sync_in(pkg)
+		self.comp_render.sync_in(pkg)
+
 
 class MasterShadowEntity(object):
 	def __init__(self):
@@ -32,3 +44,11 @@ class MasterShadowEntity(object):
 	def update(self, dt):
 		self.comp_state.update(dt)
 		self.comp_render.update(dt)
+
+	def sync_out(self):
+		self.comp_state.sync_out()
+		self.comp_render.sync_out()
+
+	def sync_in(self, pkg):
+		self.comp_state.sync_in(pkg)
+		self.comp_render.sync_in(pkg)

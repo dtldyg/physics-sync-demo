@@ -1,6 +1,5 @@
 # coding=utf-8
 
-import sys
 import pygame
 
 _key_state = {}
@@ -9,11 +8,12 @@ _key_state = {}
 def refresh():
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
-			sys.exit()
+			return False
 		if event.type == pygame.KEYDOWN:
 			_key_state[event.key] = True
 		elif event.type == pygame.KEYUP:
 			_key_state[event.key] = False
+	return True
 
 
 def key_state(key):

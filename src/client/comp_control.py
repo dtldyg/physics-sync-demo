@@ -25,3 +25,9 @@ class CompControl(object):
 		else:
 			force = math.Vector(x, y).normal() * const.ENTITY_FORCE
 		self.entity.comp_physics.force = force
+
+	def sync_out(self):
+		pass
+
+	def sync_in(self, pkg):
+		pass

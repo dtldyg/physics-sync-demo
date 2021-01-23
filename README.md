@@ -13,13 +13,19 @@
 
 ## 依赖关系
 
-### 模块依赖
+### 客户端
+
+#### 模块依赖
 ```mermaid
 graph TD
+     main --> io
      main --> game
-     main --> event
-     main --> const
-     main --> entity
+
+     game --> const
+     game --> io
+     game --> window
+     game --> event
+     game --> entity
 
      entity --> comp_control
      entity --> comp_physics
@@ -33,13 +39,16 @@ graph TD
      comp_physics --> math
      comp_physics --> const
 
+     comp_state --> io
      comp_state --> math
      comp_state --> const
 
-     comp_render --> game
+     comp_render --> window
+     comp_render --> math
      comp_render --> const
+     comp_render --> switch
 ```
-### 组件依赖
+#### 组件依赖
 ```mermaid
 graph TD
      comp_control --> comp_physics
@@ -47,4 +56,22 @@ graph TD
      comp_physics --> comp_state
 
      comp_render --> comp_state
+```
+
+### 服务端
+
+#### 模块依赖
+```mermaid
+graph TD
+     main --> io
+     main --> game
+
+     game --> const
+     game --> math
+     game --> entity
+
+     entity --> comp_physics
+     entity --> comp_state
+
+     comp_physics --> math
 ```

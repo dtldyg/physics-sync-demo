@@ -43,3 +43,9 @@ class CompPhysics(object):
 
 		self.velocity = to_v
 		self.entity.comp_state.pos = to_s
+
+	def sync_out(self):
+		pass
+
+	def sync_in(self, pkg):
+		pass

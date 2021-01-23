@@ -4,6 +4,7 @@ import pygame
 import client.window as window
 import common.const as const
 import common.math as math
+import common.switch as switch
 
 
 class CompRender(object):
@@ -20,4 +21,12 @@ class CompRender(object):
 		self.offset = math.Vector(self.radius, self.radius)
 
 	def update(self, _):
+		if self.entity.is_master and not self.entity.is_shadow and not switch.MASTER_PREDICT:
+			return
 		window.screen.blit(self.surface, (self.entity.comp_state.pos - self.offset).tuple())
+
+	def sync_out(self):
+		pass
+
+	def sync_in(self, pkg):
+		pass

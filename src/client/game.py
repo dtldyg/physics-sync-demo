@@ -2,11 +2,13 @@
 
 import time
 import pygame
+import queue
 
 import client.window as window
 import client.event as event
-import common.const as const
 import client.entity as entity
+import client.io as io
+import common.const as const
 
 
 def get_fps(t):
@@ -31,22 +33,37 @@ def run_game():
 	fps = 0
 	clock = pygame.time.Clock()
 	font = pygame.font.SysFont('arial', 16)
-	lt = time.time()
+	render_lt = time.time()
+	io_lt = time.time()
 
 	while True:
 		# clean scene
 		screen.fill(const.SCREEN_BACKGROUND)
 		# refresh input event
-		event.refresh()
-		# process io event
-		pass
+		if not event.refresh():
+			return
 		# calc dt
 		now = time.time()
-		lt, dt = now, now - lt
+		render_lt, dt = now, now - render_lt
+
+		# input io
+		while True:
+			try:
+				pkg = io.recv_q.get_nowait()
+			except queue.Empty:
+				break
+			master_entity.sync_in(pkg)
+			master_shadow_entity.sync_in(pkg)
 
 		# update all entities
 		master_entity.update(dt)
 		master_shadow_entity.update(dt)
+
+		# output io
+		if now - io_lt >= 1 / const.IO_FPS:
+			io_lt = now
+			master_entity.sync_out()
+			master_shadow_entity.sync_out()
 
 		# calc fps
 		fps_text = font.render('fps:{}'.format(fps), True, const.FPS_COLOR)
