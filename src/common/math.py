@@ -31,7 +31,7 @@ class Vector(object):
 		if length > 0:
 			return Vector(self.x / length, self.y / length)
 		else:
-			return Vector()
+			return vector_zero
 
 
 vector_zero = Vector()

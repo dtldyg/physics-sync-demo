@@ -10,6 +10,8 @@ class CompState(object):
 		self.entity = entity
 		if entity.is_master:
 			self.pos = math.Vector(*const.MASTER_INIT_POS)
+		else:
+			self.pos = math.Vector(*const.REPLICA_INIT_POS)
 
 	def update(self, _):
 		pass

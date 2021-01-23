@@ -36,6 +36,7 @@ graph TD
      comp_control --> event
      comp_control --> math
      comp_control --> const
+     comp_control --> switch
 
      comp_physics --> math
      comp_physics --> const
