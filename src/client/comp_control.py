@@ -1,11 +1,13 @@
 # coding=utf-8
 
 import pygame
-import client.window as window
-import client.event as event
+
 import common.const as const
 import common.math as math
 import common.switch as switch
+
+import client.window as window
+import client.event as event
 
 
 class CompControl(object):
@@ -69,8 +71,9 @@ class CompControl(object):
 			if self.lining_stage == 1 or self.lining_stage == 2:
 				args_line = window.screen, const.CONTROL_LINE_COLOR, self.lining_start.tuple(), self.lining_end
 				self.entity.comp_render.others.append((pygame.draw.aaline, args_line))
-				args_circle = window.screen, const.CONTROL_LINE_COLOR, self.lining_start.tuple(), const.CONTROL_LINE_RADIUS, const.CONTROL_LINE_WIDTH
-				self.entity.comp_render.others.append((pygame.draw.circle, args_circle))
+				if self.lining_stage == 1:
+					args_circle = window.screen, const.CONTROL_LINE_COLOR, self.lining_start.tuple(), const.CONTROL_LINE_RADIUS, const.CONTROL_LINE_WIDTH
+					self.entity.comp_render.others.append((pygame.draw.circle, args_circle))
 
 	def sync_out(self):
 		pass

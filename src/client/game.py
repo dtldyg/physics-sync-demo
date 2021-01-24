@@ -4,12 +4,13 @@ import time
 import pygame
 import queue
 
+import common.const as const
+
 import client.window as window
 import client.event as event
 import client.entity as entity
 import client.io as io
 import client.gui as gui
-import common.const as const
 
 
 def get_fps(t):

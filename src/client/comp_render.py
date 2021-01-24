@@ -1,10 +1,12 @@
 # coding=utf-8
 
 import pygame
-import client.window as window
+
 import common.const as const
 import common.math as math
 import common.switch as switch
+
+import client.window as window
 
 
 class CompRender(object):
@@ -14,9 +16,8 @@ class CompRender(object):
 		self.others = []
 
 	def update(self, _):
-		if self.entity.is_master and not self.entity.is_shadow and not switch.MASTER_PREDICT:
-			return
-		window.screen.blit(self.surface[0], (self.entity.comp_state.pos - self.surface[1]).tuple())
+		if not self.entity.is_master or self.entity.is_shadow or switch.MASTER_PREDICT:
+			window.screen.blit(self.surface[0], (self.entity.comp_state.pos - self.surface[1]).tuple())
 		for other in self.others:
 			other[0](*other[1])
 		self.others.clear()
