@@ -34,7 +34,9 @@ def run_game():
 			elif cmd == 'del':
 				cmd_del(pkg)
 			else:
-				scene.iter_entities(lambda e: e.io_in(pkg))
+				for en in scene.get_all_entities():
+					if en.client_id == pkg['id']:
+						en.io_in(pkg)
 
 		# update logic
 		scene.iter_entities(lambda e: e.update_logic(dt))
@@ -53,10 +55,10 @@ def to_all(pkg):
 
 
 def to_others(client_id, pkg):
-	for e in scene.get_all_entities():
-		if e.client_id == client_id:
+	for en in scene.get_all_entities():
+		if en.client_id == client_id:
 			continue
-		e.send_q.put(pkg)
+		en.send_q.put(pkg)
 
 
 def cmd_new(pkg):
@@ -68,7 +70,8 @@ def cmd_new(pkg):
 
 
 def cmd_del(pkg):
-	eids = [e.eid for e in scene.get_all_entities() if e.client_id == pkg['id']]
-	scene.del_entities(eids)
+	for en in scene.get_all_entities():
+		if en.client_id == pkg['id']:
+			scene.del_entity(en.eid)
 	# broadcast
 	to_all(pkg)

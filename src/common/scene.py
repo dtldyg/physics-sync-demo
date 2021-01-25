@@ -19,15 +19,10 @@ def del_entity(eid):
 	del entities[eid]
 
 
-def del_entities(eids):
-	for eid in eids:
-		del entities[eid]
-
-
 def get_all_entities():
-	return entities.values()
+	return [e for e in entities.values()]
 
 
 def iter_entities(f):
-	for e in entities:
-		f(e)
+	for en in entities.values():
+		f(en)

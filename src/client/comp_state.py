@@ -47,6 +47,6 @@ class CompState(ec.Component):
 
 	def io_out(self):
 		if self.entity.has_flags(const.ENTITY_FLAG_MASTER, const.ENTITY_FLAG_LOCAL) and self.dirty:
-			pkg = {'p': {'x': self.pos.x, 'y': self.pos.y}, 'v': {'x': self.velocity.x, 'y': self.velocity.y}}
-			io.send_q.put(pkg)
 			self.dirty = False
+			pkg = {'v': {'x': self.velocity.x, 'y': self.velocity.y}, 'p': {'x': self.pos.x, 'y': self.pos.y}}
+			io.send_q.put(pkg)

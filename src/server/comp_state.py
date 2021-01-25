@@ -7,23 +7,18 @@ import common.ec as ec
 class CompState(ec.Component):
 	def __init__(self):
 		super(CompState, self).__init__('comp_state')
+		self.dirty = False
 		self.velocity = math.Vector()
 		self.pos = math.Vector()
 
-	def init(self):
-		pass
-
 	def io_in(self, pkg):
-		pass
-
-	def update_logic(self, dt):
-		pass
-
-	def update_physics(self, dt):
-		pass
-
-	def update_render(self, dt):
-		pass
+		if pkg['cmd'] == 'sync':
+			self.dirty = True
+			self.velocity = math.Vector(**pkg['v'])
+			self.pos = math.Vector(**pkg['p'])
 
 	def io_out(self):
-		pass
+		if self.dirty:
+			self.dirty = False
+			pkg = {'cmd': 'sync', 'v': {'x': self.velocity.x, 'y': self.velocity.y}, 'p': {'x': self.pos.x, 'y': self.pos.y}}
+			self.entity.send_q.put(pkg)

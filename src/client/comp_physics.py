@@ -17,12 +17,12 @@ class CompPhysics(ec.Component):
 
 		# --- 1.force analysis: Euler‘s Method ---
 		# f = f - μ·mg·v_dir
-		f = self.force - self.velocity.normal() * const.ENTITY_FRICTION * const.ENTITY_MASS * const.WORLD_G
+		f = self.force - comp_state.velocity.normal() * const.ENTITY_FRICTION * const.ENTITY_MASS * const.WORLD_G
 		# a = f/m
 		a = f / const.ENTITY_MASS
 		# v = v0 + a·t
-		v = self.velocity + a * dt
-		if self.force.zero() and self.velocity.length() <= a.length() * dt:
+		v = comp_state.velocity + a * dt
+		if self.force.zero() and comp_state.velocity.length() <= a.length() * dt:
 			# to zero
 			v = math.Vector()
 		if v.length() > const.ENTITY_MAX_V:
