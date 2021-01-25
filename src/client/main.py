@@ -1,7 +1,7 @@
 # coding=utf-8
 
-import client.game as game
 import client.io as io
+import client.game as game
 
 
 def main():

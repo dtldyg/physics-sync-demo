@@ -1,12 +1,26 @@
 # coding=utf-8
 
-import common.math as math
+import common.ec as ec
 
 
-class CompPhysics(object):
-	def __init__(self, entity):
-		self.entity = entity
-		self.velocity = math.Vector()
+class CompPhysics(ec.Component):
+	def __init__(self):
+		super(CompPhysics, self).__init__('comp_physics')
 
-	def update(self, _):
+	def init(self):
+		pass
+
+	def io_in(self, pkg):
+		pass
+
+	def update_logic(self, dt):
+		pass
+
+	def update_physics(self, dt):
+		pass
+
+	def update_render(self, dt):
+		pass
+
+	def io_out(self):
 		pass

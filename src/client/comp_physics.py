@@ -9,10 +9,10 @@ class CompPhysics(ec.Component):
 	def __init__(self):
 		super(CompPhysics, self).__init__('comp_physics')
 		self.force = math.Vector()
-		self.velocity = math.Vector()
 
 	def update_logic(self, dt):
-		if self.force.zero() and self.velocity.zero():
+		comp_state = self.entity.get_comp('comp_state')
+		if self.force.zero() and comp_state.velocity.zero():
 			return
 
 		# --- 1.force analysis: Euler‘s Method ---
@@ -32,14 +32,13 @@ class CompPhysics(ec.Component):
 		s = v * dt
 
 		# --- 2.v/p update ---
-		self.velocity = v
-		comp_state = self.entity.get_comp('comp_state')
+		comp_state.velocity = v
 		comp_state.pos = comp_state.pos + s
 
 	def update_physics(self, dt):
 		comp_state = self.entity.get_comp('comp_state')
 
-		v = self.velocity
+		v = comp_state.velocity
 		p = comp_state.pos
 
 		# --- 3.collision check ---
@@ -60,5 +59,5 @@ class CompPhysics(ec.Component):
 		# collision response(v swap)
 
 		# --- 4.result show ---
-		self.velocity = v
+		comp_state.velocity = v
 		comp_state.pos = p

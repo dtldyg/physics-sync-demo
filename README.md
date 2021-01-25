@@ -3,7 +3,7 @@
 ## 简介
 最小物理同步demo，参考自GDC2017看门狗2分享
 
-# 目标特性
+## 目标特性
 - 状态同步（服务端碰撞）
 - 主控预测
 - 副本内插值平滑
@@ -11,7 +11,7 @@
 - 副本外插值预测
 - 物理模拟混合
 
-# 很重要但不做的
+## 很重要但不做的
 - 状态指令冲突
 
 ## 计划
@@ -24,9 +24,7 @@
 6. 物理同步
 
 ## 依赖关系
-
 ### 客户端
-
 #### 模块依赖
 ```mermaid
 graph TD
@@ -34,12 +32,12 @@ graph TD
      main --> game
 
      game --> const
+     game --> scene
      game --> io
      game --> gui
      game --> window
      game --> event
      game --> entity
-     game --> scene
      
      gui --> const
      gui --> switch
@@ -85,9 +83,7 @@ graph TD
 
      comp_render --> comp_state
 ```
-
 ### 服务端
-
 #### 模块依赖
 ```mermaid
 graph TD
@@ -98,8 +94,56 @@ graph TD
      game --> math
      game --> entity
 
+     entity --> ec
      entity --> comp_physics
      entity --> comp_state
 
-     comp_physics --> math
+     comp_physics --> ec
+
+     comp_state --> ec
+     comp_state --> math
+```
+#### 线程模型
+```mermaid
+graph TD
+     client1.run_conn_recv --> recv_q
+     client2.run_conn_recv --> recv_q
+
+     recv_q --> game
+
+     game --> client1.send_q
+     game --> client2.send_q
+
+     client1.send_q --> client1.run_conn_send
+     client2.send_q --> client2.run_conn_send
+```
+
+## 通信消息
+### client
+#### sync
+```json
+{
+  "p": {
+    "x": 1.0,
+    "y": 1.0
+  },
+  "v": {
+    "x": 1.0,
+    "y": 1.0
+  }
+}
+```
+### server
+#### sync
+```json
+{
+  "p": {
+    "x": 1.0,
+    "y": 1.0
+  },
+  "v": {
+    "x": 1.0,
+    "y": 1.0
+  }
+}
 ```

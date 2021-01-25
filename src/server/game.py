@@ -5,70 +5,70 @@ import queue
 import pygame
 
 import common.const as const
-import common.math as math
+import common.scene as scene
+
+import server.io as io
 import server.entity as entity
 
 
-class Game(object):
-	def __init__(self, recv_q):
-		self.entities = {}
-		self.send_qs = {}
-		self.recv_q = recv_q
+def run_game():
+	print('game run')
 
-	def run(self):
-		clock = pygame.time.Clock()
-		lt = time.time()
+	clock = pygame.time.Clock()
+	lt = time.time()
 
+	while True:
+		# calc dt
+		now = time.time()
+		lt, dt = now, now - lt
+
+		# io in
 		while True:
-			# input
-			while True:
-				try:
-					pkg = self.recv_q.get_nowait()
-				except queue.Empty:
-					break
-				client_id = pkg['id']
-				if pkg['cmd'] == 'in':
-					send_q = pkg['send_q']
-					server_entity = entity.ServerEntity(client_id)
-					self.send_qs[client_id] = send_q
-					self.entities[client_id] = server_entity
-					# broadcast
-					del pkg['send_q']
-					self.to_all(pkg)
-				elif pkg['cmd'] == 'over':
-					# broadcast
-					self.to_all(pkg)
-					del self.entities[client_id]
-					del self.send_qs[client_id]
-				elif pkg['cmd'] == 'sync':
-					# broadcast
-					self.to_all(pkg)
-					server_entity = self.entities[client_id]
-					server_entity.comp_state.pos = math.Vector(**pkg['p'])
-					server_entity.comp_physics.velocity = math.Vector(**pkg['v'])
+			try:
+				pkg = io.recv_q.get_nowait()
+			except queue.Empty:
+				break
+			cmd = pkg['cmd']
+			if cmd == 'new':
+				cmd_new(pkg)
+			elif cmd == 'del':
+				cmd_del(pkg)
+			else:
+				scene.iter_entities(lambda e: e.io_in(pkg))
 
-			# calc dt
-			now = time.time()
-			lt, dt = now, now - lt
+		# update logic
+		scene.iter_entities(lambda e: e.update_logic(dt))
+		# update physics
+		scene.iter_entities(lambda e: e.update_physics(dt))
 
-			# update all entities
-			for server_entity in self.entities.values():
-				server_entity.update(dt)
+		# io out
+		scene.iter_entities(lambda e: e.io_out())
 
-			# output
-
-			clock.tick(const.SERVER_FPS)
-
-	def to_all(self, pkg):
-		self.to_others('', pkg)
-
-	def to_others(self, my_id, pkg):
-		for client_id, send_q in self.send_qs.items():
-			if client_id == my_id:
-				continue
-			send_q.put(pkg)
+		# fps limit
+		clock.tick(const.SERVER_FPS)
 
 
-# game
-def run_game(recv_q):
-	Game(recv_q).run()
+def to_all(pkg):
+	scene.iter_entities(lambda e: e.send_q.put(pkg))
+
+
+def to_others(client_id, pkg):
+	for e in scene.get_all_entities():
+		if e.client_id == client_id:
+			continue
+		e.send_q.put(pkg)
+
+
+def cmd_new(pkg):
+	server_entity = entity.ServerEntity(pkg['id'], pkg['send_q'])
+	scene.add_entity(server_entity)
+	# broadcast
+	del pkg['send_q']
+	to_all(pkg)
+
+
+def cmd_del(pkg):
+	eids = [e.eid for e in scene.get_all_entities() if e.client_id == pkg['id']]
+	scene.del_entities(eids)
+	# broadcast
+	to_all(pkg)

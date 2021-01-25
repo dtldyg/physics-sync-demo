@@ -9,6 +9,17 @@ import common.switch as switch
 import client.window as window
 
 
+def btn_checkbox_event(event):
+	selected = False
+	if event.ui_element.is_selected:
+		event.ui_element.unselect()
+	else:
+		event.ui_element.select()
+		selected = True
+	event.ui_element.set_text(selected.__str__())
+	return selected
+
+
 class GUI(object):
 	def __init__(self):
 		self.ui_num = 0
@@ -46,44 +57,44 @@ class GUI(object):
 		y = self.next_ui_y()
 		pygame_gui.elements.UILabel(
 			relative_rect=pygame.Rect((const.PANEL_UI_MARGIN[0], y), (const.PANEL_UI_SIZE[0], const.PANEL_UI_SIZE[2])),
-			text='M_Buffer',
+			text='R_Buffer',
 			manager=self.ui_manager
 		)
-		self.master_buffer = pygame_gui.elements.UIButton(
+		self.replica_buffer = pygame_gui.elements.UIButton(
 			relative_rect=pygame.Rect(
 				(const.PANEL_UI_MARGIN[0] + const.PANEL_UI_MARGIN[3] + const.PANEL_UI_SIZE[0], y), (const.PANEL_UI_SIZE[1], const.PANEL_UI_SIZE[2])),
-			text=switch.MASTER_BUFFER.__str__(),
+			text=switch.REPLICA_BUFFER.__str__(),
 			manager=self.ui_manager)
-		if switch.MASTER_BUFFER:
-			self.master_buffer.select()
+		if switch.REPLICA_BUFFER:
+			self.replica_buffer.select()
 
 		y = self.next_ui_y()
 		pygame_gui.elements.UILabel(
 			relative_rect=pygame.Rect((const.PANEL_UI_MARGIN[0], y), (const.PANEL_UI_SIZE[0], const.PANEL_UI_SIZE[2])),
-			text='M_InterP',
+			text='R_InterP',
 			manager=self.ui_manager
 		)
-		self.master_interpolation = pygame_gui.elements.UIButton(
+		self.replica_interpolation = pygame_gui.elements.UIButton(
 			relative_rect=pygame.Rect(
 				(const.PANEL_UI_MARGIN[0] + const.PANEL_UI_MARGIN[3] + const.PANEL_UI_SIZE[0], y), (const.PANEL_UI_SIZE[1], const.PANEL_UI_SIZE[2])),
-			text=switch.MASTER_INTERPOLATION.__str__(),
+			text=switch.REPLICA_INTERPOLATION.__str__(),
 			manager=self.ui_manager)
-		if switch.MASTER_INTERPOLATION:
-			self.master_interpolation.select()
+		if switch.REPLICA_INTERPOLATION:
+			self.replica_interpolation.select()
 
 		y = self.next_ui_y()
 		pygame_gui.elements.UILabel(
 			relative_rect=pygame.Rect((const.PANEL_UI_MARGIN[0], y), (const.PANEL_UI_SIZE[0], const.PANEL_UI_SIZE[2])),
-			text='M_ExtraP',
+			text='R_ExtraP',
 			manager=self.ui_manager
 		)
-		self.master_extrapolation = pygame_gui.elements.UIButton(
+		self.replica_extrapolation = pygame_gui.elements.UIButton(
 			relative_rect=pygame.Rect(
 				(const.PANEL_UI_MARGIN[0] + const.PANEL_UI_MARGIN[3] + const.PANEL_UI_SIZE[0], y), (const.PANEL_UI_SIZE[1], const.PANEL_UI_SIZE[2])),
-			text=switch.MASTER_EXTRAPOLATION.__str__(),
+			text=switch.REPLICA_EXTRAPOLATION.__str__(),
 			manager=self.ui_manager)
-		if switch.MASTER_EXTRAPOLATION:
-			self.master_extrapolation.select()
+		if switch.REPLICA_EXTRAPOLATION:
+			self.replica_extrapolation.select()
 
 	def update(self, dt):
 		self.ui_manager.update(dt)
@@ -101,38 +112,10 @@ class GUI(object):
 					switch.CONTROL_MODE = event.text
 			if event.user_type == pygame_gui.UI_BUTTON_PRESSED:
 				if event.ui_element == self.master_predict:
-					selected = False
-					if event.ui_element.is_selected:
-						event.ui_element.unselect()
-					else:
-						event.ui_element.select()
-						selected = True
-					event.ui_element.set_text(selected.__str__())
-					switch.MASTER_PREDICT = selected
-				elif event.ui_element == self.master_buffer:
-					selected = False
-					if event.ui_element.is_selected:
-						event.ui_element.unselect()
-					else:
-						event.ui_element.select()
-						selected = True
-					event.ui_element.set_text(selected.__str__())
-					switch.MASTER_BUFFER = selected
-				elif event.ui_element == self.master_interpolation:
-					selected = False
-					if event.ui_element.is_selected:
-						event.ui_element.unselect()
-					else:
-						event.ui_element.select()
-						selected = True
-					event.ui_element.set_text(selected.__str__())
-					switch.MASTER_INTERPOLATION = selected
-				elif event.ui_element == self.master_extrapolation:
-					selected = False
-					if event.ui_element.is_selected:
-						event.ui_element.unselect()
-					else:
-						event.ui_element.select()
-						selected = True
-					event.ui_element.set_text(selected.__str__())
-					switch.MASTER_EXTRAPOLATION = selected
+					switch.MASTER_PREDICT = btn_checkbox_event(event)
+				elif event.ui_element == self.replica_buffer:
+					switch.REPLICA_BUFFER = btn_checkbox_event(event)
+				elif event.ui_element == self.replica_interpolation:
+					switch.REPLICA_INTERPOLATION = btn_checkbox_event(event)
+				elif event.ui_element == self.replica_extrapolation:
+					switch.REPLICA_EXTRAPOLATION = btn_checkbox_event(event)

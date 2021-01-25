@@ -10,7 +10,29 @@ import client.io as io
 class CompState(ec.Component):
 	def __init__(self):
 		super(CompState, self).__init__('comp_state')
-		self.pos = None
+		self.dirty = False
+		self._velocity = math.Vector()
+		self._pos = math.Vector()
+
+	@property
+	def velocity(self):
+		return self._velocity
+
+	@velocity.setter
+	def velocity(self, value):
+		if self._velocity != value:
+			self.dirty = True
+		self._velocity = value
+
+	@property
+	def pos(self):
+		return self._pos
+
+	@pos.setter
+	def pos(self, value):
+		if self._pos != value:
+			self.dirty = True
+		self._pos = value
 
 	def init(self):
 		if self.entity.has_flags(const.ENTITY_FLAG_MASTER):
@@ -24,6 +46,7 @@ class CompState(ec.Component):
 				self.pos = math.Vector(**pkg['p'])
 
 	def io_out(self):
-		if self.entity.has_flags(const.ENTITY_FLAG_MASTER, const.ENTITY_FLAG_LOCAL):
-			pkg = {'p': {'x': self.pos.x, 'y': self.pos.y}, 'v': {'x': 0, 'y': 0}}
+		if self.entity.has_flags(const.ENTITY_FLAG_MASTER, const.ENTITY_FLAG_LOCAL) and self.dirty:
+			pkg = {'p': {'x': self.pos.x, 'y': self.pos.y}, 'v': {'x': self.velocity.x, 'y': self.velocity.y}}
 			io.send_q.put(pkg)
+			self.dirty = False

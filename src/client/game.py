@@ -5,11 +5,11 @@ import pygame
 import queue
 
 import common.const as const
+import common.scene as scene
 
 import client.window as window
 import client.event as event
 import client.entity as entity
-import client.scene as scene
 import client.io as io
 import client.gui as gui
 
@@ -51,7 +51,8 @@ def run_game():
 		screen.fill(const.SCREEN_BACKGROUND)
 		# clean panel
 		panel.blit(panel_bg, (const.SCREEN_SIZE[0], 0))
-		# refresh input event
+
+		# refresh event
 		if not event.refresh(panel_gui):
 			return
 		# calc dt
@@ -86,6 +87,7 @@ def run_game():
 		screen.blit(fps_text, (0, 0))
 		# fps limit
 		fps = get_fps(clock.tick(const.CLIENT_FPS))
+
 		# re-draw the window
 		window_all.blit(screen, (0, 0))
 		window_all.blit(panel, (0, 0))

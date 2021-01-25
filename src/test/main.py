@@ -1,9 +1,6 @@
 # coding=utf-8
 
 
-def foo():
-	return True
+f = lambda a: print(1)
 
-
-print(2 & (1 << 1))
-print(2 & (1 << 1) == 1)
+f(-1)

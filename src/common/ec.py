@@ -2,11 +2,8 @@
 
 
 class Entity(object):
-	def __init__(self, flags):
-		self.entity_flags = 0
-		for flag in flags:
-			if flag[1] == 1:
-				self.entity_flags = self.entity_flags | flag[0]
+	def __init__(self):
+		self.eid = -1
 		self.comps = []
 
 	def io_in(self, pkg):
@@ -35,12 +32,6 @@ class Entity(object):
 	def iter_comps(self, f):
 		for comp in self.comps:
 			f(comp)
-
-	def has_flags(self, *flags):
-		for flag in flags:
-			if self.entity_flags & flag[0] != flag[0] * flag[1]:
-				return False
-		return True
 
 
 class Component(object):
