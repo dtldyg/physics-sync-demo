@@ -39,11 +39,14 @@ graph TD
      game --> window
      game --> event
      game --> entity
+     game --> scene
      
      gui --> const
      gui --> switch
      gui --> window
 
+     entity --> const
+     entity --> ec
      entity --> comp_control
      entity --> comp_physics
      entity --> comp_state
@@ -52,25 +55,30 @@ graph TD
      comp_control --> const
      comp_control --> math
      comp_control --> switch
+     comp_control --> ec
      comp_control --> window
      comp_control --> event
 
      comp_physics --> const
      comp_physics --> math
+     comp_physics --> ec
 
      comp_state --> const
      comp_state --> math
+     comp_state --> ec
      comp_state --> io
 
      comp_render --> const
      comp_render --> math
      comp_render --> switch
+     comp_render --> ec
      comp_render --> window
 ```
 #### 组件依赖
 ```mermaid
 graph TD
      comp_control --> comp_physics
+     comp_control --> comp_state
      comp_control --> comp_render
 
      comp_physics --> comp_state
