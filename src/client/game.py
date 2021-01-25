@@ -9,6 +9,7 @@ import common.const as const
 import client.window as window
 import client.event as event
 import client.entity as entity
+import client.scene as scene
 import client.io as io
 import client.gui as gui
 
@@ -35,8 +36,8 @@ def run_game():
 	panel_gui = gui.GUI()
 
 	# all entities
-	master_entity = entity.MasterEntity()
-	master_shadow_entity = entity.MasterShadowEntity()
+	scene.add_entity(entity.MasterEntity())
+	scene.add_entity(entity.MasterShadowEntity())
 
 	# control info
 	fps = 0
@@ -57,24 +58,25 @@ def run_game():
 		now = time.time()
 		render_lt, dt = now, now - render_lt
 
-		# input io
+		# io in
 		while True:
 			try:
 				pkg = io.recv_q.get_nowait()
 			except queue.Empty:
 				break
-			master_entity.sync_in(pkg)
-			master_shadow_entity.sync_in(pkg)
+			scene.iter_entities(lambda e: e.io_in(pkg))
 
-		# update all entities
-		master_entity.update(dt)
-		master_shadow_entity.update(dt)
+		# update logic
+		scene.iter_entities(lambda e: e.update_logic(dt))
+		# update physics
+		scene.iter_entities(lambda e: e.update_physics(dt))
+		# update render
+		scene.iter_entities(lambda e: e.update_render(dt))
 
-		# output io
+		# io out
 		if now - io_lt >= 1 / const.IO_FPS:
 			io_lt = now
-			master_entity.sync_out()
-			master_shadow_entity.sync_out()
+			scene.iter_entities(lambda e: e.io_out())
 
 		# update gui
 		panel_gui.update(dt)

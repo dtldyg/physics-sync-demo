@@ -2,18 +2,20 @@
 
 import common.const as const
 import common.math as math
+import common.ec as ec
 
 
-class CompPhysics(object):
-	def __init__(self, entity):
-		self.entity = entity
+class CompPhysics(ec.Component):
+	def __init__(self):
+		super(CompPhysics, self).__init__('comp_physics')
 		self.force = math.Vector()
 		self.velocity = math.Vector()
 
-	def update(self, dt):
+	def update_logic(self, dt):
 		if self.force.zero() and self.velocity.zero():
 			return
 
+		# --- 1.force analysis: Euler‘s Method ---
 		# f = f - μ·mg·v_dir
 		f = self.force - self.velocity.normal() * const.ENTITY_FRICTION * const.ENTITY_MASS * const.WORLD_G
 		# a = f/m
@@ -29,27 +31,34 @@ class CompPhysics(object):
 		# s = v·t - similar to uniform motion
 		s = v * dt
 
-		to_v = v
-		to_s = self.entity.comp_state.pos + s
+		# --- 2.v/p update ---
+		self.velocity = v
+		comp_state = self.entity.get_comp('comp_state')
+		comp_state.pos = comp_state.pos + s
+
+	def update_physics(self, dt):
+		comp_state = self.entity.get_comp('comp_state')
+
+		v = self.velocity
+		p = comp_state.pos
+
+		# --- 3.collision check ---
 		# wall collision
-		if to_s.x + const.ENTITY_RADIUS > const.SCREEN_SIZE[0]:
-			to_v.x = -to_v.x
-			to_s.x = const.SCREEN_SIZE[0] * 2 - const.ENTITY_RADIUS * 2 - to_s.x
-		if to_s.y + const.ENTITY_RADIUS > const.SCREEN_SIZE[1]:
-			to_v.y = -to_v.y
-			to_s.y = const.SCREEN_SIZE[1] * 2 - const.ENTITY_RADIUS * 2 - to_s.y
-		if to_s.x < const.ENTITY_RADIUS:
-			to_v.x = -to_v.x
-			to_s.x = const.ENTITY_RADIUS * 2 - to_s.x
-		if to_s.y < const.ENTITY_RADIUS:
-			to_v.y = -to_v.y
-			to_s.y = const.ENTITY_RADIUS * 2 - to_s.y
+		if p.x + const.ENTITY_RADIUS > const.SCREEN_SIZE[0]:
+			v.x = -v.x
+			p.x = const.SCREEN_SIZE[0] * 2 - const.ENTITY_RADIUS * 2 - p.x
+		if p.y + const.ENTITY_RADIUS > const.SCREEN_SIZE[1]:
+			v.y = -v.y
+			p.y = const.SCREEN_SIZE[1] * 2 - const.ENTITY_RADIUS * 2 - p.y
+		if p.x < const.ENTITY_RADIUS:
+			v.x = -v.x
+			p.x = const.ENTITY_RADIUS * 2 - p.x
+		if p.y < const.ENTITY_RADIUS:
+			v.y = -v.y
+			p.y = const.ENTITY_RADIUS * 2 - p.y
+		# entity collision
+		# collision response(v swap)
 
-		self.velocity = to_v
-		self.entity.comp_state.pos = to_s
-
-	def sync_out(self):
-		pass
-
-	def sync_in(self, pkg):
-		pass
+		# --- 4.result show ---
+		self.velocity = v
+		comp_state.pos = p

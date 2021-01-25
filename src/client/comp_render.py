@@ -5,34 +5,32 @@ import pygame
 import common.const as const
 import common.math as math
 import common.switch as switch
+import common.ec as ec
 
 import client.window as window
 
 
-class CompRender(object):
-	def __init__(self, entity):
-		self.entity = entity
-		self.surface = self.entity_surface()
+class CompRender(ec.Component):
+	def __init__(self):
+		super(CompRender, self).__init__('comp_render')
+		self.surface = None
 		self.others = []
 
-	def update(self, _):
-		if not self.entity.is_master or self.entity.is_shadow or switch.MASTER_PREDICT:
-			window.screen.blit(self.surface[0], (self.entity.comp_state.pos - self.surface[1]).tuple())
+	def init(self):
+		self.surface = self.entity_surface()
+
+	def update_render(self, _):
+		if self.entity.has_flags(const.ENTITY_FLAG_MASTER, const.ENTITY_FLAG_LOCAL) is False or switch.MASTER_PREDICT:
+			window.screen.blit(self.surface[0], (self.entity.get_comp('comp_state').pos - self.surface[1]).tuple())
 		for other in self.others:
 			other[0](*other[1])
 		self.others.clear()
 
-	def sync_out(self):
-		pass
-
-	def sync_in(self, pkg):
-		pass
-
 	def entity_surface(self):
-		if self.entity.is_master:
-			color = const.MASTER_SHADOW_COLOR if self.entity.is_shadow else const.MASTER_COLOR
+		if self.entity.has_flags(const.ENTITY_FLAG_MASTER):
+			color = const.MASTER_SHADOW_COLOR if self.entity.has_flags(const.ENTITY_FLAG_SHADOW) else const.MASTER_COLOR
 		else:
-			color = const.REPLICA_SHADOW_COLOR if self.entity.is_shadow else const.REPLICA_COLOR
+			color = const.REPLICA_SHADOW_COLOR if self.entity.has_flags(const.ENTITY_FLAG_SHADOW) else const.REPLICA_COLOR
 		radius = const.ENTITY_RADIUS
 		surface = pygame.Surface((radius * 2, radius * 2), pygame.SRCALPHA)
 		pygame.draw.circle(surface, color, (radius, radius), radius)
