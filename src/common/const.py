@@ -1,7 +1,7 @@
 # coding=utf-8
 
 # Main
-CLIENT_FPS = 120
+CLIENT_FPS = 60
 SERVER_FPS = 10
 IO_FPS = 10
 FPS_COLOR = (0, 255, 0, 255)  # green
