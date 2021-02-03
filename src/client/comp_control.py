@@ -7,8 +7,8 @@ import common.math as math
 import common.switch as switch
 import common.ec as ec
 
-import client.window as window
 import client.event as event
+import client.ui.window as window
 
 
 class CompControl(ec.Component):

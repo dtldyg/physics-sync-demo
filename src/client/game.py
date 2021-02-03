@@ -8,11 +8,11 @@ import common.const as const
 import common.scene as scene
 import common.switch as switch
 
-import client.window as window
 import client.event as event
 import client.entity as entity
 import client.io as io
-import client.gui as gui
+import client.ui.gui as gui
+import client.ui.window as window
 
 
 def get_fps(t):

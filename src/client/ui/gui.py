@@ -6,7 +6,7 @@ import pygame_gui
 import common.const as const
 import common.switch as switch
 
-import client.window as window
+import client.ui.window as window
 
 
 def btn_checkbox_event(event):
