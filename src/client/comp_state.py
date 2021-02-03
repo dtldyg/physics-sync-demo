@@ -4,7 +4,7 @@ import common.const as const
 import common.math as math
 import common.ec as ec
 
-import client.io as io
+import client.net as net
 
 
 class CompState(ec.Component):
@@ -49,4 +49,4 @@ class CompState(ec.Component):
 		if self.entity.has_flags(const.ENTITY_FLAG_MASTER, const.ENTITY_FLAG_LOCAL) and self.dirty:
 			self.dirty = False
 			pkg = {'v': {'x': self.velocity.x, 'y': self.velocity.y}, 'p': {'x': self.pos.x, 'y': self.pos.y}}
-			io.send_q.put(pkg)
+			net.send_q.put(pkg)

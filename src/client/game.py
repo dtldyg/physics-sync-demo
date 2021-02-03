@@ -10,7 +10,7 @@ import common.switch as switch
 
 import client.event as event
 import client.entity as entity
-import client.io as io
+import client.net as net
 import client.ui.gui as gui
 import client.ui.window as window
 
@@ -63,7 +63,7 @@ def run_game():
 		# io in
 		while True:
 			try:
-				pkg = io.recv_q.get_nowait()
+				pkg = net.recv_q.get_nowait()
 			except queue.Empty:
 				break
 			scene.iter_entities(lambda e: e.io_in(pkg))

@@ -20,7 +20,6 @@ class CompControl(ec.Component):
 		self.line_f_dir = None
 		self.line_t = 0
 
-	# TODO 输出force_dir
 	def update_logic(self, dt):
 		comp_physics = self.entity.get_comp('comp_physics')
 		comp_state = self.entity.get_comp('comp_state')

@@ -7,7 +7,7 @@ import pygame
 import common.const as const
 import common.scene as scene
 
-import server.io as io
+import server.net as net
 import server.entity as entity
 
 
@@ -25,7 +25,7 @@ def run_game():
 		# io in
 		while True:
 			try:
-				pkg = io.recv_q.get_nowait()
+				pkg = net.recv_q.get_nowait()
 			except queue.Empty:
 				break
 			cmd = pkg['cmd']
