@@ -1,11 +1,18 @@
 # coding=utf-8
 
-class PkgCmd(object):
-	def __init__(self):
-		self.x
+def pkg():
+	p = {
+		'eid': 0,
+		'pkg': [],
+	}
+	return
 
 
-class PkgVec(object):
-	def __init__(self, x, y):
-		self.x = x
-		self.y = y
+def pkg_cmd():
+	p = {
+		'f': {
+			'x': 0,
+			'y': 0,
+		}
+	}
+	return p
