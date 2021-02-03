@@ -47,7 +47,7 @@ def run_game():
 		scene.iter_entities(lambda e: e.io_out())
 
 		# fps limit
-		clock.tick(const.SERVER_FPS)
+		clock.tick(const.LOGIC_FPS)
 
 
 def to_all(pkg):

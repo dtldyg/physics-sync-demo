@@ -6,6 +6,7 @@ import queue
 
 import common.const as const
 import common.scene as scene
+import common.switch as switch
 
 import client.window as window
 import client.event as event
@@ -75,7 +76,7 @@ def run_game():
 		scene.iter_entities(lambda e: e.update_render(dt))
 
 		# io out
-		if now - io_lt >= 1 / const.IO_FPS:
+		if now - io_lt >= 1 / switch.NETWORK_CMD_FPS:
 			io_lt = now
 			scene.iter_entities(lambda e: e.io_out())
 
@@ -86,7 +87,7 @@ def run_game():
 		fps_text = font.render('fps:{}'.format(fps), True, const.FPS_COLOR)
 		screen.blit(fps_text, (0, 0))
 		# fps limit
-		fps = get_fps(clock.tick(const.CLIENT_FPS))
+		fps = get_fps(clock.tick(const.LOGIC_FPS))
 
 		# re-draw the window
 		window_all.blit(screen, (0, 0))

@@ -1,15 +1,9 @@
 # coding=utf-8
 
-# Frame
-FRAME_RENDER = 120
-FRAME_INPUT_SAMPLE = 60
-FRAME_LOGIC = 60
 # Main
-CLIENT_FPS = 60  # TODO remove
-SERVER_FPS = 10  # TODO remove
-IO_FPS = 10  # TODO remove
-FPS_COLOR = (0, 255, 0, 255)  # green
+LOGIC_FPS = 60
 # Screen
+FPS_COLOR = (0, 255, 0, 255)  # green
 SCREEN_SIZE = (400, 400)
 SCREEN_BACKGROUND = (0, 0, 0, 255)  # black
 # Panel
@@ -21,6 +15,7 @@ PANEL_UI_SIZE = (80, 160, 26)
 CONTROL_LINE_COLOR = (255, 255, 255, 255)  # white
 CONTROL_LINE_WIDTH = 1
 CONTROL_LINE_RADIUS = int(SCREEN_SIZE[1] / 2)
+CONTROL_LINE_TIME = 1
 # World
 WORLD_G = 1  # const
 # Entity
