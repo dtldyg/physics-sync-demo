@@ -1,9 +1,13 @@
 # coding=utf-8
 
+# Frame
+FRAME_RENDER = 120
+FRAME_INPUT_SAMPLE = 60
+FRAME_LOGIC = 60
 # Main
-CLIENT_FPS = 60
-SERVER_FPS = 10
-IO_FPS = 10
+CLIENT_FPS = 60  # TODO remove
+SERVER_FPS = 10  # TODO remove
+IO_FPS = 10  # TODO remove
 FPS_COLOR = (0, 255, 0, 255)  # green
 # Screen
 SCREEN_SIZE = (400, 400)
@@ -25,12 +29,12 @@ ENTITY_MASS = 1  # const
 ENTITY_FRICTION = 400
 ENTITY_FORCE = 1200
 ENTITY_MAX_V = 800
-# Entity flag (mask, val)
+# EntityFlag (mask, val)
 ENTITY_FLAG_MASTER = (1, 0)
 ENTITY_FLAG_REPLICA = (1, 1)
 ENTITY_FLAG_LOCAL = (1 << 1, 0)
 ENTITY_FLAG_SHADOW = (1 << 1, 1)
-# Entity init
+# EntityInit
 MASTER_INIT_POS = (50, SCREEN_SIZE[1] / 2)
 MASTER_COLOR = (255, 0, 0, 255)  # red
 MASTER_SHADOW_COLOR = (255, 0, 0, 127)  # red-half
