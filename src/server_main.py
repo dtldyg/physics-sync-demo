@@ -1,11 +1,11 @@
 # coding=utf-8
 
-import server.net as net
+import common.net as net
 import server.game as game
 
 
 def main():
-	net.run_socket()
+	net.run_server_socket()
 	game.run_game()
 
 

@@ -2,10 +2,10 @@
 
 import pygame
 
-import common.const as const
-import common.math as math
-import common.switch as switch
-import common.ec as ec
+import common.base.const as const
+import common.base.math as math
+import common.base.switch as switch
+import common.base.ec as ec
 
 import client.event as event
 import client.ui.window as window
@@ -25,7 +25,7 @@ class CompControl(ec.Component):
 		comp_state = self.entity.get_comp('comp_state')
 		comp_render = self.entity.get_comp('comp_render')
 
-		comp_physics.force = math.vector_zero
+		comp_physics.f = math.vector_zero
 		# wasd
 		if switch.CONTROL_MODE == switch.CONTROL_WASD:
 			x, y = 0, 0
@@ -39,7 +39,7 @@ class CompControl(ec.Component):
 				x = 1
 			if x != 0 or y != 0:
 				force = math.Vector(x, y).normal() * const.ENTITY_FORCE
-				comp_physics.force = force
+				comp_physics.f = force
 		# follow mouse
 		elif switch.CONTROL_MODE == switch.CONTROL_MOUSE:
 			if event.mouse_active() and event.key_state(pygame.K_SPACE):
@@ -47,7 +47,7 @@ class CompControl(ec.Component):
 				mouse_pos = pygame.mouse.get_pos()
 				if mouse_pos[0] - cur_pos[0] != 0 or mouse_pos[1] - cur_pos[1] != 0:
 					force = (math.Vector(*mouse_pos) - math.Vector(*cur_pos)).normal() * const.ENTITY_FORCE
-					comp_physics.force = force
+					comp_physics.f = force
 		# archery
 		elif switch.CONTROL_MODE == switch.CONTROL_LINE:
 			cur_pos = comp_state.pos
@@ -79,7 +79,7 @@ class CompControl(ec.Component):
 			if self.line_stage == 3:
 				if self.line_t > 0:
 					force = self.line_f_dir * const.ENTITY_FORCE
-					comp_physics.force = force
+					comp_physics.f = force
 					self.line_t = self.line_t - dt
 				else:
 					# line trigger over

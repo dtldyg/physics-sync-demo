@@ -3,8 +3,8 @@
 import pygame
 import pygame_gui
 
-import common.const as const
-import common.switch as switch
+import common.base.const as const
+import common.base.switch as switch
 
 import client.ui.window as window
 

@@ -4,12 +4,11 @@
 class Entity(object):
 	def __init__(self):
 		self.eid = -1
+		self.frame = -1
 		self.comps = []
 
-	def io_in(self, pkg):
-		self.iter_comps(lambda c: c.io_in(pkg))
-
 	def update_logic(self, dt):
+		self.frame = self.frame + 1
 		self.iter_comps(lambda c: c.update_logic(dt))
 
 	def update_physics(self, dt):
@@ -17,9 +16,6 @@ class Entity(object):
 
 	def update_render(self, dt):
 		self.iter_comps(lambda c: c.update_render(dt))
-
-	def io_out(self):
-		self.iter_comps(lambda c: c.io_out())
 
 	def add_comp(self, comp):
 		comp.entity = self
@@ -42,9 +38,6 @@ class Component(object):
 	def init(self):
 		pass
 
-	def io_in(self, pkg):
-		pass
-
 	def update_logic(self, dt):
 		pass
 
@@ -52,7 +45,4 @@ class Component(object):
 		pass
 
 	def update_render(self, dt):
-		pass
-
-	def io_out(self):
 		pass

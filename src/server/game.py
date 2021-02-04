@@ -4,47 +4,54 @@ import time
 import queue
 import pygame
 
-import common.const as const
+import common.base.const as const
+import common.net as net
 import common.scene as scene
 
-import server.net as net
-import server.entity as entity
+import server.ec as entity
 
 
 def run_game():
-	print('game run')
-
 	clock = pygame.time.Clock()
-	lt = time.time()
+	logic_lt = time.time()
+	states_lt = time.time()
+	states_interval = 1 / const.NETWORK_STATES_FPS
 
 	while True:
 		# calc dt
 		now = time.time()
-		lt, dt = now, now - lt
+		logic_lt, dt = now, now - logic_lt
 
-		# io in
-		while True:
-			try:
-				pkg = net.recv_q.get_nowait()
-			except queue.Empty:
-				break
-			cmd = pkg['cmd']
-			if cmd == 'new':
-				cmd_new(pkg)
-			elif cmd == 'del':
-				cmd_del(pkg)
-			else:
-				for en in scene.get_all_entities():
-					if en.client_id == pkg['id']:
-						en.io_in(pkg)
+		# recv
+		for pkg in net.iter_recv_pkg():
+			if pkg['pid'] == net.PID_JOIN:
+				server_entity = entity.ServerEntity(pkg['send_q'])
+				server_entity.eid = pkg['eid']
+				server_entity.send_q.put({'pid': net.PID_ADD_MASTER, 'eid': server_entity.eid})
+				# broadcast
+				to_all({'pid': net.PID_ADD_REPLICA, 'eid': server_entity.eid})
+				scene.add_entity(server_entity)
+			elif pkg['pid'] == net.PID_DEL:
+				server_entity = scene.get_entity(pkg['eid'])
+				server_entity.send_q.put(pkg)
+				# broadcast
+				scene.del_entity(server_entity.eid)
+				to_all({'pid': net.PID_DEL_REPLICA, 'eid': server_entity.eid})
+			elif pkg['pid'] == net.PID_CMD:
+				server_entity = scene.get_entity(pkg['eid'])
+				server_entity.input_cmd(pkg)
 
-		# update logic
+		# update logic & physics
 		scene.iter_entities(lambda e: e.update_logic(dt))
-		# update physics
 		scene.iter_entities(lambda e: e.update_physics(dt))
 
-		# io out
-		scene.iter_entities(lambda e: e.io_out())
+		# send states
+		if now - states_lt >= states_interval:
+			states_lt = now
+			states = [e.output_state() for e in scene.get_all_entities()]
+			for e in scene.get_all_entities():
+				pkg = {'pid': net.PID_STATES, 'frame': e.frame, 'states': states}
+				e.send_q.put(pkg)
 
 		# fps limit
 		clock.tick(const.LOGIC_FPS)
@@ -52,26 +59,3 @@ def run_game():
 
 def to_all(pkg):
 	scene.iter_entities(lambda e: e.send_q.put(pkg))
-
-
-def to_others(client_id, pkg):
-	for en in scene.get_all_entities():
-		if en.client_id == client_id:
-			continue
-		en.send_q.put(pkg)
-
-
-def cmd_new(pkg):
-	server_entity = entity.ServerEntity(pkg['id'], pkg['send_q'])
-	scene.add_entity(server_entity)
-	# broadcast
-	del pkg['send_q']
-	to_all(pkg)
-
-
-def cmd_del(pkg):
-	for en in scene.get_all_entities():
-		if en.client_id == pkg['id']:
-			scene.del_entity(en.eid)
-	# broadcast
-	to_all(pkg)

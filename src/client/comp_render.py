@@ -2,10 +2,9 @@
 
 import pygame
 
-import common.const as const
-import common.math as math
-import common.switch as switch
-import common.ec as ec
+import common.base.const as const
+import common.base.math as math
+import common.base.ec as ec
 
 import client.ui.window as window
 
@@ -20,7 +19,7 @@ class CompRender(ec.Component):
 		self.surface = self.entity_surface()
 
 	def update_render(self, _):
-		if self.entity.has_flags(const.ENTITY_FLAG_MASTER, const.ENTITY_FLAG_LOCAL) is False or switch.MASTER_PREDICT:
+		if self.entity.has_flags(const.ENTITY_FLAG_MASTER, const.ENTITY_FLAG_LOCAL) is False or const.MASTER_PREDICT:
 			window.screen.blit(self.surface[0], (self.entity.get_comp('comp_state').pos - self.surface[1]).tuple())
 		for other in self.others:
 			other[0](*other[1])

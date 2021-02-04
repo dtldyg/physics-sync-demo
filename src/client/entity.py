@@ -1,7 +1,7 @@
 # coding=utf-8
 
-import common.const as const
-import common.ec as ec
+import common.base.const as const
+import common.base.ec as ec
 
 import client.comp_control as comp_control
 import client.comp_physics as comp_physics

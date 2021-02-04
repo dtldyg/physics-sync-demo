@@ -4,13 +4,12 @@ import time
 import pygame
 import queue
 
-import common.const as const
+import common.base.const as const
 import common.scene as scene
-import common.switch as switch
 
 import client.event as event
 import client.entity as entity
-import client.net as net
+import common.net as net
 import client.ui.gui as gui
 import client.ui.window as window
 
@@ -45,7 +44,7 @@ def run_game():
 	clock = pygame.time.Clock()
 	font = pygame.font.SysFont('arial', 16)
 	render_lt = time.time()
-	io_lt = time.time()
+	# io_lt = time.time()
 
 	while True:
 		# clean scene
@@ -76,9 +75,9 @@ def run_game():
 		scene.iter_entities(lambda e: e.update_render(dt))
 
 		# io out
-		if now - io_lt >= 1 / switch.NETWORK_CMD_FPS:
-			io_lt = now
-			scene.iter_entities(lambda e: e.io_out())
+		# if now - io_lt >= 1 / switch.NETWORK_CMD_FPS:
+		# io_lt = now
+		scene.iter_entities(lambda e: e.io_out())
 
 		# update gui
 		panel_gui.update(dt)

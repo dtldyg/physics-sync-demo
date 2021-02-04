@@ -1,10 +1,10 @@
 # coding=utf-8
 
-import common.const as const
-import common.math as math
-import common.ec as ec
+import common.base.const as const
+import common.base.math as math
+import common.base.ec as ec
 
-import client.net as net
+import common.net as net
 
 
 class CompState(ec.Component):
