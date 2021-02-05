@@ -8,7 +8,7 @@ import common.ec as ec
 class CompPhysics(ec.ServerComponent):
 	def __init__(self):
 		super(CompPhysics, self).__init__('comp_physics')
-		self.f = math.Vector()
+		self.f = math.vector_zero
 
 	def update_logic(self, dt):
 		comp_state = self.entity.get_comp('comp_state')
@@ -24,7 +24,7 @@ class CompPhysics(ec.ServerComponent):
 		v = comp_state.v + a * dt
 		if self.f.zero() and comp_state.v.length() <= a.length() * dt:
 			# to zero
-			v = math.Vector()
+			v = math.vector_zero
 		if v.length() > const.ENTITY_MAX_V:
 			# to max
 			v = v.normal() * const.ENTITY_MAX_V

@@ -1,6 +1,7 @@
 # coding=utf-8
 
 import common.base.math as math
+import common.base.const as const
 import common.ec as ec
 
 
@@ -12,4 +13,7 @@ class CompControl(ec.ServerComponent):
 
 	def recv_cmd(self, cmd):
 		comp_physics = self.entity.get_comp('comp_physics')
-		comp_physics.f = math.Vector(**cmd['f'])
+		if cmd['f']['x'] == 0 and cmd['f']['y'] == 0:
+			comp_physics.f = math.vector_zero
+		else:
+			comp_physics.f = math.Vector(**cmd['f']).normal() * const.ENTITY_FORCE

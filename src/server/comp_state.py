@@ -9,7 +9,7 @@ class CompState(ec.ServerComponent):
 	def __init__(self):
 		super(CompState, self).__init__('comp_state')
 		self.p = math.Vector(*const.MASTER_INIT_POS)
-		self.v = math.Vector()
+		self.v = math.vector_zero
 
 	def send_state(self, state):
 		state['p'] = self.p.__dict__

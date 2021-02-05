@@ -57,6 +57,7 @@ def run_conn_send(send_q, conn):
 
 def run_listen(sock):
 	sock.listen()
+	print('net run')
 	eid = 0
 	while True:
 		conn, addr = sock.accept()

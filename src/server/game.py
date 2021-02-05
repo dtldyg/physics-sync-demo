@@ -14,6 +14,7 @@ def run_game():
 	c = clock.Clock()
 	c.add(const.LOGIC_FPS, tick_logic)
 	c.add(const.STATES_FPS, tick_state)
+	print('game run')
 	c.run()
 
 

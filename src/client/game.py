@@ -72,6 +72,12 @@ class Game(object):
 		scene.iter_entities(lambda e: e.update_logic(dt))
 		scene.iter_entities(lambda e: e.update_physics(dt))
 
+		# send cmd
+		if self.master_entity is not None:
+			cmd = self.master_entity.send_cmd()
+			cmd['pid'] = net.PID_CMD
+			net.global_send_q.put(cmd)
+
 	def tick_render(self, dt):
 		# clean game surface
 		self.sur_game.fill(const.SCREEN_BACKGROUND)
