@@ -35,7 +35,7 @@ class Game(object):
 		self.fps_font = pygame.font.SysFont('arial', 16)
 		self.fps_txt = self.fps_font.render('fps:0', True, const.FPS_COLOR)
 		# master entity init
-		self.master_entity = None
+		self.master_entity = entity.MasterEntity()
 		net.global_send_q.put({'pid': net.PID_JOIN})
 
 	def run(self):
@@ -51,11 +51,10 @@ class Game(object):
 		# recv states
 		for pkg in net.iter_recv_pkg():
 			if pkg['pid'] == net.PID_ADD_MASTER:
-				en = entity.MasterEntity()
-				en.eid = pkg['state']['eid']
-				en.recv_state(pkg['state'])
-				self.master_entity = en
-				scene.add_entity(en)
+				self.master_entity.eid = pkg['state']['eid']
+				self.master_entity.recv_state(pkg['state'])
+				self.master_entity.enable = True
+				scene.add_entity(self.master_entity)
 			elif pkg['pid'] == net.PID_ADD_REPLICA:
 				en = entity.ReplicaEntity()
 				en.eid = pkg['state']['eid']
@@ -75,7 +74,7 @@ class Game(object):
 		scene.iter_entities(lambda e: e.update_physics(dt))
 
 		# send cmd
-		if self.master_entity is not None:
+		if self.master_entity.enable:
 			cmd = self.master_entity.send_cmd()
 			cmd['pid'] = net.PID_CMD
 			net.global_send_q.put(cmd)

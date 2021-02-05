@@ -3,6 +3,8 @@
 import sys
 import pygame
 
+import common.base.clock as clock
+
 _key_state = {}
 _mouse_state = {'active': False, 'trigger': {'down': {}, 'up': {}}}
 
@@ -12,7 +14,7 @@ def refresh(panel_gui):
 	_mouse_state['trigger']['up'].clear()
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
-			sys.exit(0)
+			raise clock.QuitError()
 		if event.type == pygame.KEYDOWN:
 			_key_state[event.key] = True
 		elif event.type == pygame.KEYUP:

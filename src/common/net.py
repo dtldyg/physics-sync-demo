@@ -33,7 +33,7 @@ def run_conn_recv(recv_q, conn, eid=None, send_q=None):
 				pkg['eid'] = eid
 				pkg['send_q'] = send_q
 			recv_q.put(pkg)
-		except socket.error:
+		except (socket.error, struct.error):
 			if eid is not None:
 				recv_q.put({'pid': PID_DEL, 'eid': eid})
 			return
@@ -70,7 +70,7 @@ def run_listen(sock):
 # socket client
 def run_client_socket():
 	conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-	conn.connect(('127.0.0.1', 9999))
+	conn.connect(('127.0.0.1', 9998))
 	threading.Thread(target=run_conn_recv, args=(global_recv_q, conn,), daemon=True).start()
 	threading.Thread(target=run_conn_send, args=(global_send_q, conn,), daemon=True).start()
 
