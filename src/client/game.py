@@ -64,9 +64,11 @@ class Game(object):
 			elif pkg['pid'] == net.PID_DEL_REPLICA:
 				en = scene.get_entity(pkg['eid'])
 				scene.del_entity(en.eid)
-			elif pkg['pid'] == net.PID_CMD:
-				en = scene.get_entity(pkg['eid'])
-				en.recv_state(pkg)
+			elif pkg['pid'] == net.PID_STATES:
+				for state in pkg['states']:
+					en = scene.get_entity(state['eid'])
+					print(state)
+					en.recv_state(state)
 
 		# update logic & physics
 		scene.iter_entities(lambda e: e.update_logic(dt))

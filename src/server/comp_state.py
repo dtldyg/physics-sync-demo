@@ -13,4 +13,4 @@ class CompState(ec.ServerComponent):
 
 	def send_state(self, state):
 		state['p'] = self.p.__dict__
-		state['v'] = self.p.__dict__
+		state['v'] = self.v.__dict__
