@@ -67,8 +67,8 @@ class Game(object):
 			elif pkg['pid'] == net.PID_STATES:
 				for state in pkg['states']:
 					en = scene.get_entity(state['eid'])
-					print(state)
-					en.recv_state(state)
+					if en is not None:
+						en.recv_state(state)
 
 		# update logic & physics
 		scene.iter_entities(lambda e: e.update_logic(dt))
