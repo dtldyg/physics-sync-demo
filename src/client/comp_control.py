@@ -5,10 +5,10 @@ import pygame
 import common.base.const as const
 import common.base.math as math
 import common.base.switch as switch
-import common.base.ec as ec
+import common.ec as ec
 
 import client.event as event
-import client.ui.window as window
+import client.display.surface as window
 
 
 class CompControl(ec.Component):
@@ -86,10 +86,10 @@ class CompControl(ec.Component):
 					self.line_reset()
 			# draw line
 			if self.line_stage == 1 or self.line_stage == 2:
-				args_line = window.screen, const.CONTROL_LINE_COLOR, self.line_start.tuple(), self.line_end
+				args_line = window.sur_game, const.CONTROL_LINE_COLOR, self.line_start.tuple(), self.line_end
 				comp_render.others.append((pygame.draw.aaline, args_line))
 				if self.line_stage == 1:
-					args_circle = window.screen, const.CONTROL_LINE_COLOR, self.line_start.tuple(), const.CONTROL_LINE_RADIUS, const.CONTROL_LINE_WIDTH
+					args_circle = window.sur_game, const.CONTROL_LINE_COLOR, self.line_start.tuple(), const.CONTROL_LINE_RADIUS, const.CONTROL_LINE_WIDTH
 					comp_render.others.append((pygame.draw.circle, args_circle))
 
 	def line_reset(self):

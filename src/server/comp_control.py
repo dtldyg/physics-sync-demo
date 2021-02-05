@@ -1,7 +1,7 @@
 # coding=utf-8
 
 import common.base.math as math
-import server.ec as ec
+import server.entity as ec
 
 
 class CompControl(ec.ServerComponent):

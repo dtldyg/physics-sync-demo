@@ -8,7 +8,7 @@ import common.base.const as const
 import common.net as net
 import common.scene as scene
 
-import server.ec as entity
+import server.entity as entity
 
 
 def run_game():
@@ -24,22 +24,7 @@ def run_game():
 
 		# recv
 		for pkg in net.iter_recv_pkg():
-			if pkg['pid'] == net.PID_JOIN:
-				server_entity = entity.ServerEntity(pkg['send_q'])
-				server_entity.eid = pkg['eid']
-				server_entity.send_q.put({'pid': net.PID_ADD_MASTER, 'eid': server_entity.eid})
-				# broadcast
-				to_all({'pid': net.PID_ADD_REPLICA, 'eid': server_entity.eid})
-				scene.add_entity(server_entity)
-			elif pkg['pid'] == net.PID_DEL:
-				server_entity = scene.get_entity(pkg['eid'])
-				server_entity.send_q.put(pkg)
-				# broadcast
-				scene.del_entity(server_entity.eid)
-				to_all({'pid': net.PID_DEL_REPLICA, 'eid': server_entity.eid})
-			elif pkg['pid'] == net.PID_CMD:
-				server_entity = scene.get_entity(pkg['eid'])
-				server_entity.input_cmd(pkg)
+			process_pkg(pkg)
 
 		# update logic & physics
 		scene.iter_entities(lambda e: e.update_logic(dt))
@@ -49,9 +34,9 @@ def run_game():
 		if now - states_lt >= states_interval:
 			states_lt = now
 			states = [e.output_state() for e in scene.get_all_entities()]
-			for e in scene.get_all_entities():
-				pkg = {'pid': net.PID_STATES, 'frame': e.frame, 'states': states}
-				e.send_q.put(pkg)
+			for en in scene.get_all_entities():
+				pkg = {'pid': net.PID_STATES, 'frame': en.frame, 'states': states}
+				en.send_q.put(pkg)
 
 		# fps limit
 		clock.tick(const.LOGIC_FPS)
@@ -59,3 +44,22 @@ def run_game():
 
 def to_all(pkg):
 	scene.iter_entities(lambda e: e.send_q.put(pkg))
+
+
+def process_pkg(pkg):
+	if pkg['pid'] == net.PID_JOIN:
+		en = entity.ServerEntity(pkg['send_q'])
+		en.eid = pkg['eid']
+		en.send_q.put({'pid': net.PID_ADD_MASTER, 'eid': en.eid})
+		# broadcast
+		to_all({'pid': net.PID_ADD_REPLICA, 'eid': en.eid})
+		scene.add_entity(en)
+	elif pkg['pid'] == net.PID_DEL:
+		en = scene.get_entity(pkg['eid'])
+		en.send_q.put(pkg)
+		# broadcast
+		scene.del_entity(en.eid)
+		to_all({'pid': net.PID_DEL_REPLICA, 'eid': en.eid})
+	elif pkg['pid'] == net.PID_CMD:
+		en = scene.get_entity(pkg['eid'])
+		en.recv_cmd(pkg)

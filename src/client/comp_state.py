@@ -2,7 +2,7 @@
 
 import common.base.const as const
 import common.base.math as math
-import common.base.ec as ec
+import common.ec as ec
 
 import common.net as net
 

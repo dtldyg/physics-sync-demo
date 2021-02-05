@@ -1,7 +1,7 @@
 # coding=utf-8
 
 import common.base.const as const
-import common.base.ec as ec
+import common.ec as ec
 
 import client.comp_control as comp_control
 import client.comp_physics as comp_physics
@@ -16,6 +16,9 @@ class ClientEntity(ec.Entity):
 		for flag in flags:
 			if flag[1] == 1:
 				self.flags = self.flags | flag[0]
+
+	def input_state(self, pkg):
+		self.iter_comps(lambda c: c.input_state(pkg))
 
 	def has_flags(self, *flags):
 		for flag in flags:
@@ -32,9 +35,17 @@ class MasterEntity(ClientEntity):
 		self.add_comp(comp_state.CompState())
 		self.add_comp(comp_render.CompRender())
 
+	def output_cmd(self):
+		cmd = {'eid': self.eid}
+		self.iter_comps(lambda c: c.output_cmd(cmd))
+		return cmd
 
-class MasterShadowEntity(ClientEntity):
-	def __init__(self):
-		super(MasterShadowEntity, self).__init__(flags=(const.ENTITY_FLAG_MASTER, const.ENTITY_FLAG_SHADOW))
-		self.add_comp(comp_state.CompState())
-		self.add_comp(comp_render.CompRender())
+
+class ClientComponent(ec.Component):
+	def input_state(self, pkg):
+		pass
+
+
+class MasterComponent(ClientComponent):
+	def output_cmd(self, cmd):
+		pass

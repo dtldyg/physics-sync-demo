@@ -1,6 +1,6 @@
 # coding=utf-8
 
-import common.base.ec as ec
+import common.ec as ec
 
 
 class CompPhysics(ec.Component):

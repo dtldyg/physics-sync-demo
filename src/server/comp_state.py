@@ -1,7 +1,7 @@
 # coding=utf-8
 
 import common.base.math as math
-import server.ec as ec
+import common.ec as ec
 
 
 class CompState(ec.ServerComponent):
@@ -11,6 +11,6 @@ class CompState(ec.ServerComponent):
 		self.p = math.Vector()
 		self.v = math.Vector()
 
-	def output_state(self, state):
+	def send_state(self, state):
 		state['p'] = self.p.__dict__
 		state['v'] = self.p.__dict__
