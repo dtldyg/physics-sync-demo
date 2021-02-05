@@ -2,83 +2,93 @@
 
 import time
 import pygame
-import queue
 
 import common.base.const as const
+import common.base.clock as clock
 import common.scene as scene
+import common.net as net
 
 import client.event as event
 import client.entity as entity
-import common.net as net
-import client.display.gui as gui
-import client.display.surface as surface
-
-
-def get_fps(t):
-	if t <= 0:
-		return 1
-	return int(1 / t * 1000)
+import client.gui as gui
 
 
 def run_game():
-	# pygame init
-	pygame.init()
-	pygame.display.set_caption('Physics Sync - Demo')
-	# surface init
-	surface.sur_window = pygame.display.set_mode((const.SCREEN_SIZE[0] + const.GUI_WIDTH, const.SCREEN_SIZE[1]))
-	surface.sur_game = pygame.Surface(const.SCREEN_SIZE, pygame.SRCALPHA)
-	surface.sur_gui = pygame.Surface((const.SCREEN_SIZE[0] + const.GUI_WIDTH, const.SCREEN_SIZE[1]), pygame.SRCALPHA)
-	# gui
-	gui_pnl = gui.GUI()
+	game = Game()
+	game.run()
 
-	# all entities
-	scene.add_entity(entity.MasterEntity())
-	scene.add_entity(entity.MasterShadowEntity())
 
-	# control info
-	fps = 0
-	clock = pygame.time.Clock()
-	font = pygame.font.SysFont('arial', 16)
-	render_lt = time.time()
+class Game(object):
+	def __init__(self):
+		# pygame init
+		pygame.init()
+		pygame.display.set_caption('Physics Sync - Demo')
+		# surface init
+		self.sur_window = pygame.display.set_mode((const.SCREEN_SIZE[0] + const.GUI_WIDTH, const.SCREEN_SIZE[1]))
+		self.sur_game = pygame.Surface(const.SCREEN_SIZE, pygame.SRCALPHA)
+		self.sur_gui = pygame.Surface((const.SCREEN_SIZE[0] + const.GUI_WIDTH, const.SCREEN_SIZE[1]), pygame.SRCALPHA)
+		# gui init
+		self.gui = gui.GUI(self.sur_gui)
+		# fps init
+		self.fps_frame = 0
+		self.fps_lt = time.time()
+		self.fps_font = pygame.font.SysFont('arial', 16)
+		self.fps_txt = self.fps_font.render('fps:0', True, const.FPS_COLOR)
+		# master entity init
+		self.master_entity = None
+		net.global_send_q.put({'pid': net.PID_JOIN})
 
-	while True:
-		# clean game surface
-		surface.sur_game.fill(const.SCREEN_BACKGROUND)
+	def run(self):
+		c = clock.Clock()
+		c.add(const.LOGIC_FPS, self.tick_logic)
+		c.add(const.RENDER_FPS, self.tick_render)
+		c.run()
 
+	def tick_logic(self, dt):
 		# refresh event
-		if not event.refresh(gui_pnl):
-			return
-		# calc dt
-		now = time.time()
-		render_lt, dt = now, now - render_lt
+		event.refresh(self.gui)
 
-		# io in
-		while True:
-			try:
-				pkg = net.recv_q.get_nowait()
-			except queue.Empty:
-				break
-			scene.iter_entities(lambda e: e.io_in(pkg))
+		# recv states
+		for pkg in net.iter_recv_pkg():
+			if pkg['pid'] == net.PID_ADD_MASTER:
+				en = entity.MasterEntity()
+				en.eid = pkg['state']['eid']
+				en.recv_state(pkg['state'])
+				self.master_entity = en
+				scene.add_entity(en)
+			elif pkg['pid'] == net.PID_ADD_REPLICA:
+				en = entity.ReplicaEntity()
+				en.eid = pkg['state']['eid']
+				en.recv_state(pkg['state'])
+				scene.add_entity(en)
+			elif pkg['pid'] == net.PID_DEL_REPLICA:
+				en = scene.get_entity(pkg['eid'])
+				scene.del_entity(en.eid)
+			elif pkg['pid'] == net.PID_CMD:
+				en = scene.get_entity(pkg['eid'])
+				en.recv_state(pkg)
 
-		# update logic
+		# update logic & physics
 		scene.iter_entities(lambda e: e.update_logic(dt))
-		# update physics
 		scene.iter_entities(lambda e: e.update_physics(dt))
-		# update render
-		scene.iter_entities(lambda e: e.update_render(dt))
 
-		scene.iter_entities(lambda e: e.io_out())
+	def tick_render(self, dt):
+		# clean game surface
+		self.sur_game.fill(const.SCREEN_BACKGROUND)
 
-		# update gui panel
-		gui_pnl.update(dt)
-
-		# calc fps
-		fps_text = font.render('fps:{}'.format(fps), True, const.FPS_COLOR)
-		surface.sur_game.blit(fps_text, (0, 0))
-		# fps limit
-		fps = get_fps(clock.tick(const.LOGIC_FPS))
+		# update render & gui
+		scene.iter_entities(lambda e: e.update_render(self.sur_game, dt))
+		self.gui.update(dt)
+		# update fps
+		now = time.time()
+		self.fps_frame = self.fps_frame + 1
+		if now - self.fps_lt >= 1:
+			self.fps_txt = self.fps_font.render('fps:{:.1f}'.format(self.fps_frame / (now - self.fps_lt)), True, const.FPS_COLOR)
+			self.fps_lt = now
+			self.fps_frame = 0
+		self.sur_game.blit(self.fps_txt, (0, 0))
 
 		# draw window surface
-		surface.sur_window.blit(surface.sur_game, (0, 0))
-		surface.sur_window.blit(surface.sur_gui, (0, 0))
+		self.sur_window.blit(self.sur_game, (0, 0))
+		self.sur_window.blit(self.sur_gui, (0, 0))
 		pygame.display.flip()

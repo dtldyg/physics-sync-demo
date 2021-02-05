@@ -2,7 +2,7 @@
 
 import common.base.const as const
 import common.base.math as math
-import server.entity as ec
+import common.ec as ec
 
 
 class CompPhysics(ec.ServerComponent):

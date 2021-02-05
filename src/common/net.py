@@ -94,8 +94,8 @@ PID_DEL = 99
 example_pkg_join = {'pid': 0, 'eid': 0, 'send_q': None}  # eid、send_q仅server内部使用
 example_pkg_cmd = {'pid': 0, 'eid': 0, 'f': {'x': 0, 'y': 0}}
 # down
-example_pkg_add_master = {'pid': 0, 'eid': 0}
-example_pkg_add_replica = {'pid': 0, 'eid': 0}
+example_pkg_add_master = {'pid': 0, 'state': {'eid': 0, 'p': {'x': 0, 'y': 0, }, 'v': {'x': 0, 'y': 0, }}}
+example_pkg_add_replica = {'pid': 0, 'state': {'eid': 0, 'p': {'x': 0, 'y': 0, }, 'v': {'x': 0, 'y': 0, }}}
 example_pkg_del_replica = {'pid': 0, 'eid': 0}
 example_pkg_states = {'pid': 0, 'frame': 0, 'states': [{'eid': 0, 'p': {'x': 0, 'y': 0, }, 'v': {'x': 0, 'y': 0, }}]}
 # inner

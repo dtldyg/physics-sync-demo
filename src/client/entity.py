@@ -9,25 +9,17 @@ import client.comp_state as comp_state
 import client.comp_render as comp_render
 
 
-class MasterEntity(ClientEntity):
+class MasterEntity(ec.ClientEntity):
 	def __init__(self):
-		super(MasterEntity, self).__init__(flags=(const.ENTITY_FLAG_MASTER, const.ENTITY_FLAG_LOCAL))
+		super(MasterEntity, self).__init__()
 		self.add_comp(comp_control.CompControl())
 		self.add_comp(comp_physics.CompPhysics())
 		self.add_comp(comp_state.CompState())
 		self.add_comp(comp_render.CompRender())
 
-	def output_cmd(self):
-		cmd = {'eid': self.eid}
-		self.iter_comps(lambda c: c.output_cmd(cmd))
-		return cmd
 
-
-class ClientComponent(ec.Component):
-	def input_state(self, pkg):
-		pass
-
-
-class MasterComponent(ClientComponent):
-	def output_cmd(self, cmd):
-		pass
+class ReplicaEntity(ec.ClientEntity):
+	def __init__(self):
+		super(ReplicaEntity, self).__init__()
+		self.add_comp(comp_state.CompState())
+		self.add_comp(comp_render.CompRender())

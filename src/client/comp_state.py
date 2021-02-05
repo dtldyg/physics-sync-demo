@@ -1,52 +1,15 @@
 # coding=utf-8
 
-import common.base.const as const
 import common.base.math as math
 import common.ec as ec
 
-import common.net as net
 
-
-class CompState(ec.Component):
+class CompState(ec.ClientComponent):
 	def __init__(self):
 		super(CompState, self).__init__('comp_state')
-		self.dirty = False
-		self._velocity = math.Vector()
-		self._pos = math.Vector()
+		self.v = math.Vector()
+		self.p = math.Vector()
 
-	@property
-	def velocity(self):
-		return self._velocity
-
-	@velocity.setter
-	def velocity(self, value):
-		if self._velocity != value:
-			self.dirty = True
-		self._velocity = value
-
-	@property
-	def pos(self):
-		return self._pos
-
-	@pos.setter
-	def pos(self, value):
-		if self._pos != value:
-			self.dirty = True
-		self._pos = value
-
-	def init(self):
-		if self.entity.has_flags(const.ENTITY_FLAG_MASTER):
-			self.pos = math.Vector(*const.MASTER_INIT_POS)
-		else:
-			self.pos = math.Vector(*const.REPLICA_INIT_POS)
-
-	def io_in(self, pkg):
-		if self.entity.has_flags(const.ENTITY_FLAG_MASTER, const.ENTITY_FLAG_SHADOW):
-			if pkg['cmd'] == 'sync':
-				self.pos = math.Vector(**pkg['p'])
-
-	def io_out(self):
-		if self.entity.has_flags(const.ENTITY_FLAG_MASTER, const.ENTITY_FLAG_LOCAL) and self.dirty:
-			self.dirty = False
-			pkg = {'v': {'x': self.velocity.x, 'y': self.velocity.y}, 'p': {'x': self.pos.x, 'y': self.pos.y}}
-			net.send_q.put(pkg)
+	def recv_state(self, state):
+		self.p = math.Vector(**state['p'])
+		self.v = math.Vector(**state['v'])

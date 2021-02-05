@@ -1,5 +1,6 @@
 # coding=utf-8
 
+import sys
 import pygame
 
 _key_state = {}
@@ -11,7 +12,7 @@ def refresh(panel_gui):
 	_mouse_state['trigger']['up'].clear()
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
-			return False
+			sys.exit(0)
 		if event.type == pygame.KEYDOWN:
 			_key_state[event.key] = True
 		elif event.type == pygame.KEYUP:
@@ -25,7 +26,6 @@ def refresh(panel_gui):
 		elif event.type == pygame.MOUSEBUTTONUP:
 			_mouse_state['trigger']['up'][event.button] = None
 		panel_gui.process_events(event)
-	return True
 
 
 def key_state(key):

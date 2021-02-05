@@ -5,22 +5,10 @@ import pygame_gui
 
 import common.base.const as const
 
-import client.display.surface as surface
-
-
-def btn_checkbox_event(event):
-	selected = False
-	if event.ui_element.is_selected:
-		event.ui_element.unselect()
-	else:
-		event.ui_element.select()
-		selected = True
-	event.ui_element.set_text(selected.__str__())
-	return selected
-
 
 class GUI(object):
-	def __init__(self):
+	def __init__(self, sur):
+		self.sur = sur
 		self.ui_num = 0
 		self.ui_manager = pygame_gui.UIManager((const.SCREEN_SIZE[0] + const.GUI_WIDTH, const.SCREEN_SIZE[1]))
 		self.ui_manager.get_root_container().set_position((const.SCREEN_SIZE[0], 0))
@@ -98,9 +86,9 @@ class GUI(object):
 			self.replica_extrapolation.select()
 
 	def update(self, dt):
+		self.sur.blit(self.bg, (const.SCREEN_SIZE[0], 0))
 		self.ui_manager.update(dt)
-		surface.sur_gui.blit(self.bg, (const.SCREEN_SIZE[0], 0))
-		self.ui_manager.draw_ui(surface.sur_gui)
+		self.ui_manager.draw_ui(self.sur)
 
 	def next_ui_y(self):
 		self.ui_num = self.ui_num + 1
@@ -121,3 +109,14 @@ class GUI(object):
 					const.REPLICA_INTERPOLATION = btn_checkbox_event(event)
 				elif event.ui_element == self.replica_extrapolation:
 					const.REPLICA_EXTRAPOLATION = btn_checkbox_event(event)
+
+
+def btn_checkbox_event(event):
+	selected = False
+	if event.ui_element.is_selected:
+		event.ui_element.unselect()
+	else:
+		event.ui_element.select()
+		selected = True
+	event.ui_element.set_text(selected.__str__())
+	return selected

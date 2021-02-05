@@ -31,8 +31,8 @@ class Entity(object):
 
 
 class ClientEntity(Entity):
-	def update_render(self, dt):
-		self.iter_comps(lambda c: c.update_render(dt))
+	def update_render(self, sur, dt):
+		self.iter_comps(lambda c: c.update_render(sur, dt))
 
 	# send cmd to server (only master entity)
 	def send_cmd(self):
@@ -73,6 +73,9 @@ class Component(object):
 
 
 class ClientComponent(Component):
+	def update_render(self, sur, dt):
+		pass
+
 	def send_cmd(self, cmd):
 		pass
 
