@@ -9,24 +9,6 @@ import client.comp_state as comp_state
 import client.comp_render as comp_render
 
 
-class ClientEntity(ec.Entity):
-	def __init__(self, flags=()):
-		super(ClientEntity, self).__init__()
-		self.flags = 0
-		for flag in flags:
-			if flag[1] == 1:
-				self.flags = self.flags | flag[0]
-
-	def input_state(self, pkg):
-		self.iter_comps(lambda c: c.input_state(pkg))
-
-	def has_flags(self, *flags):
-		for flag in flags:
-			if self.flags & flag[0] != flag[0] * flag[1]:
-				return False
-		return True
-
-
 class MasterEntity(ClientEntity):
 	def __init__(self):
 		super(MasterEntity, self).__init__(flags=(const.ENTITY_FLAG_MASTER, const.ENTITY_FLAG_LOCAL))

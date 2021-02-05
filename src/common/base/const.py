@@ -2,10 +2,6 @@
 
 # --------- static ---------
 
-# Main
-RENDER_FPS = 60
-LOGIC_FPS = 30
-
 # Screen
 FPS_COLOR = (0, 255, 0, 255)  # green
 SCREEN_SIZE = (400, 400)
@@ -51,6 +47,11 @@ REPLICA_SHADOW_COLOR = (255, 255, 0, 127)  # yellow-half
 
 # --------- dynamic ---------
 
+# FPS
+RENDER_FPS = 60
+LOGIC_FPS = 30  # CMD_FPS
+STATES_FPS = 15
+
 # ControlMod
 CONTROL_WASD = 'WASD'
 CONTROL_MOUSE = 'Mouse Follow'
@@ -66,7 +67,6 @@ REPLICA_EXTRAPOLATION = False
 
 # Network
 NETWORK_CLIENT_BUFFER = 0
-NETWORK_STATES_FPS = 15
 NETWORK_SERVER_BUFFER = 0
 
 # Physics

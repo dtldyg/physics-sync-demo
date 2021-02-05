@@ -8,7 +8,7 @@ import common.base.const as const
 import common.scene as scene
 
 import client.event as event
-import client.ec as entity
+import client.entity as entity
 import common.net as net
 import client.display.gui as gui
 import client.display.surface as surface
