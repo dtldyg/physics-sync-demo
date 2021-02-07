@@ -9,9 +9,9 @@ class Entity(object):
 		self.comps = []
 
 	def update(self, dt):
+		self.frame = self.frame + 1
 		if not self.enable:
 			return
-		self.frame = self.frame + 1
 		self.iter_comps(lambda c: c.update_logic(dt))
 		self.iter_comps(lambda c: c.update_physics(dt))
 

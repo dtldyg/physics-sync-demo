@@ -36,6 +36,7 @@ class Game(object):
 		self.fps_txt = self.fps_font.render('fps:0', True, const.FPS_COLOR)
 		# master entity init
 		self.master_entity = entity.MasterEntity()
+		scene.add_entity(self.master_entity)
 		net.global_send_q.put({'pid': net.PID_JOIN})
 
 	def run(self):
@@ -54,7 +55,6 @@ class Game(object):
 				self.master_entity.eid = pkg['state']['eid']
 				self.master_entity.recv_state(pkg['state'])
 				self.master_entity.enable = True
-				scene.add_entity(self.master_entity)
 			elif pkg['pid'] == net.PID_ADD_REPLICA:
 				en = entity.ReplicaEntity()
 				en.eid = pkg['state']['eid']
