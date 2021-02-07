@@ -12,7 +12,7 @@ import client.event as event
 class CompControl(ec.ClientComponent):
 	def __init__(self):
 		super(CompControl, self).__init__('comp_control')
-		self.f = math.vector_zero
+		self.f_nor = math.vector_zero
 		self.line_stage = 0  # 0:none 1:draw 2:wait 3:trigger
 		self.line_start = None
 		self.line_end = None
@@ -20,10 +20,10 @@ class CompControl(ec.ClientComponent):
 		self.line_t = 0
 
 	def send_cmd(self, cmd):
-		cmd['f'] = self.f.__dict__
+		cmd['f'] = self.f_nor.__dict__
 
 	def update_logic(self, dt):
-		self.f = math.vector_zero
+		self.f_nor = math.vector_zero
 
 		# wasd
 		if const.CONTROL_MODE == const.CONTROL_WASD:
@@ -37,7 +37,7 @@ class CompControl(ec.ClientComponent):
 			if event.key_state(pygame.K_d):
 				x = 1
 			if x != 0 or y != 0:
-				self.f = math.Vector(x, y).normal()
+				self.f_nor = math.Vector(x, y).normal()
 		# follow mouse
 		elif const.CONTROL_MODE == const.CONTROL_MOUSE:
 			if event.mouse_active() and event.key_state(pygame.K_SPACE):
@@ -45,7 +45,7 @@ class CompControl(ec.ClientComponent):
 				cur_pos = int(comp_state.p.x), int(comp_state.p.y)
 				mouse_pos = pygame.mouse.get_pos()
 				if mouse_pos[0] - cur_pos[0] != 0 or mouse_pos[1] - cur_pos[1] != 0:
-					self.f = (math.Vector(*mouse_pos) - math.Vector(*cur_pos)).normal()
+					self.f_nor = (math.Vector(*mouse_pos) - math.Vector(*cur_pos)).normal()
 		# archery
 		elif const.CONTROL_MODE == const.CONTROL_LINE:
 			comp_state = self.entity.get_comp('comp_state')
@@ -77,7 +77,7 @@ class CompControl(ec.ClientComponent):
 			# line triggering
 			if self.line_stage == 3:
 				if self.line_t > 0:
-					self.f = self.line_f_dir
+					self.f_nor = self.line_f_dir
 					self.line_t = self.line_t - dt
 				else:
 					# line trigger over
