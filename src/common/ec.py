@@ -9,9 +9,6 @@ class Entity(object):
 		self.comps = []
 
 	def update(self, dt):
-		self.frame = self.frame + 1
-		if not self.enable:
-			return
 		self.iter_comps(lambda c: c.update_logic(dt))
 		self.iter_comps(lambda c: c.update_physics(dt))
 
@@ -32,6 +29,12 @@ class Entity(object):
 
 
 class ClientEntity(Entity):
+	def update(self, dt):
+		self.frame = self.frame + 1
+		if not self.enable:
+			return
+		super(ClientEntity, self).update(dt)
+
 	def update_render(self, sur, dt):
 		if not self.enable:
 			return

@@ -18,6 +18,8 @@ def refresh(panel_gui):
 		if event.type == pygame.KEYDOWN:
 			_key_state[event.key] = True
 		elif event.type == pygame.KEYUP:
+			if event.key == pygame.K_ESCAPE:
+				raise clock.QuitError()
 			_key_state[event.key] = False
 		elif event.type == pygame.WINDOWENTER:
 			_mouse_state['active'] = True

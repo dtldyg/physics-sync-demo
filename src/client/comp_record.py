@@ -14,7 +14,7 @@ class CompRecord(ec.ClientComponent):
 			server_frame = state['fr']
 			if server_frame < 0 or len(self.records) == 0 or server_frame < self.records[0][0]:
 				return
-			print(server_frame, self.records[0][0], '-', self.records[-1][0])
+			# print(server_frame, self.records[0][0], '-', self.records[-1][0])
 			comp_state = self.entity.get_comp('comp_state')
 			if server_frame > self.records[-1][0]:
 				print('set', server_frame, self.records[0][0], '-', self.records[-1][0])

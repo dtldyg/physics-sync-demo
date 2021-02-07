@@ -40,7 +40,7 @@ class CompControl(ec.ClientComponent):
 				self.f_nor = math.Vector(x, y).normal()
 		# follow mouse
 		elif const.CONTROL_MODE == const.CONTROL_MOUSE:
-			if event.mouse_active() and event.key_state(pygame.K_SPACE):
+			if event.mouse_active() and not event.key_state(pygame.K_SPACE):
 				comp_state = self.entity.get_comp('comp_state')
 				cur_pos = int(comp_state.c_p.x), int(comp_state.c_p.y)
 				mouse_pos = pygame.mouse.get_pos()

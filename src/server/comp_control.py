@@ -11,6 +11,7 @@ class CompControl(ec.ServerComponent):
 		self.f_nor = math.vector_zero
 
 	def recv_cmd(self, cmd):
+		self.entity.frame = cmd['fr']
 		if cmd['f']['x'] == 0 and cmd['f']['y'] == 0:
 			self.f_nor = math.vector_zero
 		else:

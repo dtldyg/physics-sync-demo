@@ -76,6 +76,7 @@ class Game(object):
 		if self.master_entity.enable:
 			cmd = self.master_entity.send_cmd()
 			cmd['pid'] = net.PID_CMD
+			cmd['fr'] = self.master_entity.frame
 			net.global_send_q.put(cmd)
 
 	def tick_render(self, dt):

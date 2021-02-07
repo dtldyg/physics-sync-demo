@@ -45,7 +45,7 @@ def tick_logic(dt):
 	scene.iter_entities(lambda e: e.update(dt))
 
 
-def tick_state(dt):
+def tick_state(_):
 	# send states
 	pkg = {'pid': net.PID_STATES, 'states': [e.send_state() for e in scene.get_all_entities()]}
 	for en in scene.get_all_entities():
