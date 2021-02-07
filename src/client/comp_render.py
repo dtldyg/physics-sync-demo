@@ -25,6 +25,7 @@ class CompRender(ec.ClientComponent):
 		self.others.clear()
 
 	def update_render(self, sur, _):
+		# TODO 渲染内插值
 		comp_state = self.entity.get_comp('comp_state')
 		if const.MASTER_PREDICT:
 			sur.blit(self.c_en_sur[0], (comp_state.c_p - self.c_en_sur[1]).tuple())

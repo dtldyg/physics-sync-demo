@@ -47,7 +47,6 @@ def tick_logic(dt):
 
 def tick_state(dt):
 	# send states
-	states = [e.send_state() for e in scene.get_all_entities()]
+	pkg = {'pid': net.PID_STATES, 'states': [e.send_state() for e in scene.get_all_entities()]}
 	for en in scene.get_all_entities():
-		pkg = {'pid': net.PID_STATES, 'frame': en.frame, 'states': states}
 		en.send_q.put(pkg)

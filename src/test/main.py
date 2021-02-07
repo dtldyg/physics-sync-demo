@@ -1,12 +1,5 @@
 # coding=utf-8
 
-import time
-import threading
+import random
 
-
-def foo():
-	while True:
-		time.sleep(1)
-
-
-threading.Thread(target=foo).start()
+print(random.random())

@@ -98,6 +98,6 @@ example_pkg_cmd = {'pid': 0, 'eid': 0, 'f': {'x': 0, 'y': 0}}
 example_pkg_add_master = {'pid': 0, 'state': {'eid': 0, 'p': {'x': 0, 'y': 0, }, 'v': {'x': 0, 'y': 0, }}}
 example_pkg_add_replica = {'pid': 0, 'state': {'eid': 0, 'p': {'x': 0, 'y': 0, }, 'v': {'x': 0, 'y': 0, }}}
 example_pkg_del_replica = {'pid': 0, 'eid': 0}
-example_pkg_states = {'pid': 0, 'frame': 0, 'states': [{'eid': 0, 'p': {'x': 0, 'y': 0, }, 'v': {'x': 0, 'y': 0, }}]}
+example_pkg_states = {'pid': 0, 'states': [{'eid': 0, 'fr': 0, 'p': {'x': 0, 'y': 0, }, 'v': {'x': 0, 'y': 0, }}]}
 # inner
 example_pkg_del = {'pid': 0, 'eid': 0}

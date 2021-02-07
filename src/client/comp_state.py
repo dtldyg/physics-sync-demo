@@ -17,6 +17,7 @@ class CompState(ec.ClientComponent):
 	def recv_state(self, state):
 		self.s_p = math.Vector(**state['p'])
 		self.s_v = math.Vector(**state['v'])
+		# TODO 预测错误：回滚重放，解决初始化问题
 		if not const.MASTER_PREDICT or not self.is_init:
 			self.is_init = True
 			self.c_p = self.s_p

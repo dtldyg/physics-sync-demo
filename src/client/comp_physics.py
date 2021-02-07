@@ -19,3 +19,10 @@ class CompPhysics(ec.ClientComponent):
 		if const.MASTER_PREDICT:
 			comp_state = self.entity.get_comp('comp_state')
 			comp_state.c_p, comp_state.c_v = physics.pv_with_wall(comp_state.c_p, comp_state.c_v)
+
+	def replay(self):
+		comp_state = self.entity.get_comp('comp_state')
+		comp_record = self.entity.get_comp('comp_record')
+		for _, _, (f_nor, dt) in comp_record.records:
+			p, v = physics.pv_with_force_normal(comp_state.s_p, comp_state.s_v, f_nor, dt)
+			comp_state.c_p, comp_state.c_v = physics.pv_with_wall(p, v)

@@ -12,5 +12,6 @@ class CompState(ec.ServerComponent):
 		self.v = math.vector_zero
 
 	def send_state(self, state):
+		state['fr'] = self.entity.frame
 		state['p'] = self.p.__dict__
 		state['v'] = self.v.__dict__
