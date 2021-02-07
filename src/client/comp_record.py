@@ -14,17 +14,22 @@ class CompRecord(ec.ClientComponent):
 			server_frame = state['fr']
 			if server_frame < 0 or len(self.records) == 0 or server_frame < self.records[0][0]:
 				return
+			print(server_frame, self.records[0][0], '-', self.records[-1][0])
 			comp_state = self.entity.get_comp('comp_state')
-			if server_frame >= self.records[-1][0]:
+			if server_frame > self.records[-1][0]:
+				print('set', server_frame, self.records[0][0], '-', self.records[-1][0])
 				self.records.clear()
+				self.entity.frame = server_frame
 				comp_state.c_p, comp_state.c_v = comp_state.s_p, comp_state.s_v
 				return
-			idx = server_frame - self.records[0][0]
-			record = self.records[idx]
-			self.records = self.records[idx + 1:]
-			record_state = record[1]
-			if record_state[0] != comp_state.s_p or record_state[1] != comp_state.s_v:
-				self.entity.get_comp('comp_physics').replay()
+			else:
+				idx = server_frame - self.records[0][0]
+				record = self.records[idx]
+				self.records = self.records[idx + 1:]
+				record_state = record[1]
+				if record_state[0] != comp_state.s_p or record_state[1] != comp_state.s_v:
+					print('replay', record[0])
+					self.entity.get_comp('comp_physics').replay()
 
 	# last do in each tick
 	def update_physics(self, dt):

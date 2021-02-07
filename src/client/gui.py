@@ -46,6 +46,20 @@ class GUI(object):
 		y = self.next_ui_y()
 		pygame_gui.elements.UILabel(
 			relative_rect=pygame.Rect((const.GUI_MARGIN[0], y), (const.GUI_SIZE[0], const.GUI_SIZE[2])),
+			text='M_Pred_Svr',
+			manager=self.ui_manager
+		)
+		self.master_predict_server = pygame_gui.elements.UIButton(
+			relative_rect=pygame.Rect(
+				(const.GUI_MARGIN[0] + const.GUI_MARGIN[3] + const.GUI_SIZE[0], y), (const.GUI_SIZE[1], const.GUI_SIZE[2])),
+			text=const.MASTER_PREDICT_SERVER.__str__(),
+			manager=self.ui_manager)
+		if const.MASTER_PREDICT_SERVER:
+			self.master_predict_server.select()
+
+		y = self.next_ui_y()
+		pygame_gui.elements.UILabel(
+			relative_rect=pygame.Rect((const.GUI_MARGIN[0], y), (const.GUI_SIZE[0], const.GUI_SIZE[2])),
 			text='R_Buffer',
 			manager=self.ui_manager
 		)
@@ -103,6 +117,8 @@ class GUI(object):
 			if event.user_type == pygame_gui.UI_BUTTON_PRESSED:
 				if event.ui_element == self.master_predict:
 					const.MASTER_PREDICT = btn_checkbox_event(event)
+				if event.ui_element == self.master_predict_server:
+					const.MASTER_PREDICT_SERVER = btn_checkbox_event(event)
 				elif event.ui_element == self.replica_buffer:
 					const.REPLICA_BUFFER = btn_checkbox_event(event)
 				elif event.ui_element == self.replica_interpolation:
