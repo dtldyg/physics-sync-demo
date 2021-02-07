@@ -3,11 +3,14 @@
 
 class Entity(object):
 	def __init__(self):
+		self.enable = True
 		self.eid = -1
 		self.frame = -1
 		self.comps = []
 
 	def update(self, dt):
+		if not self.enable:
+			return
 		self.frame = self.frame + 1
 		self.iter_comps(lambda c: c.update_logic(dt))
 		self.iter_comps(lambda c: c.update_physics(dt))
@@ -30,6 +33,8 @@ class Entity(object):
 
 class ClientEntity(Entity):
 	def update_render(self, sur, dt):
+		if not self.enable:
+			return
 		self.iter_comps(lambda c: c.update_render(sur, dt))
 
 	# send cmd to server (only master entity)
@@ -57,6 +62,7 @@ class ServerEntity(Entity):
 
 class Component(object):
 	def __init__(self, name):
+		self.enable = True
 		self.name = name
 		self.entity = None
 

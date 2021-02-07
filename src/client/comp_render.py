@@ -15,8 +15,13 @@ class CompRender(ec.ClientComponent):
 		self.entity_sur = (surface, math.Vector(const.ENTITY_RADIUS, const.ENTITY_RADIUS))
 		self.others = []
 
+	def update_logic(self, _):
+		self.others.clear()
+
 	def update_render(self, sur, _):
 		sur.blit(self.entity_sur[0], (self.entity.get_comp('comp_state').p - self.entity_sur[1]).tuple())
 		for other in self.others:
 			other[0](sur, *other[1])
-		self.others.clear()
+
+	def add_render(self, r_func, r_arg):
+		self.others.append((r_func, r_arg))

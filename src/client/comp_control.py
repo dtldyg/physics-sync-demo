@@ -86,10 +86,10 @@ class CompControl(ec.ClientComponent):
 			if self.line_stage == 1 or self.line_stage == 2:
 				comp_render = self.entity.get_comp('comp_render')
 				args_line = const.CONTROL_LINE_COLOR, self.line_start.tuple(), self.line_end
-				comp_render.others.append((pygame.draw.aaline, args_line))
+				comp_render.add_render(pygame.draw.aaline, args_line)
 				if self.line_stage == 1:
 					args_circle = const.CONTROL_LINE_COLOR, self.line_start.tuple(), const.CONTROL_LINE_RADIUS, const.CONTROL_LINE_WIDTH
-					comp_render.others.append((pygame.draw.circle, args_circle))
+					comp_render.add_render(pygame.draw.circle, args_circle)
 
 	def line_reset(self):
 		self.line_stage = 0
