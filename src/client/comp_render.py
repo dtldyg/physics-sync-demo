@@ -30,7 +30,7 @@ class CompRender(ec.ClientComponent):
 			sur.blit(self.c_en_sur[0], (comp_state.c_p - self.c_en_sur[1]).tuple())
 			sur.blit(self.s_en_sur[0], (comp_state.s_p - self.s_en_sur[1]).tuple())
 		else:
-			sur.blit(self.s_en_sur[0], (comp_state.s_p - self.s_en_sur[1]).tuple())
+			sur.blit(self.c_en_sur[0], (comp_state.c_p - self.c_en_sur[1]).tuple())
 		for other in self.others:
 			other[0](sur, *other[1])
 

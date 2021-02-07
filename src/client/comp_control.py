@@ -42,14 +42,14 @@ class CompControl(ec.ClientComponent):
 		elif const.CONTROL_MODE == const.CONTROL_MOUSE:
 			if event.mouse_active() and event.key_state(pygame.K_SPACE):
 				comp_state = self.entity.get_comp('comp_state')
-				cur_pos = int(comp_state.p.x), int(comp_state.p.y)
+				cur_pos = int(comp_state.c_p.x), int(comp_state.c_p.y)
 				mouse_pos = pygame.mouse.get_pos()
 				if mouse_pos[0] - cur_pos[0] != 0 or mouse_pos[1] - cur_pos[1] != 0:
 					self.f_nor = (math.Vector(*mouse_pos) - math.Vector(*cur_pos)).normal()
 		# archery
 		elif const.CONTROL_MODE == const.CONTROL_LINE:
 			comp_state = self.entity.get_comp('comp_state')
-			cur_pos = comp_state.p
+			cur_pos = comp_state.c_p
 			mouse_pos = pygame.mouse.get_pos()
 			if event.mouse_trigger_down(1) and not self.line_stage == 3:
 				# line begin draw
