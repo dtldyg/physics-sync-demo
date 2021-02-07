@@ -7,11 +7,9 @@ class Entity(object):
 		self.frame = -1
 		self.comps = []
 
-	def update_logic(self, dt):
+	def update(self, dt):
 		self.frame = self.frame + 1
 		self.iter_comps(lambda c: c.update_logic(dt))
-
-	def update_physics(self, dt):
 		self.iter_comps(lambda c: c.update_physics(dt))
 
 	def add_comp(self, comp):

@@ -70,8 +70,7 @@ class Game(object):
 						en.recv_state(state)
 
 		# update logic & physics
-		scene.iter_entities(lambda e: e.update_logic(dt))
-		scene.iter_entities(lambda e: e.update_physics(dt))
+		scene.iter_entities(lambda e: e.update(dt))
 
 		# send cmd
 		if self.master_entity.enable:

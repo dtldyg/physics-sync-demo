@@ -42,8 +42,7 @@ def tick_logic(dt):
 			en.recv_cmd(pkg)
 
 	# update logic & physics
-	scene.iter_entities(lambda e: e.update_logic(dt))
-	scene.iter_entities(lambda e: e.update_physics(dt))
+	scene.iter_entities(lambda e: e.update(dt))
 
 
 def tick_state(dt):
