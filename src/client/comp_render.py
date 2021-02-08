@@ -42,7 +42,7 @@ class CompRender(ec.ClientComponent):
 		for other in self.others:
 			other[0](sur, *other[1])
 
-	def render_interpolation_c_p(self):
+	def render_interpolation_c_p(self) -> math.Vector:
 		if self.c_en_a_p is None:
 			return self.c_en_b_p
 		t = time.time() - self.c_en_b_t

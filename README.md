@@ -22,7 +22,7 @@
 4. 客户端物理预测，预测失败回滚重放
 5. 客机接入，内插值
 6. 完善服务器物理模拟（单机验证）
-7. 输入缓冲
+7. 输入缓冲，消息剔除
 8. 外插值+物理混合
 
 ## 帧率 & 采样率
@@ -37,6 +37,39 @@
 - c/s保证逻辑帧率一致
 - s维护的c中记录帧号，c的帧号和s保持一致，做到任意时刻c/s处于同一帧号
 - c的x帧延迟时，s将会用x-1帧输入作为x帧输入并计算，这导致s的x帧状态与c预测的x帧状态不一致，c回滚重放
+
+## ECS
+### client
+- world
+  - entity_master 实体_主控
+    - component_control 组件_操控
+    - component_move 组件_移动
+    - component_record 组件_记录
+    - component_render 组件_渲染
+  - entity_replica 实体_副本
+    - component_move 组件_移动
+    - component_render 组件_渲染
+  - system_control 系统_操控
+    - (component_control, component_move, component_render)
+  - system_physics 系统_物理
+    - (component_control, component_move)
+  - system_record 系统_记录
+    - (component_control, component_move, component_record)
+  - system_net_in 系统_网络输入
+    - (component_move, component_record)
+  - system_net_out 系统_网络输入
+    - (component_control, component_move)
+### server
+- world
+  - entity_server 实体_服务端实体
+    - component_control 组件_操控
+    - component_move 组件_移动
+  - system_physics 系统_物理
+    - (component_control, component_move)
+  - system_net_in 系统_网络输入
+    - (component_move, component_record)
+  - system_net_out 系统_网络输入
+    - (component_control, component_move)
 
 ## 依赖关系
 ### 客户端
