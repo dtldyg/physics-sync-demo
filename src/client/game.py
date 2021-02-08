@@ -79,11 +79,11 @@ class Game(object):
 			cmd['fr'] = self.master_entity.frame
 			net.global_send_q.put(cmd)
 
-		if self.master_entity.enable:
-			comp_state = self.master_entity.get_comp('comp_state')
-			comp_control = self.master_entity.get_comp('comp_control')
-			record = {'fr': self.master_entity.frame, 'p': comp_state.c_p, 'v': comp_state.c_v, 'f': comp_control.f_nor, 'dt': dt}
-			print(record)
+		# if self.master_entity.enable:
+		# 	comp_state = self.master_entity.get_comp('comp_state')
+		# 	comp_control = self.master_entity.get_comp('comp_control')
+		# 	record = {'fr': self.master_entity.frame, 'p': comp_state.c_p, 'v': comp_state.c_v, 'f': comp_control.f_nor, 'dt': dt}
+		# 	print(record)
 
 	def tick_render(self, dt):
 		# clean game surface

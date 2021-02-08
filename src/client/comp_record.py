@@ -2,12 +2,13 @@
 
 import common.base.const as const
 import common.ec as ec
+import common.physics as physics
 
 
 class CompRecord(ec.ClientComponent):
 	def __init__(self):
 		super(CompRecord, self).__init__('comp_record')
-		self.records = []  # frame, (p,v), (f,t)
+		self.records = []  # {'fr': 0, 'p': (0,0), 'v': (0,0), 'f': (0,0), 'dt': 0}
 
 	def recv_state(self, state):
 		if const.MASTER_PREDICT:
@@ -19,12 +20,30 @@ class CompRecord(ec.ClientComponent):
 				self.records.pop(0)
 				record = self.records[0]
 			if not self.check_state(record):
-				self.entity.get_comp('comp_physics').replay()
-				print('replay', record)
+				self.replay()
+			# comp_state = self.entity.get_comp('comp_state')
+			# comp_control = self.entity.get_comp('comp_control')
+			# record = {'fr': self.entity.frame, 'p': comp_state.c_p, 'v': comp_state.c_v, 'f': comp_control.f_nor}
+			# print('replay', s_frame, 'to', record)
 
 	def check_state(self, record):
 		comp_state = self.entity.get_comp('comp_state')
 		return record['p'] == comp_state.s_p and record['v'] == comp_state.s_v
+
+	# TODO 临时做法，重构为ecs
+	def replay(self):
+		comp_state = self.entity.get_comp('comp_state')
+		comp_record = self.entity.get_comp('comp_record')
+		p, v = comp_state.s_p, comp_state.s_v
+		record = comp_record.records[0]
+		record['p'], record['v'] = p, v
+		for record in comp_record.records[1:]:
+			p, v = physics.pv_with_force_normal(p, v, record['f'], record['dt'])
+			p, v = physics.pv_with_wall(p, v)
+			record['p'], record['v'] = p, v
+			# re = {'fr': record['fr'], 'p': p, 'v': v, 'f': record['f']}
+			# print('replay', re)
+		comp_state.c_p, comp_state.c_v = p, v
 
 	# last do in each tick
 	def update_physics(self, dt):
