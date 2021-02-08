@@ -21,10 +21,6 @@ class CompRecord(ec.ClientComponent):
 				record = self.records[0]
 			if not self.check_state(record):
 				self.replay()
-			# comp_state = self.entity.get_comp('comp_state')
-			# comp_control = self.entity.get_comp('comp_control')
-			# record = {'fr': self.entity.frame, 'p': comp_state.c_p, 'v': comp_state.c_v, 'f': comp_control.f_nor}
-			# print('replay', s_frame, 'to', record)
 
 	def check_state(self, record):
 		comp_state = self.entity.get_comp('comp_state')
@@ -41,8 +37,6 @@ class CompRecord(ec.ClientComponent):
 			p, v = physics.pv_with_force_normal(p, v, record['f'], record['dt'])
 			p, v = physics.pv_with_wall(p, v)
 			record['p'], record['v'] = p, v
-			# re = {'fr': record['fr'], 'p': p, 'v': v, 'f': record['f']}
-			# print('replay', re)
 		comp_state.c_p, comp_state.c_v = p, v
 
 	# last do in each tick

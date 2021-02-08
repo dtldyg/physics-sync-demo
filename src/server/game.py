@@ -44,13 +44,6 @@ def tick_logic(dt):
 	# update logic & physics
 	scene.iter_entities(lambda e: e.update(dt))
 
-	# if len(scene.entities) > 0:
-	# 	en = scene.entities[0]
-	# 	comp_state = en.get_comp('comp_state')
-	# 	comp_control = en.get_comp('comp_control')
-	# 	record = {'fr': en.frame, 'p': comp_state.p, 'v': comp_state.v, 'f': comp_control.f_nor, 'dt': dt}
-	# 	print(record)
-
 
 def tick_state(_):
 	# send states
