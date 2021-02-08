@@ -23,6 +23,9 @@ class Vector(object):
 	def __ne__(self, other):
 		return not self == other
 
+	def __repr__(self):
+		return '({},{})'.format(self.x, self.y)
+
 	def tuple(self):
 		return self.x, self.y
 
@@ -30,7 +33,7 @@ class Vector(object):
 		return (self.x ** 2 + self.y ** 2) ** 0.5
 
 	def zero(self):
-		return abs(self.x) < 1e-9 and abs(self.y) < 1e-9
+		return abs(self.x) < 1e-6 and abs(self.y) < 1e-6
 
 	def normal(self):
 		length = self.length()

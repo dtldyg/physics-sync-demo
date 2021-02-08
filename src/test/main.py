@@ -1,5 +1,6 @@
 # coding=utf-8
 
-import random
+import common.base.math as math
 
-print(random.random())
+a = {'p': math.Vector(1, 2)}
+print(a)
