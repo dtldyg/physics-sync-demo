@@ -18,7 +18,7 @@ class Vector(object):
 		return Vector(self.x / other, self.y / other)
 
 	def __eq__(self, other):
-		return abs(self.x - other.x) < 1e-9 and abs(self.y - other.y) < 1e-9
+		return abs(self.x - other.x) < 1e-6 and abs(self.y - other.y) < 1e-6
 
 	def __ne__(self, other):
 		return not self == other

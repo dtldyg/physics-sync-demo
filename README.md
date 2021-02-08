@@ -41,35 +41,33 @@
 ## ECS
 ### client
 - world
-  - entity_master 实体_主控
-    - component_control 组件_操控
-    - component_move 组件_移动
-    - component_record 组件_记录
-    - component_render 组件_渲染
-  - entity_replica 实体_副本
-    - component_move 组件_移动
-    - component_render 组件_渲染
-  - system_control 系统_操控
-    - (component_control, component_move, component_render)
-  - system_physics 系统_物理
-    - (component_control, component_move)
-  - system_record 系统_记录
-    - (component_control, component_move, component_record)
-  - system_net_in 系统_网络输入
-    - (component_move, component_record)
-  - system_net_out 系统_网络输入
-    - (component_control, component_move)
+  - entity_game 实体_游戏 (component_net, component_event, component_gui)
+  - entity_master 实体_主控 (component_control, component_move, component_record, component_render)
+  - entity_replica 实体_副本 (component_move, component_render)
+  - component_net 组件_网络
+  - component_event 组件_事件
+  - component_gui 组件_界面
+  - component_control 组件_操控
+  - component_move 组件_移动
+  - component_record 组件_记录
+  - component_render 组件_渲染
+  - system_net 系统_网络
+  - system_control 系统_操控 (component_control, component_move, component_render)
+  - system_physics 系统_物理 (component_control, component_move)
+  - system_record 系统_记录 (component_control, component_move, component_record)
+  - system_pkg_in 系统_消息输入 (component_move, component_record)
+  - system_pkg_out 系统_消息输入 (component_control, component_move)
 ### server
 - world
-  - entity_server 实体_服务端实体
-    - component_control 组件_操控
-    - component_move 组件_移动
-  - system_physics 系统_物理
-    - (component_control, component_move)
-  - system_net_in 系统_网络输入
-    - (component_move, component_record)
-  - system_net_out 系统_网络输入
-    - (component_control, component_move)
+  - entity_game 实体_游戏 (component_net)
+  - entity_player 实体_玩家 (component_control, component_move)
+  - component_net 组件_网络
+  - component_control 组件_操控
+  - component_move 组件_移动
+  - system_net 系统_网络
+  - system_physics 系统_物理 (component_control, component_move)
+  - system_pkg_in 系统_消息输入 (component_move, component_record)
+  - system_pkg_out 系统_消息输入 (component_control, component_move)
 
 ## 依赖关系
 ### 客户端
