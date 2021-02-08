@@ -42,32 +42,32 @@
 ### client
 - world
   - entity_game 实体_游戏 (component_net, component_event, component_gui)
-  - entity_master 实体_主控 (component_control, component_move, component_record, component_render)
-  - entity_replica 实体_副本 (component_move, component_render)
+  - entity_master 实体_主控 (component_control, component_transform, component_record, component_render)
+  - entity_replica 实体_副本 (component_transform, component_render)
   - component_net 组件_网络
   - component_event 组件_事件
   - component_gui 组件_界面
   - component_control 组件_操控
-  - component_move 组件_移动
+  - component_transform 组件_移动
   - component_record 组件_记录
   - component_render 组件_渲染
   - system_net 系统_网络
-  - system_control 系统_操控 (component_control, component_move, component_render)
-  - system_physics 系统_物理 (component_control, component_move)
-  - system_record 系统_记录 (component_control, component_move, component_record)
-  - system_pkg_in 系统_消息输入 (component_move, component_record)
-  - system_pkg_out 系统_消息输入 (component_control, component_move)
+  - system_control 系统_操控 (component_control, component_transform, component_render)
+  - system_physics 系统_物理 (component_control, component_transform)
+  - system_record 系统_记录 (component_control, component_transform, component_record)
+  - system_pkg_in 系统_消息输入 (component_transform, component_record)
+  - system_pkg_out 系统_消息输入 (component_control, component_transform)
 ### server
 - world
   - entity_game 实体_游戏 (component_net)
-  - entity_player 实体_玩家 (component_control, component_move)
+  - entity_player 实体_玩家 (component_control, component_transform)
   - component_net 组件_网络
   - component_control 组件_操控
-  - component_move 组件_移动
+  - component_transform 组件_移动
   - system_net 系统_网络
-  - system_physics 系统_物理 (component_control, component_move)
-  - system_pkg_in 系统_消息输入 (component_move, component_record)
-  - system_pkg_out 系统_消息输入 (component_control, component_move)
+  - system_physics 系统_物理 (component_control, component_transform)
+  - system_pkg_in 系统_消息输入 (component_transform, component_record)
+  - system_pkg_out 系统_消息输入 (component_control, component_transform)
 
 ## 依赖关系
 ### 客户端
