@@ -5,9 +5,12 @@ import socket
 import struct
 import threading
 import queue
+import time
 
 global_recv_q = queue.Queue(1024)
 global_send_q = queue.Queue(1024)
+
+client_rtt = [0, 0]
 
 
 def iter_recv_pkg():
@@ -32,6 +35,15 @@ def run_conn_recv(recv_q, conn, eid=None, send_q=None):
 			if pkg['pid'] == PID_JOIN:
 				pkg['eid'] = eid
 				pkg['send_q'] = send_q
+			elif pkg['pid'] == PID_PING:
+				pkg['pid'] = PID_PONG
+				pkg['t2'] = time.time()
+				send_q.put(pkg)
+				continue
+			elif pkg['pid'] == PID_PONG:
+				client_rtt[0] = time.time() - pkg['t1']
+				client_rtt[1] = pkg['t1'] + client_rtt[0] / 2 - pkg['t2']
+				continue
 			recv_q.put(pkg)
 		except (socket.error, struct.error):
 			if eid is not None:
@@ -83,18 +95,25 @@ def run_server_socket():
 
 
 # --------- pkg ---------
+# sync
 PID_CMD = 0
 PID_STATES = 1
-PID_JOIN = 10
-PID_ADD_MASTER = 11
-PID_ADD_REPLICA = 12
-PID_DEL_REPLICA = 13
+# rpc
+PID_PING = 10
+PID_PONG = 11
+PID_JOIN = 12
+PID_ADD_MASTER = 13
+PID_ADD_REPLICA = 14
+PID_DEL_REPLICA = 15
+# inner
 PID_DEL = 99
 
 # up
+example_pkg_ping = {'pid': 0, 't1': 0}
 example_pkg_join = {'pid': 0, 'eid': 0, 'send_q': None}  # eid、send_q仅server内部使用
 example_pkg_cmd = {'pid': 0, 'eid': 0, 'fr': 0, 'f': {'x': 0, 'y': 0}}
 # down
+example_pkg_pong = {'pid': 0, 't1': 0, 't2': 0}
 example_pkg_add_master = {'pid': 0, 'state': {'eid': 0, 'p': {'x': 0, 'y': 0, }, 'v': {'x': 0, 'y': 0, }}}
 example_pkg_add_replica = {'pid': 0, 'state': {'eid': 0, 'p': {'x': 0, 'y': 0, }, 'v': {'x': 0, 'y': 0, }}}
 example_pkg_del_replica = {'pid': 0, 'eid': 0}

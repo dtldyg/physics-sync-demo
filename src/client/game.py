@@ -29,11 +29,12 @@ class Game(object):
 		self.sur_gui = pygame.Surface((const.SCREEN_SIZE[0] + const.GUI_WIDTH, const.SCREEN_SIZE[1]), pygame.SRCALPHA)
 		# gui init
 		self.gui = gui.GUI(self.sur_gui)
+		# info font init
+		self.info_font = pygame.font.SysFont('arial', 16)
 		# fps init
 		self.fps_frame = 0
 		self.fps_lt = time.time()
-		self.fps_font = pygame.font.SysFont('arial', 16)
-		self.fps_txt = self.fps_font.render('fps:0', True, const.FPS_COLOR)
+		self.fps_txt = self.info_font.render('fps:0', True, const.FPS_COLOR)
 		# master entity init
 		self.master_entity = entity.MasterEntity()
 		scene.add_entity(self.master_entity)
@@ -43,6 +44,7 @@ class Game(object):
 		c = clock.Clock()
 		c.add(const.LOGIC_FPS, self.tick_logic)
 		c.add(const.RENDER_FPS, self.tick_render)
+		c.add(const.PING_FPS, self.tick_ping)
 		c.run()
 
 	def tick_logic(self, dt):
@@ -90,12 +92,20 @@ class Game(object):
 		now = time.time()
 		self.fps_frame = self.fps_frame + 1
 		if now - self.fps_lt >= 1:
-			self.fps_txt = self.fps_font.render('fps:{:.1f}'.format(self.fps_frame / (now - self.fps_lt)), True, const.FPS_COLOR)
+			self.fps_txt = self.info_font.render('fps:{:.1f}'.format(self.fps_frame / (now - self.fps_lt)), True, const.FPS_COLOR)
 			self.fps_lt = now
 			self.fps_frame = 0
 		self.sur_game.blit(self.fps_txt, (0, 0))
+		# update rtt
+		rtt_txt = self.info_font.render('rtt:{:.0f}ms,c-s:{:+.0f}ms'.format(net.client_rtt[0] * 1000, net.client_rtt[1] * 1000), True, const.FPS_COLOR)
+		self.sur_game.blit(rtt_txt, (0, 18))
 
 		# draw window surface
 		self.sur_window.blit(self.sur_game, (0, 0))
 		self.sur_window.blit(self.sur_gui, (0, 0))
 		pygame.display.flip()
+
+	def tick_ping(self, dt):
+		_ = self
+		pkg = {'pid': net.PID_PING, 't1': time.time()}
+		net.global_send_q.put(pkg)

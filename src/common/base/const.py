@@ -18,6 +18,7 @@ GUI_MARGIN = (10, 10, 12, 2)
 GUI_SIZE = (80, 160, 26)
 
 # Game
+PING_FPS = 2
 CONTROL_LINE_COLOR = (255, 255, 255, 255)  # white
 CONTROL_LINE_WIDTH = 1
 CONTROL_LINE_RADIUS = int(SCREEN_SIZE[1] / 2)
@@ -53,8 +54,8 @@ REPLICA_SHADOW_COLOR = (255, 255, 0, 127)  # yellow-half
 
 # FPS
 RENDER_FPS = 120
-LOGIC_FPS = 30  # CMD_FPS
-STATES_FPS = 10
+LOGIC_FPS = 30  # 逻辑频率(cpu)，命令(上行带宽)
+STATES_FPS = 10  # 状态(下行带宽)
 
 # ControlMod
 CONTROL_WASD = 'WASD'
