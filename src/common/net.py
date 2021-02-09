@@ -22,8 +22,12 @@ def iter_recv_pkg():
 			break
 
 
+def send_client_pkg(pkg):
+	global_send_q.put(pkg)
+
+
 # --------- network ---------
-def run_conn_recv(recv_q, conn, eid=None, send_q=None):
+def _run_conn_recv(recv_q, conn, eid=None, send_q=None):
 	while True:
 		try:
 			# read one package
@@ -51,7 +55,7 @@ def run_conn_recv(recv_q, conn, eid=None, send_q=None):
 			return
 
 
-def run_conn_send(send_q, conn):
+def _run_conn_send(send_q, conn):
 	while True:
 		try:
 			# send one pkg
@@ -67,31 +71,31 @@ def run_conn_send(send_q, conn):
 			return
 
 
-def run_listen(sock):
+def _run_listen(sock):
 	sock.listen()
 	print('net run')
 	eid = 0
 	while True:
 		conn, addr = sock.accept()
-		local_send_q = queue.Queue(1024)
-		threading.Thread(target=run_conn_recv, args=(global_recv_q, conn, eid, local_send_q)).start()
-		threading.Thread(target=run_conn_send, args=(local_send_q, conn)).start()
 		eid = eid + 1
+		local_send_q = queue.Queue(1024)
+		threading.Thread(target=_run_conn_recv, args=(global_recv_q, conn, eid, local_send_q)).start()
+		threading.Thread(target=_run_conn_send, args=(local_send_q, conn)).start()
 
 
 # socket client
 def run_client_socket():
 	conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 	conn.connect(('127.0.0.1', 9998))
-	threading.Thread(target=run_conn_recv, args=(global_recv_q, conn,), daemon=True).start()
-	threading.Thread(target=run_conn_send, args=(global_send_q, conn,), daemon=True).start()
+	threading.Thread(target=_run_conn_recv, args=(global_recv_q, conn,), daemon=True).start()
+	threading.Thread(target=_run_conn_send, args=(global_send_q, conn,), daemon=True).start()
 
 
 # socket server
 def run_server_socket():
 	sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 	sock.bind(('127.0.0.1', 9999))
-	threading.Thread(target=run_listen, args=(sock,)).start()
+	threading.Thread(target=_run_listen, args=(sock,)).start()
 
 
 # --------- pkg ---------

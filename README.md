@@ -66,10 +66,24 @@
   - component_transform 组件_移动
   - system_net 系统_网络
   - system_physics 系统_物理 (component_control, component_transform)
-  - system_pkg_in 系统_消息输入 (component_transform, component_record)
-  - system_pkg_out 系统_消息输入 (component_control, component_transform)
+  - system_pkg_in 系统_消息输入 (component_control)
+  - system_pkg_out 系统_消息输入 (component_transform)
 
 ## 依赖关系
+### ECS
+#### 服务端
+```mermaid
+graph TD
+    entity_xxx --> entity
+    entity_xxx --> component_xxx
+    component_xxx --> component
+    system_xxx --> system
+    system_xxx --> component
+    system_xxx --> entity_xxx
+    world --> system_xxx
+```
+
+
 ### 客户端
 #### 模块依赖
 ```mermaid
