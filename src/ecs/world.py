@@ -10,6 +10,7 @@ import ecs.system_net_out as system_net_out
 class World(object):
 	def __init__(self):
 		if const.IS_CLIENT:
+			self.rollbacking = False  # TODO 回滚时设置的标志位，用于逻辑判断
 			self.systems = []
 		else:
 			self.systems = [
