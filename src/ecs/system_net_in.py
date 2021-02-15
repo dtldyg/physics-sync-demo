@@ -7,8 +7,8 @@ import ecs.entity_player as entity_player
 
 
 class SystemNetIn(system.System):
-	def __init__(self):
-		super(SystemNetIn, self).__init__((component.LABEL_NET,))
+	def __init__(self, world):
+		super(SystemNetIn, self).__init__(world, (component.LABEL_NET,))
 
 	def update(self, dt, component_tuples):
 		component_tuple_dict = {}

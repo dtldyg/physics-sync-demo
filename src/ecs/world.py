@@ -13,10 +13,10 @@ class World(object):
 			self.systems = []
 		else:
 			self.systems = [
-				system_net_in.SystemNetIn(),
-				system_control.SystemControl(),
-				system_physics.SystemPhysics(),
-				system_net_out.SystemNetOut(),
+				system_net_in.SystemNetIn(self),
+				system_control.SystemControl(self),
+				system_physics.SystemPhysics(self),
+				system_net_out.SystemNetOut(self),
 			]
 		self.entities = []
 

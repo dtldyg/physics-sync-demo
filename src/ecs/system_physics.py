@@ -6,8 +6,8 @@ import ecs.component as component
 
 
 class SystemPhysics(system.System):
-	def __init__(self):
-		super(SystemPhysics, self).__init__((component.LABEL_CONTROL, component.LABEL_TRANSFORM))
+	def __init__(self, world):
+		super(SystemPhysics, self).__init__(world, (component.LABEL_CONTROL, component.LABEL_TRANSFORM))
 
 	def update(self, dt, component_tuples):
 		# move
