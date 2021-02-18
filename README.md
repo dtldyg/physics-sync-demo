@@ -41,32 +41,62 @@
 ## ECS
 ### client
 - world
-  - entity_game 实体_游戏 (component_net, component_event, component_gui)
-  - entity_master 实体_主控 (component_control, component_transform, component_record, component_render)
-  - entity_replica 实体_副本 (component_transform, component_render)
-  - component_net 组件_网络
-  - component_event 组件_事件
-  - component_gui 组件_界面
-  - component_control 组件_操控
-  - component_transform 组件_移动
-  - component_record 组件_记录
-  - component_render 组件_渲染
-  - system_net 系统_网络
-  - system_control 系统_操控 (component_control, component_transform, component_render)
-  - system_physics 系统_物理 (component_control, component_transform)
-  - system_record 系统_记录 (component_control, component_transform, component_record)
-  - system_pkg_in 系统_消息输入 (component_transform, component_record)
-  - system_pkg_out 系统_消息输入 (component_control, component_transform)
+  - control
+    force_normal
+    line_...
+  - physics
+  - record
+    records
+  - render
+    client_entity_sur
+    client_interpolation_...
+    server_entity_sur
+    other_render_func
+  - state
+    client_pos
+    client_v
+  - event
+    key_state
+    mouse_state
+  - gui
+    ...
 ### server
 - world
-  - entity_player 实体_玩家 (component_control, component_transform)
-  - component_net 组件_网络
-  - component_control 组件_操控
+  - entity_game 实体_游戏
+    - component_package
+  - entity_player 实体_玩家
+    - component_connection
+    - component_package
+    - component_physics
+    - component_frame
+    - component_transform
+  - component_connection 组件_连接
+    - send_q
+  - component_package 组件_消息包
+    - packages
+  - component_physics 组件_操控
+    - force_normal
+  - component_frame 组件_帧
+    - frame
   - component_transform 组件_移动
-  - system_net 系统_网络
-  - system_physics 系统_物理 (component_control, component_transform)
-  - system_pkg_in 系统_消息输入 (component_control)
-  - system_pkg_out 系统_消息输入 (component_transform)
+    - position
+    - velocity
+  - system_package_dispatch 系统_消息包分发
+    - component_package
+  - system_entity_manager 系统_实体管理
+    - component_connection
+  - system_control 系统_操控
+    - component_package
+    - component_physics
+    - component_frame
+  - system_physics 系统_物理
+    - component_physics
+    - component_transform
+  - system_sync_state 系统_状态同步
+    - component_connection
+    - component_physics
+    - component_transform
+    - component_frame
 
 ## 依赖关系
 ### ECS

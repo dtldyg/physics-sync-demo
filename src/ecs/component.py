@@ -3,8 +3,9 @@
 # label
 LABEL_CONNECTION = 1 << 0
 LABEL_PACKAGE = 1 << 1
-LABEL_CONTROL = 1 << 2
+LABEL_PHYSICS = 1 << 2
 LABEL_TRANSFORM = 1 << 3
+LABEL_FRAME = 1 << 4
 
 
 class Component(object):
