@@ -6,8 +6,8 @@ import ecs.component as component
 
 
 class SystemPhysics(system.System):
-	def __init__(self, world):
-		super(SystemPhysics, self).__init__(world, (component.LABEL_CONTROL, component.LABEL_TRANSFORM))
+	def __init__(self):
+		super(SystemPhysics, self).__init__((component.LABEL_CONTROL, component.LABEL_TRANSFORM))
 
 	def update(self, dt, component_tuples):
 		# move
@@ -20,4 +20,4 @@ class SystemPhysics(system.System):
 		for _, component_tuple in component_tuples:
 			_, component_transform = component_tuple
 			p, v = component_transform.position, component_transform.velocity
-			component_transform.position, component_transform.velocity = physics.pv_with_wall(p, v, dt)
+			component_transform.position, component_transform.velocity = physics.pv_with_wall(p, v)

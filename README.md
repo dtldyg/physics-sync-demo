@@ -59,7 +59,6 @@
   - system_pkg_out 系统_消息输入 (component_control, component_transform)
 ### server
 - world
-  - entity_game 实体_游戏 (component_net)
   - entity_player 实体_玩家 (component_control, component_transform)
   - component_net 组件_网络
   - component_control 组件_操控

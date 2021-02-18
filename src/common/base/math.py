@@ -29,6 +29,9 @@ class Vector(object):
 	def tuple(self):
 		return self.x, self.y
 
+	def dict(self):
+		return self.__dict__
+
 	def length(self):
 		return (self.x ** 2 + self.y ** 2) ** 0.5
 

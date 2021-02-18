@@ -13,6 +13,7 @@ global_send_q = queue.Queue(1024)
 client_rtt = [0, 0]
 
 
+# --------- interface ---------
 def iter_recv_pkg():
 	while True:
 		try:
@@ -36,15 +37,19 @@ def _run_conn_recv(recv_q, conn, eid=None, send_q=None):
 			pkg_b = conn.recv(pkg_len, socket.MSG_WAITALL)
 			pkg_s = pkg_b.decode('utf-8')
 			pkg = json.loads(pkg_s)
+			# network logic
 			if pkg['pid'] == PID_JOIN:
+				# add id, send_q
 				pkg['eid'] = eid
 				pkg['send_q'] = send_q
 			elif pkg['pid'] == PID_PING:
+				# echo pong
 				pkg['pid'] = PID_PONG
 				pkg['t2'] = time.time()
 				send_q.put(pkg)
 				continue
 			elif pkg['pid'] == PID_PONG:
+				# calc rtt
 				client_rtt[0] = time.time() - pkg['t1']
 				client_rtt[1] = pkg['t1'] + client_rtt[0] / 2 - pkg['t2']
 				continue
