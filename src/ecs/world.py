@@ -1,6 +1,7 @@
 # coding=utf-8
 
 import common.base.const as const
+import common.base.clock as clock
 import ecs.system_package_dispatch as system_package_dispatch
 import ecs.system_entity_manager as system_entity_manager
 import ecs.system_control as system_control
@@ -23,6 +24,16 @@ class World(object):
 			self.add_system(system_physics.SystemPhysics())
 			self.system_sync_state = system_sync_state.SystemSyncState()
 
+	def run(self):
+		c = clock.Clock()
+		c.add(const.LOGIC_FPS, self.update)
+		if const.IS_CLIENT:
+			pass
+		else:
+			c.add(const.STATES_FPS, self.sync_state)
+		print('world run')
+		c.run()
+
 	def update(self, dt):
 		for system in self.systems:
 			system.update(dt, self.component_tuples(system))
@@ -36,7 +47,8 @@ class World(object):
 			component_tuple = entity.component_tuple(system.component_labels, system.component_label_mask)
 			if component_tuple is None:
 				continue
-			component_tuples.append((entity.eid, component_tuples))
+			component_tuples.append((entity.eid, component_tuple))
+		return component_tuples
 
 	def add_entity(self, entity):
 		self.entities.append(entity)

@@ -14,6 +14,7 @@ class SystemPackageDispatch(system.System):
 		component_package_dict = {}
 		for eid, component_tuple in component_tuples:
 			component_package, = component_tuple
+			component_package.packages.clear()
 			component_package_dict[eid] = component_package
 		for pkg in net.iter_recv_pkg():
 			if pkg['pid'] == net.PID_JOIN or pkg['pid'] == net.PID_DEL:

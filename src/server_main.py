@@ -2,13 +2,14 @@
 
 import common.base.const as const
 import common.net as net
-import server.game as game
+import ecs.world as world
 
 
 def main():
 	const.IS_SERVER = True
 	net.run_server_socket()
-	game.run_game()
+	w = world.World()
+	w.run()
 
 
 if __name__ == "__main__":
