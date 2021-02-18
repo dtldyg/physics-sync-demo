@@ -16,9 +16,14 @@ class SystemEntityManager(system.System):
 			if game_pkg['pid'] == net.PID_JOIN:
 				entity = entity_player.EntityPlayer(game_pkg['send_q'])
 				entity.eid = game_pkg['eid']
-				entity.components[component.LABEL_CONNECTION].send_q.put({'pid': net.PID_ADD_MASTER, 'eid': entity.eid})
+				# TODO 临时
+				component_control, component_transform = entity.components[component.LABEL_CONTROL], entity.components[component.LABEL_TRANSFORM]
+				state = {'eid': entity.eid, 'fr': component_control.frame, 'p': component_transform.position.dict(), 'v': component_transform.velocity.dict()}
+				entity.components[component.LABEL_CONNECTION].send_q.put({'pid': net.PID_ADD_MASTER, 'state': state})
+				# entity.components[component.LABEL_CONNECTION].send_q.put({'pid': net.PID_ADD_MASTER, 'eid': entity.eid})
 				# broadcast
-				broadcast_pkg = {'pid': net.PID_ADD_REPLICA, 'eid': entity.eid}
+				broadcast_pkg = {'pid': net.PID_ADD_REPLICA, 'state': state}
+				# broadcast_pkg = {'pid': net.PID_ADD_REPLICA, 'eid': entity.eid}
 				for _, component_tuple in component_tuples:
 					component_connection, = component_tuple
 					component_connection.send_q.put(broadcast_pkg)
