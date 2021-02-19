@@ -26,5 +26,6 @@ class SystemPackageDispatch(system.System):
 			elif pkg['pid'] == net.PID_CMD:
 				component_package_dict[pkg['eid']].packages.append(pkg)
 			elif pkg['pid'] == net.PID_STATES:
+				self.world.game_component(component.LABEL_RECORD).server_frame = pkg['fr']
 				for pkg_state in pkg['states']:
-					component_package_dict[pkg['eid']].packages.append(pkg_state)
+					component_package_dict[pkg_state['eid']].packages.append(pkg_state)

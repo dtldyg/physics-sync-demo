@@ -3,6 +3,7 @@
 import ecs.component_package as component_package
 import ecs.component_input as component_input
 import ecs.component_control as component_control
+import ecs.component_frame as component_frame
 import ecs.component_physics as component_physics
 import ecs.component_transform as component_transform
 import ecs.component_render as component_render
@@ -16,6 +17,7 @@ class EntityPlayerMaster(entity.Entity):
 		self.add_component(component_package.ComponentPackage())
 		self.add_component(component_input.ComponentInput())
 		self.add_component(component_control.ComponentControl())
+		self.add_component(component_frame.ComponentFrame())
 		self.add_component(component_physics.ComponentPhysics())
 		self.add_component(component_transform.ComponentTransform())
 		self.add_component(component_render.ComponentRender())

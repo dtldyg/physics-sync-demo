@@ -1,6 +1,8 @@
 # coding=utf-8
 
 import copy
+import common.base.const as const
+import common.base.math as math
 import ecs.system as system
 import ecs.component as component
 
@@ -10,16 +12,30 @@ class SystemRollback(system.System):
 		super(SystemRollback, self).__init__((component.LABEL_PACKAGE, component.LABEL_PHYSICS, component.LABEL_TRANSFORM))
 
 	def update(self, dt, component_tuples):
-		# record
 		component_record = self.world.game_component(component.LABEL_RECORD)
+		if not const.MASTER_PREDICT:
+			component_record.clear()
+			return
+		# record
 		component_package = self.world.game_component(component.LABEL_PACKAGE)
-		component_frame = self.world.game_component(component.LABEL_FRAME)
+		component_frame = self.world.master_component(component.LABEL_FRAME)
 		record = Record(dt, self.world.entities, component_package, component_frame)
 		for eid, component_tuple in component_tuples:
 			record.entities.append(RecordEntity(eid, *component_tuple))
 		component_record.records.append(record)
 		# rollback
-		pass
+		while component_record.server_frame > component_record.records[0].component_frame.frame:
+			component_record.records.pop(0)
+		component_transform = self.world.master_component(component.LABEL_TRANSFORM)
+		record_component_transform = None
+		for record_entity in component_record.records[0].entities:
+			if record_entity.eid == self.world.master_eid():
+				record_component_transform = record_entity.component_transform
+				break
+		if not component_transform.server_position.near(record_component_transform.position) or \
+				not component_transform.server_velocity.near(record_component_transform.velocity)
+			# TODO rollback
+			pass
 
 
 class Record(object):

@@ -40,27 +40,6 @@
 
 ## ECS
 ### client
-- world
-      - control
-        force_normal
-        line_...
-      - physics
-  - record
-    records
-  - render
-    client_entity_sur
-    client_interpolation_...
-    server_entity_sur
-    other_render_func
-      - state
-        client_pos
-        client_v
-      - event
-        key_state
-        mouse_state
-  - gui
-    ...
-  
 self.add_system(system_package_dispatch.SystemPackageDispatch()) 分发网络包
 self.add_system(system_entity_manager.SystemEntityManager())     遍历全局网络包，创建、销毁实体
 self.add_system(system_recv_state.SystemRecvState())             遍历实体网络包，更新服务端状态-坐标

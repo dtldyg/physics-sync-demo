@@ -8,3 +8,4 @@ class ComponentRecord(component.Component):
 	def __init__(self):
 		super(ComponentRecord, self).__init__(component.LABEL_RECORD)
 		self.records = []
+		self.server_frame = 0

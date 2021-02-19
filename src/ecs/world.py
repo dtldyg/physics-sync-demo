@@ -5,6 +5,8 @@ import pygame
 import common.base.const as const
 import common.base.clock as clock
 
+import ecs.component as component
+
 import ecs.system_package_dispatch as system_package_dispatch
 import ecs.system_entity_manager as system_entity_manager
 import ecs.system_recv_cmd as system_recv_cmd
@@ -59,7 +61,7 @@ class World(object):
 		print('world run')
 		c.run()
 
-	# ---------------- update ----------------
+	# ---------- update ----------
 	def update(self, dt):
 		for system in self.systems:
 			system.update(dt, self.component_tuples(system))
@@ -79,7 +81,7 @@ class World(object):
 			component_tuples.append((entity.eid, component_tuple))
 		return component_tuples
 
-	# ---------------- entity ----------------
+	# ---------- entity ----------
 	def add_entity(self, entity):
 		self.entities.append(entity)
 
@@ -92,14 +94,21 @@ class World(object):
 				return entity
 		return None
 
-	# ---------------- system ----------------
+	# ---------- system ----------
 	def add_system(self, system):
 		system.init(self)
 		self.systems.append(system)
 
-	# ---------------- game single entity ----------------
+	# ---------- game single entity ----------
 	def game_component(self, component_label):
 		return self.get_entity(const.ENTITY_GAME_ID).components[component_label]
 
-	def game_component_rollback(self, component_label, component):
-		self.get_entity(const.ENTITY_GAME_ID).components[component_label] = component
+	def game_component_rollback(self, component_label, component_obj):
+		self.get_entity(const.ENTITY_GAME_ID).components[component_label] = component_obj
+
+	# ---------- master single entity ----------
+	def master_eid(self):
+		return self.game_component(component.LABEL_GLOBAL).master_entity_id
+
+	def master_component(self, component_label):
+		return self.get_entity(self.master_eid()).components[component_label]
