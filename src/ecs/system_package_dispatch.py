@@ -17,7 +17,14 @@ class SystemPackageDispatch(system.System):
 			component_package.packages.clear()
 			component_package_dict[eid] = component_package
 		for pkg in net.iter_recv_pkg():
-			if pkg['pid'] == net.PID_JOIN or pkg['pid'] == net.PID_DEL:
+			if pkg['pid'] == net.PID_JOIN or \
+					pkg['pid'] == net.PID_DEL or \
+					pkg['pid'] == net.PID_ADD_MASTER or \
+					pkg['pid'] == net.PID_ADD_REPLICA or \
+					pkg['pid'] == net.PID_DEL_REPLICA:
 				component_package_dict[const.ENTITY_GAME_ID].packages.append(pkg)
-			if pkg['pid'] == net.PID_CMD:
+			elif pkg['pid'] == net.PID_CMD:
 				component_package_dict[pkg['eid']].packages.append(pkg)
+			elif pkg['pid'] == net.PID_STATES:
+				for pkg_state in pkg['states']:
+					component_package_dict[pkg['eid']].packages.append(pkg_state)

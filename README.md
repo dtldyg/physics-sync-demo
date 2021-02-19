@@ -41,10 +41,10 @@
 ## ECS
 ### client
 - world
-  - control
-    force_normal
-    line_...
-  - physics
+      - control
+        force_normal
+        line_...
+      - physics
   - record
     records
   - render
@@ -52,51 +52,39 @@
     client_interpolation_...
     server_entity_sur
     other_render_func
-  - state
-    client_pos
-    client_v
-  - event
-    key_state
-    mouse_state
+      - state
+        client_pos
+        client_v
+      - event
+        key_state
+        mouse_state
   - gui
     ...
+  
+self.add_system(system_package_dispatch.SystemPackageDispatch()) 分发网络包
+self.add_system(system_entity_manager.SystemEntityManager())     遍历全局网络包，创建、销毁实体
+self.add_system(system_recv_state.SystemRecvState())             遍历实体网络包，更新服务端状态-坐标
+self.add_system(system_game_event.SystemGameEvent())             处理事件，input、gui
+self.add_system(system_control.SystemControl())                  根据input，更新控制指令
+self.add_system(system_sync_cmd.SystemSyncCmd())                 帧号增加，控制指令发送服务器
+self.add_system(system_physics.SystemPhysics())                  执行控制指令，更新客户端状态
+self.add_system(system_render_logic.SystemRenderLogic())         更新客户端状态的渲染插值
+self.add_system(system_rollback.SystemRollback())                记录帧，比对实体网络状态、回滚
+
 ### server
 - world
-  - entity_game 实体_游戏
-    - component_package
-  - entity_player 实体_玩家
-    - component_connection
-    - component_package
-    - component_physics
-    - component_frame
-    - component_transform
-  - component_connection 组件_连接
-    - send_q
-  - component_package 组件_消息包
-    - packages
-  - component_physics 组件_操控
-    - force_normal
-  - component_frame 组件_帧
-    - frame
-  - component_transform 组件_移动
-    - position
-    - velocity
-  - system_package_dispatch 系统_消息包分发
-    - component_package
-  - system_entity_manager 系统_实体管理
-    - component_connection
-  - system_control 系统_操控
-    - component_package
-    - component_physics
-    - component_frame
-  - system_physics 系统_物理
-    - component_physics
-    - component_transform
-  - system_sync_state 系统_状态同步
-    - component_connection
-    - component_physics
-    - component_transform
-    - component_frame
+  - entity_game 实体_游戏 (component_package)
+  - entity_player 实体_玩家 (component_connection, component_package, component_physics, component_frame, component_transform)
+  - component_connection 组件_连接 (send_q)
+  - component_package 组件_消息包 (packages)
+  - component_physics 组件_操控 (force_normal)
+  - component_frame 组件_帧 (frame)
+  - component_transform 组件_移动 (position, velocity)
+  - system_package_dispatch 系统_消息包分发 (component_package)
+  - system_entity_manager 系统_实体管理 (component_connection)
+  - system_sync_cmd 系统_操控 (component_package, component_physics, component_frame)
+  - system_physics 系统_物理 (component_physics, component_transform)
+  - system_sync_state 系统_状态同步 (component_connection, component_physics, component_transform, component_frame)
 
 ## 依赖关系
 ### ECS

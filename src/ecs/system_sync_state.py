@@ -13,8 +13,8 @@ class SystemSyncState(system.System):
 		states = []
 		for eid, component_tuple in component_tuples:
 			_, component_physics, component_transform, component_frame = component_tuple
-			states.append({'eid': eid, 'fr': component_frame.frame, 'p': component_transform.position.dict(), 'v': component_transform.velocity.dict()})
-		sync_package = {'pid': net.PID_STATES, 'states': states}
+			states.append({'eid': eid, 'p': component_transform.position.dict(), 'v': component_transform.velocity.dict()})
 		for _, component_tuple in component_tuples:
-			component_connection, _, _, _ = component_tuple
+			component_connection, _, _, component_frame = component_tuple
+			sync_package = {'pid': net.PID_STATES, 'fr': component_frame.frame, 'states': states}
 			component_connection.send_q.put(sync_package)

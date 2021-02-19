@@ -1,8 +1,8 @@
 # coding=utf-8
 
 class Entity(object):
-	def __init__(self):
-		self.eid = 0
+	def __init__(self, eid):
+		self.eid = eid
 		self.components = {}
 		self.component_label_mask = 0
 

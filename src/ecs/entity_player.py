@@ -11,8 +11,8 @@ import ecs.entity as entity
 
 
 class EntityPlayer(entity.Entity):
-	def __init__(self, send_q):
-		super(EntityPlayer, self).__init__()
+	def __init__(self, eid, send_q):
+		super(EntityPlayer, self).__init__(eid)
 		self.add_component(component_connection.ComponentConnection(send_q))
 		self.add_component(component_package.ComponentPackage())
 		self.add_component(component_physics.ComponentPhysics())

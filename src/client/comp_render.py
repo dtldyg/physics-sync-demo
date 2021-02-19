@@ -35,7 +35,7 @@ class CompRender(ec.ClientComponent):
 		comp_state = self.entity.get_comp('comp_state')
 		if const.MASTER_PREDICT:
 			sur.blit(self.c_en_sur[0], (self.render_interpolation_c_p() - self.c_en_sur[1]).tuple())
-			if const.MASTER_PREDICT_SERVER:
+			if const.MASTER_SERVER:
 				sur.blit(self.s_en_sur[0], (comp_state.s_p - self.s_en_sur[1]).tuple())
 		else:
 			sur.blit(self.c_en_sur[0], (self.render_interpolation_c_p() - self.c_en_sur[1]).tuple())
