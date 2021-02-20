@@ -22,6 +22,8 @@ class SystemRollback(ecs.System):
 			record.entities[eid] = RecordEntity(*comp_tuple)
 		comp_record.records.append(record)
 		# rollback
+		if not comp_record.check_rollback:
+			return
 		while comp_record.server_frame > comp_record.records[0].component_frame.frame:
 			comp_record.records.pop(0)  # pop confirmed record
 		comp_transform = self.world.master_component(ecs.LABEL_TRANSFORM)
@@ -38,7 +40,8 @@ class SystemRollback(ecs.System):
 						if en.eid == const.ENTITY_GAME_ID:
 							continue
 						record_entity = record.entities[en.eid]
-						en.add_component(record_entity.component_transform)
+						en.get_component(ecs.LABEL_TRANSFORM).position = record_entity.component_transform.position
+						en.get_component(ecs.LABEL_TRANSFORM).velocity = record_entity.component_transform.velocity
 				else:
 					# roll-forward world
 					self.world.game_component_rollback(copy.deepcopy(record.component_package))
@@ -54,6 +57,7 @@ class SystemRollback(ecs.System):
 							continue
 						record_entity = record.entities[en.eid]
 						record_entity.component_transform = copy.deepcopy(en.get_component(ecs.LABEL_TRANSFORM))
+		comp_record.check_rollback = False
 
 
 def transform_near(server_trans, record_trans):

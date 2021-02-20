@@ -8,3 +8,4 @@ class ComponentRecord(ecs.Component):
 		super(ComponentRecord, self).__init__(ecs.LABEL_RECORD)
 		self.records = []
 		self.server_frame = 0
+		self.check_rollback = False
