@@ -29,4 +29,6 @@ class SystemPackageDispatch(ecs.System):
 				comp_record.server_frame = pkg['fr']
 				comp_record.check_rollback = True
 				for pkg_state in pkg['states']:
+					if pkg_state['eid'] not in comp_package_dict:
+						continue
 					comp_package_dict[pkg_state['eid']].packages.append(pkg_state)
