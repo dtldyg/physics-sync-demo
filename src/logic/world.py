@@ -40,7 +40,7 @@ class World(object):
 			self.add_system(system_render_logic.SystemRenderLogic())
 			self.add_system(system_rollback.SystemRollback())
 			# render
-			self.system_render = system_render.SystemRender()
+			self.system_render = self.init_system(system_render.SystemRender())
 			# join server
 			net.send_client_pkg({'pid': net.PID_JOIN})
 		else:
@@ -50,7 +50,7 @@ class World(object):
 			self.add_system(system_recv_cmd.SystemRecvCmd())
 			self.add_system(system_physics.SystemPhysics())
 			# state
-			self.system_sync_state = system_sync_state.SystemSyncState()
+			self.system_sync_state = self.init_system(system_sync_state.SystemSyncState())
 		self.entities.append(entity_game.EntityGame())
 
 	def run(self):
@@ -103,8 +103,11 @@ class World(object):
 
 	# ---------- system ----------
 	def add_system(self, system):
+		self.systems.append(self.init_system(system))
+
+	def init_system(self, system):
 		system.init(self)
-		self.systems.append(system)
+		return system
 
 	# ---------- game single entity ----------
 	def game_component(self, component_label):

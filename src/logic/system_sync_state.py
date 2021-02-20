@@ -15,5 +15,7 @@ class SystemSyncState(ecs.System):
 			states.append({'eid': eid, 'p': comp_transform.position.dict(), 'v': comp_transform.velocity.dict()})
 		for _, comp_tuple in component_tuples:
 			comp_connection, _, _, comp_frame = comp_tuple
+			if comp_frame.frame == 0:
+				continue
 			sync_package = {'pid': net.PID_STATES, 'fr': comp_frame.frame, 'states': states}
 			comp_connection.send_q.put(sync_package)

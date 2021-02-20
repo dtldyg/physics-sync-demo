@@ -12,24 +12,20 @@ class SystemRollback(ecs.System):
 	def update(self, dt, component_tuples):
 		comp_record = self.world.game_component(ecs.LABEL_RECORD)
 		if not const.MASTER_PREDICT:
-			comp_record.clear()
+			comp_record.records.clear()
 			return
 		# record
 		comp_package = self.world.game_component(ecs.LABEL_PACKAGE)
 		comp_frame = self.world.master_component(ecs.LABEL_FRAME)
 		record = Record(dt, self.world.entities, comp_package, comp_frame)
 		for eid, comp_tuple in component_tuples:
-			record.entities[eid] = RecordEntity(eid, *comp_tuple)
+			record.entities[eid] = RecordEntity(*comp_tuple)
 		comp_record.records.append(record)
 		# rollback
 		while comp_record.server_frame > comp_record.records[0].component_frame.frame:
-			comp_record.records.pop(0)
+			comp_record.records.pop(0)  # pop confirmed record
 		comp_transform = self.world.master_component(ecs.LABEL_TRANSFORM)
-		record_transform = None
-		for record_entity in comp_record.records[0].entities:
-			if record_entity.eid == self.world.master_eid():
-				record_transform = record_entity.component_transform
-				break
+		record_transform = comp_record.records[0].entities[self.world.master_eid()].component_transform
 		if not transform_near(comp_transform, record_transform):
 			for record in comp_record.records:
 				if record == comp_record.records[0]:
@@ -39,19 +35,25 @@ class SystemRollback(ecs.System):
 					# roll-back world
 					self.world.entities = [en for en in self.world.entities if en.eid in record.eids]
 					for en in self.world.entities:
+						if en.eid == const.ENTITY_GAME_ID:
+							continue
 						record_entity = record.entities[en.eid]
 						en.add_component(record_entity.component_transform)
 				else:
 					# roll-forward world
 					self.world.game_component_rollback(copy.deepcopy(record.component_package))
 					for en in self.world.entities:
+						if en.eid == const.ENTITY_GAME_ID:
+							continue
 						record_entity = record.entities[en.eid]
 						en.add_component(copy.deepcopy(record_entity.component_physics))
 					self.world.update_roll_forward(record.dt)
 					# roll-forward record
 					for en in self.world.entities:
+						if en.eid == const.ENTITY_GAME_ID:
+							continue
 						record_entity = record.entities[en.eid]
-						record_entity.component_transform = copy.deepcopy(en.get_component(component.LABEL_TRANSFORM))
+						record_entity.component_transform = copy.deepcopy(en.get_component(ecs.LABEL_TRANSFORM))
 
 
 def transform_near(server_trans, record_trans):
@@ -68,6 +70,6 @@ class Record(object):
 
 
 class RecordEntity(object):
-	def __init__(self, component_package, component_physics, component_transform):
+	def __init__(self, component_physics, component_transform):
 		self.component_physics = copy.deepcopy(component_physics)
 		self.component_transform = copy.deepcopy(component_transform)
