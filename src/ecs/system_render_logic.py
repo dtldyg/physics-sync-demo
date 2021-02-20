@@ -8,6 +8,7 @@ import ecs.component as component
 class SystemRenderLogic(system.System):
 	def __init__(self):
 		super(SystemRenderLogic, self).__init__((component.LABEL_TRANSFORM, component.LABEL_RENDER))
+		self.roll_forward = True
 
 	def update(self, dt, component_tuples):
 		for _, component_tuple in component_tuples:

@@ -10,7 +10,10 @@ class Entity(object):
 		self.components[component.label] = component
 		self.component_label_mask |= component.label
 
+	def get_component(self, component_label):
+		return self.components[component_label]
+
 	def component_tuple(self, component_labels, component_label_mask):
-		if self.component_label_mask & component_label_mask != component_label_mask:
+		if (self.component_label_mask & component_label_mask) != component_label_mask:
 			return None
 		return tuple([self.components[label] for label in component_labels])

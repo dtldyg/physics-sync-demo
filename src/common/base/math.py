@@ -38,7 +38,7 @@ class Vector(object):
 	def zero(self):
 		return abs(self.x) < 1e-6 and abs(self.y) < 1e-6
 
-	def near(self, other, margin=1e-2):
+	def near(self, other, margin=0.1):
 		return abs(self.x - other.x) < margin and abs(self.y - other.y) < margin
 
 	def normal(self):

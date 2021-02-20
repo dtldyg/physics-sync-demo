@@ -8,6 +8,7 @@ import ecs.component as component
 class SystemPhysics(system.System):
 	def __init__(self):
 		super(SystemPhysics, self).__init__((component.LABEL_PHYSICS, component.LABEL_TRANSFORM))
+		self.roll_forward = True
 
 	def update(self, dt, component_tuples):
 		# move

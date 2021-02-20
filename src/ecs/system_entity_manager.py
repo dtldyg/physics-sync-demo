@@ -12,12 +12,13 @@ import ecs.entity_player_replica as entity_player_replica
 class SystemEntityManager(system.System):
 	def __init__(self):
 		super(SystemEntityManager, self).__init__((component.LABEL_CONNECTION,))
+		self.roll_forward = True
 
 	def update(self, dt, component_tuples):
 		for pkg in self.world.game_component(component.LABEL_PACKAGE).packages:
 			if pkg['pid'] == net.PID_JOIN:
 				entity = entity_player.EntityPlayer(pkg['eid'], pkg['send_q'])
-				entity.components[component.LABEL_CONNECTION].send_q.put({'pid': net.PID_ADD_MASTER, 'eid': entity.eid})
+				entity.get_component(component.LABEL_CONNECTION).send_q.put({'pid': net.PID_ADD_MASTER, 'eid': entity.eid})
 				# broadcast
 				broadcast_pkg = {'pid': net.PID_ADD_REPLICA, 'eid': entity.eid}
 				for _, component_tuple in component_tuples:
@@ -27,7 +28,7 @@ class SystemEntityManager(system.System):
 				print('join:', entity.eid)
 			elif pkg['pid'] == net.PID_DEL:
 				entity = self.world.get_entity(pkg['eid'])
-				entity.components[component.LABEL_CONNECTION].send_q.put(pkg)
+				entity.get_component(component.LABEL_CONNECTION).send_q.put(pkg)
 				self.world.del_entity(entity)
 				# broadcast
 				broadcast_pkg = {'pid': net.PID_DEL_REPLICA, 'eid': entity.eid}

@@ -5,6 +5,8 @@ import pygame
 import common.base.const as const
 import common.base.clock as clock
 
+import common.net as net
+
 import ecs.component as component
 
 import ecs.system_package_dispatch as system_package_dispatch
@@ -42,6 +44,8 @@ class World(object):
 			self.add_system(system_rollback.SystemRollback())
 			# render
 			self.system_render = system_render.SystemRender()
+			# join server
+			net.send_client_pkg({'pid': net.PID_JOIN})
 		else:
 			# system
 			self.add_system(system_package_dispatch.SystemPackageDispatch())
@@ -65,6 +69,11 @@ class World(object):
 	def update(self, dt):
 		for system in self.systems:
 			system.update(dt, self.component_tuples(system))
+
+	def update_roll_forward(self, dt):
+		for system in self.systems:
+			if system.roll_forward:
+				system.update(dt, self.component_tuples(system))
 
 	def update_render(self, dt):
 		self.system_render.update(dt, self.component_tuples(self.system_render))
@@ -101,14 +110,14 @@ class World(object):
 
 	# ---------- game single entity ----------
 	def game_component(self, component_label):
-		return self.get_entity(const.ENTITY_GAME_ID).components[component_label]
+		return self.get_entity(const.ENTITY_GAME_ID).get_component(component_label)
 
-	def game_component_rollback(self, component_label, component_obj):
-		self.get_entity(const.ENTITY_GAME_ID).components[component_label] = component_obj
+	def game_component_rollback(self, component_obj):
+		self.get_entity(const.ENTITY_GAME_ID).add_component(component_obj)
 
 	# ---------- master single entity ----------
 	def master_eid(self):
 		return self.game_component(component.LABEL_GLOBAL).master_entity_id
 
 	def master_component(self, component_label):
-		return self.get_entity(self.master_eid()).components[component_label]
+		return self.get_entity(self.master_eid()).get_component(component_label)
