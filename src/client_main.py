@@ -1,8 +1,8 @@
 # coding=utf-8
 
-import common.base.const as const
-import common.net as net
-import ecs.world as world
+import base.const as const
+import base.net as net
+import logic.world as world
 
 
 def main():

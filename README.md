@@ -40,166 +40,44 @@
 
 ## ECS
 ### client
-self.add_system(system_package_dispatch.SystemPackageDispatch()) 分发网络包
-self.add_system(system_entity_manager.SystemEntityManager())     遍历全局网络包，创建、销毁实体
-self.add_system(system_recv_state.SystemRecvState())             遍历实体网络包，更新服务端状态-坐标
-self.add_system(system_game_event.SystemGameEvent())             处理事件，input、gui
-self.add_system(system_control.SystemControl())                  根据input，更新控制指令
-self.add_system(system_sync_cmd.SystemSyncCmd())                 帧号增加，控制指令发送服务器
-self.add_system(system_physics.SystemPhysics())                  执行控制指令，更新客户端状态
-self.add_system(system_render_logic.SystemRenderLogic())         更新客户端状态的渲染插值
-self.add_system(system_rollback.SystemRollback())                记录帧，比对实体网络状态、回滚
+- world
+  - entity_game 实体_游戏
+  - entity_player_master 实体_主机玩家
+  - entity_player_replica 实体_副本玩家
+  - component_package 组件_消息
+  - component_surface 组件_渲染面
+  - component_gui 组件_界面
+  - component_info 组件_全局信息
+  - component_input 组件_输入
+  - component_record 组件_回滚记录
+  - component_package 组件_消息
+  - component_control 组件_控制
+  - component_physics 组件_物理
+  - component_frame 组件_帧
+  - component_transform 组件_移动
+  - component_render 组件_渲染
+  - system_package_dispatch 系统_消息分发
+  - system_entity_manager 系统_实体管理
+  - system_recv_state 系统_接收状态
+  - system_game_event 系统_游戏事件
+  - system_control 系统_控制
+  - system_sync_cmd 系统_同步指令
+  - system_physics 系统_物理
+  - system_render_logic 系统_渲染逻辑
+  - system_rollback 系统_回滚
+  - system_render 系统_渲染
 
 ### server
 - world
-  - entity_game 实体_游戏 (component_package)
-  - entity_player 实体_玩家 (component_connection, component_package, component_physics, component_frame, component_transform)
-  - component_connection 组件_连接 (send_q)
-  - component_package 组件_消息包 (packages)
-  - component_physics 组件_操控 (force_normal)
-  - component_frame 组件_帧 (frame)
-  - component_transform 组件_移动 (position, velocity)
-  - system_package_dispatch 系统_消息包分发 (component_package)
-  - system_entity_manager 系统_实体管理 (component_connection)
-  - system_sync_cmd 系统_操控 (component_package, component_physics, component_frame)
-  - system_physics 系统_物理 (component_physics, component_transform)
-  - system_sync_state 系统_状态同步 (component_connection, component_physics, component_transform, component_frame)
-
-## 依赖关系
-### ECS
-#### 服务端
-```mermaid
-graph TD
-    entity_xxx --> entity
-    entity_xxx --> component_xxx
-    component_xxx --> component
-    system_xxx --> system
-    system_xxx --> component
-    system_xxx --> entity_xxx
-    world --> system_xxx
-```
-
-
-### 客户端
-#### 模块依赖
-```mermaid
-graph TD
-     main --> io
-     main --> game
-
-     game --> const
-     game --> scene
-     game --> io
-     game --> gui
-     game --> window
-     game --> event
-     game --> entity
-     
-     gui --> const
-     gui --> switch
-     gui --> window
-
-     entity --> const
-     entity --> ec
-     entity --> comp_control
-     entity --> comp_physics
-     entity --> comp_state
-     entity --> comp_render
-
-     comp_control --> const
-     comp_control --> math
-     comp_control --> switch
-     comp_control --> ec
-     comp_control --> window
-     comp_control --> event
-
-     comp_physics --> const
-     comp_physics --> math
-     comp_physics --> ec
-
-     comp_state --> const
-     comp_state --> math
-     comp_state --> ec
-     comp_state --> io
-
-     comp_render --> const
-     comp_render --> math
-     comp_render --> switch
-     comp_render --> ec
-     comp_render --> window
-```
-#### 组件依赖
-```mermaid
-graph TD
-     comp_control --> comp_physics
-     comp_control --> comp_state
-     comp_control --> comp_render
-
-     comp_physics --> comp_state
-
-     comp_render --> comp_state
-```
-### 服务端
-#### 模块依赖
-```mermaid
-graph TD
-     main --> io
-     main --> game
-
-     game --> const
-     game --> math
-     game --> entity
-
-     entity --> ec
-     entity --> comp_physics
-     entity --> comp_state
-
-     comp_physics --> ec
-
-     comp_state --> ec
-     comp_state --> math
-```
-#### 线程模型
-```mermaid
-graph TD
-     client1.run_conn_recv --> recv_q
-     client2.run_conn_recv --> recv_q
-
-     recv_q --> game
-
-     game --> client1.send_q
-     game --> client2.send_q
-
-     client1.send_q --> client1.run_conn_send
-     client2.send_q --> client2.run_conn_send
-```
-
-## 通信消息
-### client
-#### sync
-```json
-{
-  "p": {
-    "x": 1.0,
-    "y": 1.0
-  },
-  "v": {
-    "x": 1.0,
-    "y": 1.0
-  }
-}
-```
-### server
-#### sync
-```json
-{
-  "p": {
-    "x": 1.0,
-    "y": 1.0
-  },
-  "v": {
-    "x": 1.0,
-    "y": 1.0
-  }
-}
-```
+  - entity_game 实体_游戏
+  - entity_player 实体_玩家
+  - component_connection 组件_连接
+  - component_package 组件_消息
+  - component_physics 组件_操控
+  - component_frame 组件_帧
+  - component_transform 组件_移动
+  - system_package_dispatch 系统_消息分发
+  - system_entity_manager 系统_实体管理
+  - system_recv_cmd 系统_接收指令
+  - system_physics 系统_物理
+  - system_sync_state 系统_同步状态

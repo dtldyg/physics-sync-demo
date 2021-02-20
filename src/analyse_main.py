@@ -1,16 +1,16 @@
 # coding=utf-8
 
 import inspect
-import common.base.const as const
-import ecs.world as world
-import ecs.component as component
+import base.const as const
+import base.ecs as component
+import logic.world as world
 
 
 def main():
 	component_list = {}
 	for name, obj in inspect.getmembers(component):
 		if isinstance(obj, int):
-			component_list[obj] = name.replace('LABEL_', '')
+			component_list[obj] = name.replace('LABEL_', '').title()
 	const.IS_CLIENT = True
 	w = world.World()
 	print('------client------')
