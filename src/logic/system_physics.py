@@ -17,7 +17,7 @@ class SystemPhysics(ecs.System):
 			f_nor = comp_physics.force_normal
 			p, v = comp_transform.position, comp_transform.velocity
 			if f_nor.zero() and v.zero():
-				return p, v
+				continue
 			# --- 1.force analysis: Euler‘s Method ---
 			# f = f - μ·mg·v_dir
 			f_join = f_nor * const.ENTITY_FORCE - v.normal() * const.ENTITY_FRICTION * const.ENTITY_MASS * const.WORLD_G

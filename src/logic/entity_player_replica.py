@@ -8,9 +8,9 @@ import logic.component_render as component_render
 
 
 class EntityPlayerReplica(ecs.Entity):
-	def __init__(self, eid):
+	def __init__(self, eid, pos):
 		super(EntityPlayerReplica, self).__init__(eid)
 		self.add_component(component_package.ComponentPackage())
 		self.add_component(component_physics.ComponentPhysics())
-		self.add_component(component_transform.ComponentTransform())
+		self.add_component(component_transform.ComponentTransform(pos))
 		self.add_component(component_render.ComponentRender())

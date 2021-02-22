@@ -2,6 +2,7 @@
 
 import base.net as net
 import base.ecs as ecs
+import base.math as math
 import logic.entity_player as entity_player
 import logic.entity_player_master as entity_player_master
 import logic.entity_player_replica as entity_player_replica
@@ -16,9 +17,10 @@ class SystemEntityManager(ecs.System):
 		for pkg in self.world.game_component(ecs.LABEL_PACKAGE).packages:
 			if pkg['pid'] == net.PID_JOIN:
 				entity = entity_player.EntityPlayer(pkg['eid'], pkg['send_q'])
-				entity.get_component(ecs.LABEL_CONNECTION).send_q.put({'pid': net.PID_ADD_MASTER, 'eid': entity.eid})
+				init_p = entity.get_component(ecs.LABEL_TRANSFORM).position.dict()
+				entity.get_component(ecs.LABEL_CONNECTION).send_q.put({'pid': net.PID_ADD_MASTER, 'eid': entity.eid, 'p': init_p})
 				# broadcast
-				broadcast_pkg = {'pid': net.PID_ADD_REPLICA, 'eid': entity.eid}
+				broadcast_pkg = {'pid': net.PID_ADD_REPLICA, 'eid': entity.eid, 'p': init_p}
 				for _, comp_tuple in component_tuples:
 					comp_connection, = comp_tuple
 					comp_connection.send_q.put(broadcast_pkg)
@@ -35,12 +37,14 @@ class SystemEntityManager(ecs.System):
 					comp_connection.send_q.put(broadcast_pkg)
 				print('del:', entity.eid)
 			elif pkg['pid'] == net.PID_ADD_MASTER:
-				entity = entity_player_master.EntityPlayerMaster(pkg['eid'])
+				init_p = math.Vector(**pkg['p'])
+				entity = entity_player_master.EntityPlayerMaster(pkg['eid'], init_p)
 				self.world.game_component(ecs.LABEL_INFO).master_entity_id = entity.eid
 				self.world.add_entity(entity)
 				print('add master:', entity.eid)
 			elif pkg['pid'] == net.PID_ADD_REPLICA:
-				entity = entity_player_replica.EntityPlayerReplica(pkg['eid'])
+				init_p = math.Vector(**pkg['p'])
+				entity = entity_player_replica.EntityPlayerReplica(pkg['eid'], init_p)
 				self.world.add_entity(entity)
 				print('add replica:', entity.eid)
 			elif pkg['pid'] == net.PID_DEL_REPLICA:
