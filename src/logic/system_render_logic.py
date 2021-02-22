@@ -16,6 +16,3 @@ class SystemRenderLogic(ecs.System):
 			client_inter = comp_render.client_interpolation
 			client_inter[0], client_inter[1] = client_inter[2], client_inter[3]
 			client_inter[2], client_inter[3] = comp_transform.position, time.time()
-			server_inter = comp_render.server_interpolation
-			server_inter[0], server_inter[1] = server_inter[2], server_inter[3]
-			server_inter[2], server_inter[3] = comp_transform.server_position, time.time()

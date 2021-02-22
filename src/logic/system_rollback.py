@@ -7,7 +7,7 @@ import base.ecs as ecs
 
 class SystemRollback(ecs.System):
 	def __init__(self):
-		super(SystemRollback, self).__init__((ecs.LABEL_PHYSICS, ecs.LABEL_TRANSFORM))
+		super(SystemRollback, self).__init__((ecs.LABEL_TRANSFORM,))
 
 	def update(self, dt, component_tuples):
 		comp_record = self.world.game_component(ecs.LABEL_RECORD)
@@ -17,7 +17,8 @@ class SystemRollback(ecs.System):
 		# record
 		comp_package = self.world.game_component(ecs.LABEL_PACKAGE)
 		comp_frame = self.world.master_component(ecs.LABEL_FRAME)
-		record = Record(dt, self.world.entities, comp_package, comp_frame)
+		comp_physics = self.world.master_component(ecs.LABEL_PHYSICS)
+		record = Record(dt, self.world.entities, comp_package, comp_frame, comp_physics)
 		for eid, comp_tuple in component_tuples:
 			record.entities[eid] = RecordEntity(*comp_tuple)
 		comp_record.records.append(record)
@@ -45,11 +46,7 @@ class SystemRollback(ecs.System):
 				else:
 					# roll-forward world
 					self.world.game_component_rollback(copy.deepcopy(record.component_package))
-					for en in self.world.entities:
-						if en.eid == const.ENTITY_GAME_ID:
-							continue
-						record_entity = record.entities[en.eid]
-						en.add_component(copy.deepcopy(record_entity.component_physics))
+					self.world.master_component_rollback(copy.deepcopy(record.component_physics))
 					self.world.update_roll_forward(record.dt)
 					# roll-forward record
 					for en in self.world.entities:
@@ -65,15 +62,15 @@ def transform_near(server_trans, record_trans):
 
 
 class Record(object):
-	def __init__(self, dt, entities, component_package, component_frame):
+	def __init__(self, dt, entities, component_package, component_frame, component_physics):
 		self.dt = dt
 		self.eids = set([en.eid for en in entities])
 		self.component_package = copy.deepcopy(component_package)
 		self.component_frame = copy.deepcopy(component_frame)
+		self.component_physics = copy.deepcopy(component_physics)
 		self.entities = {}
 
 
 class RecordEntity(object):
-	def __init__(self, component_physics, component_transform):
-		self.component_physics = copy.deepcopy(component_physics)
+	def __init__(self, component_transform):
 		self.component_transform = copy.deepcopy(component_transform)

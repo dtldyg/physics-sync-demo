@@ -18,3 +18,6 @@ class SystemRecvState(ecs.System):
 				if eid != self.world.master_eid():
 					comp_transform.position = comp_transform.server_position
 					comp_transform.velocity = comp_transform.server_velocity
+				server_inter = comp_render.server_interpolation
+				server_inter[0], server_inter[1] = server_inter[2], server_inter[3]
+				server_inter[2], server_inter[3] = comp_transform.server_position, time.time()

@@ -122,3 +122,6 @@ class World(object):
 
 	def master_component(self, component_label):
 		return self.get_entity(self.master_eid()).get_component(component_label)
+
+	def master_component_rollback(self, component_obj):
+		return self.get_entity(self.master_eid()).add_component(component_obj)
