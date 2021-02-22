@@ -1,0 +1,16 @@
+{
+  "button": {
+    "font": {
+      "name": "msyh",
+      "size": "14",
+      "regular_path": "res/msyh.ttc"
+    }
+  },
+  "label": {
+    "font": {
+      "name": "msyh",
+      "size": "14",
+      "regular_path": "res/msyh.ttc"
+    }
+  }
+}

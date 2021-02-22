@@ -19,15 +19,23 @@ class SystemRender(ecs.System):
 		# game
 		comp_surface.game.fill(const.SCREEN_BACKGROUND)
 		# game - entity
-		for _, comp_tuple in component_tuples:
+		for eid, comp_tuple in component_tuples:
 			comp_transform, comp_render, = comp_tuple
-			if const.MASTER_PREDICT:
-				interpolation = comp_render.client_interpolation
+			# draw client
+			if eid == self.world.master_eid():
+				if const.MASTER_PREDICT:
+					client_position = position_interpolation(*comp_render.client_interpolation)
+				else:
+					client_position = position_interpolation(*comp_render.server_interpolation)
 			else:
-				interpolation = comp_render.server_interpolation
+				if const.REPLICA_INTERPOLATION:
+					client_position = position_interpolation(*comp_render.client_interpolation)
+				else:
+					client_position = comp_transform.server_position
 			client_surface = comp_render.client_surface
-			comp_surface.game.blit(client_surface[0], (position_interpolation(*interpolation) - client_surface[1]).tuple())
-			if const.MASTER_SERVER:
+			comp_surface.game.blit(client_surface[0], (client_position - client_surface[1]).tuple())
+			# draw server
+			if const.SHOW_SERVER:
 				server_surface = comp_render.server_surface
 				comp_surface.game.blit(server_surface[0], (comp_transform.server_position - server_surface[1]).tuple())
 			for other_render in comp_render.other_renders:

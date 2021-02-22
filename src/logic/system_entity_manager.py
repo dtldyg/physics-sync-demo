@@ -10,7 +10,7 @@ import logic.entity_player_replica as entity_player_replica
 
 class SystemEntityManager(ecs.System):
 	def __init__(self):
-		super(SystemEntityManager, self).__init__((ecs.LABEL_CONNECTION,))
+		super(SystemEntityManager, self).__init__((ecs.LABEL_CONNECTION, ecs.LABEL_TRANSFORM))
 		self.roll_forward = True
 
 	def update(self, dt, component_tuples):
@@ -18,11 +18,15 @@ class SystemEntityManager(ecs.System):
 			if pkg['pid'] == net.PID_JOIN:
 				entity = entity_player.EntityPlayer(pkg['eid'], pkg['send_q'])
 				init_p = entity.get_component(ecs.LABEL_TRANSFORM).position.dict()
-				entity.get_component(ecs.LABEL_CONNECTION).send_q.put({'pid': net.PID_ADD_MASTER, 'eid': entity.eid, 'p': init_p})
+				comp_connection = entity.get_component(ecs.LABEL_CONNECTION)
+				comp_connection.send_q.put({'pid': net.PID_ADD_MASTER, 'eid': entity.eid, 'p': init_p})
+				# for _, comp_tuple in component_tuples:
+				# 	_, comp_transform = comp_tuple
+				# 	comp_connection.send_q.put({'pid': net.PID_ADD_REPLICA, 'eid': entity.eid, 'p': comp_transform.position.dict()})
 				# broadcast
 				broadcast_pkg = {'pid': net.PID_ADD_REPLICA, 'eid': entity.eid, 'p': init_p}
 				for _, comp_tuple in component_tuples:
-					comp_connection, = comp_tuple
+					comp_connection, _ = comp_tuple
 					comp_connection.send_q.put(broadcast_pkg)
 				self.world.add_entity(entity)
 				print('join:', entity.eid)
@@ -33,7 +37,7 @@ class SystemEntityManager(ecs.System):
 				# broadcast
 				broadcast_pkg = {'pid': net.PID_DEL_REPLICA, 'eid': entity.eid}
 				for _, comp_tuple in component_tuples:
-					comp_connection, = comp_tuple
+					comp_connection, _ = comp_tuple
 					comp_connection.send_q.put(broadcast_pkg)
 				print('del:', entity.eid)
 			elif pkg['pid'] == net.PID_ADD_MASTER:

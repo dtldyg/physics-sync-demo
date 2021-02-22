@@ -11,5 +11,5 @@ class ComponentTransform(ecs.Component):
 		self.position = pos
 		self.velocity = math.vector_zero
 		if const.IS_CLIENT:
-			self.server_position = math.vector_zero
+			self.server_position = pos
 			self.server_velocity = math.vector_zero

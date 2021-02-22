@@ -42,10 +42,10 @@ class SystemGameEvent(ecs.System):
 						if event.ui_element == comp_gui.control_mod:
 							const.CONTROL_MODE = event.text
 					elif event.user_type == pygame_gui.UI_BUTTON_PRESSED:
-						if event.ui_element == comp_gui.master_predict:
+						if event.ui_element == comp_gui.show_server:
+							const.SHOW_SERVER = btn_checkbox_event(event)
+						elif event.ui_element == comp_gui.master_predict:
 							const.MASTER_PREDICT = btn_checkbox_event(event)
-						if event.ui_element == comp_gui.master_predict_server:
-							const.MASTER_SERVER = btn_checkbox_event(event)
 						elif event.ui_element == comp_gui.replica_buffer:
 							const.REPLICA_BUFFER = btn_checkbox_event(event)
 						elif event.ui_element == comp_gui.replica_interpolation:

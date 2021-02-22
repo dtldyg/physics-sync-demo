@@ -13,4 +13,4 @@ class EntityPlayerReplica(ecs.Entity):
 		self.add_component(component_package.ComponentPackage())
 		self.add_component(component_physics.ComponentPhysics())
 		self.add_component(component_transform.ComponentTransform(pos))
-		self.add_component(component_render.ComponentRender())
+		self.add_component(component_render.ComponentRender(pos))
