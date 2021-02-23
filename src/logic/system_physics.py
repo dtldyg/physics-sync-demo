@@ -36,23 +36,31 @@ class SystemPhysics(ecs.System):
 			# --- 2.v/p update ---
 			comp_transform.position = p + s
 			comp_transform.velocity = v
+			comp_transform.modified = True
 		# collision
 		for _, comp_tuple in component_tuples:
 			_, comp_transform = comp_tuple
 			p, v = comp_transform.position, comp_transform.velocity
 			# --- 3.collision check ---
+			collide = False
 			if p.x + const.ENTITY_RADIUS > const.SCREEN_SIZE[0]:
 				v.x = -v.x
 				p.x = const.SCREEN_SIZE[0] * 2 - const.ENTITY_RADIUS * 2 - p.x
+				collide = True
 			if p.y + const.ENTITY_RADIUS > const.SCREEN_SIZE[1]:
 				v.y = -v.y
 				p.y = const.SCREEN_SIZE[1] * 2 - const.ENTITY_RADIUS * 2 - p.y
+				collide = True
 			if p.x < const.ENTITY_RADIUS:
 				v.x = -v.x
 				p.x = const.ENTITY_RADIUS * 2 - p.x
+				collide = True
 			if p.y < const.ENTITY_RADIUS:
 				v.y = -v.y
 				p.y = const.ENTITY_RADIUS * 2 - p.y
+				collide = True
 			# --- 4.result show ---
-			comp_transform.position = p
-			comp_transform.velocity = v
+			if collide:
+				comp_transform.position = p
+				comp_transform.velocity = v
+				comp_transform.modified = True

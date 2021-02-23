@@ -13,6 +13,8 @@ class SystemRenderLogic(ecs.System):
 		for _, comp_tuple in component_tuples:
 			comp_transform, comp_render = comp_tuple
 			comp_render.other_renders.clear()
-			client_inter = comp_render.client_interpolation
-			client_inter[0], client_inter[1] = client_inter[2], client_inter[3]
-			client_inter[2], client_inter[3] = comp_transform.position, time.time()
+			# interpolation
+			if comp_transform.modified:
+				interpolation = comp_render.interpolation
+				interpolation[0], interpolation[1] = interpolation[2], interpolation[3]
+				interpolation[2], interpolation[3] = comp_transform.position, time.time()

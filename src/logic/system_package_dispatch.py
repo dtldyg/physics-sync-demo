@@ -10,11 +10,13 @@ class SystemPackageDispatch(ecs.System):
 		super(SystemPackageDispatch, self).__init__((ecs.LABEL_PACKAGE,))
 
 	def update(self, dt, component_tuples):
+		# collect
 		comp_package_dict = {}
 		for eid, comp_tuple in component_tuples:
 			comp_package, = comp_tuple
 			comp_package.packages.clear()
 			comp_package_dict[eid] = comp_package
+		# dispatch
 		for pkg in net.iter_recv_pkg():
 			if pkg['pid'] == net.PID_JOIN or \
 					pkg['pid'] == net.PID_DEL or \
@@ -25,9 +27,8 @@ class SystemPackageDispatch(ecs.System):
 			elif pkg['pid'] == net.PID_CMD:
 				comp_package_dict[pkg['eid']].packages.append(pkg)
 			elif pkg['pid'] == net.PID_STATES:
-				comp_record = self.world.game_component(ecs.LABEL_RECORD)
-				comp_record.server_frame = pkg['fr']
-				comp_record.check_rollback = True
+				master_comp_frame = self.world.master_component(ecs.LABEL_FRAME)
+				master_comp_frame.server_frame = pkg['fr']
 				for pkg_state in pkg['states']:
 					if pkg_state['eid'] not in comp_package_dict:
 						continue

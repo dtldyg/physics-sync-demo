@@ -10,6 +10,8 @@ class ComponentTransform(ecs.Component):
 		super(ComponentTransform, self).__init__(ecs.LABEL_TRANSFORM)
 		self.position = pos
 		self.velocity = math.vector_zero
+		self.modified = True
 		if const.IS_CLIENT:
 			self.server_position = pos
 			self.server_velocity = math.vector_zero
+			self.server_modified = True

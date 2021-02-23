@@ -7,6 +7,7 @@ import base.clock as clock
 import base.net as net
 import base.ecs as ecs
 
+import logic.system_modified_reset as system_modified_reset
 import logic.system_package_dispatch as system_package_dispatch
 import logic.system_entity_manager as system_entity_manager
 import logic.system_recv_cmd as system_recv_cmd
@@ -30,6 +31,7 @@ class World(object):
 			pygame.init()
 			pygame.display.set_caption('Physics Sync - Demo')
 			# system
+			self.add_system(system_modified_reset.SystemModifiedReset())
 			self.add_system(system_package_dispatch.SystemPackageDispatch())
 			self.add_system(system_entity_manager.SystemEntityManager())
 			self.add_system(system_recv_state.SystemRecvState())
@@ -37,8 +39,8 @@ class World(object):
 			self.add_system(system_control.SystemControl())
 			self.add_system(system_sync_cmd.SystemSyncCmd())
 			self.add_system(system_physics.SystemPhysics())
-			self.add_system(system_render_logic.SystemRenderLogic())
 			self.add_system(system_rollback.SystemRollback())
+			self.add_system(system_render_logic.SystemRenderLogic())
 			# render
 			self.system_render = self.init_system(system_render.SystemRender())
 			# join server

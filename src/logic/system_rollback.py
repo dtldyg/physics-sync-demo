@@ -10,31 +10,31 @@ class SystemRollback(ecs.System):
 		super(SystemRollback, self).__init__((ecs.LABEL_TRANSFORM,))
 
 	def update(self, dt, component_tuples):
-		comp_record = self.world.game_component(ecs.LABEL_RECORD)
+		game_comp_record = self.world.game_component(ecs.LABEL_RECORD)
 		if not const.MASTER_PREDICT:
-			comp_record.records.clear()
+			game_comp_record.records.clear()
 			return
+		game_comp_package = self.world.game_component(ecs.LABEL_PACKAGE)
+		master_comp_frame = self.world.master_component(ecs.LABEL_FRAME)
+		master_comp_physics = self.world.master_component(ecs.LABEL_PHYSICS)
+		master_comp_transform = self.world.master_component(ecs.LABEL_TRANSFORM)
 		# record
-		comp_package = self.world.game_component(ecs.LABEL_PACKAGE)
-		comp_frame = self.world.master_component(ecs.LABEL_FRAME)
-		comp_physics = self.world.master_component(ecs.LABEL_PHYSICS)
-		record = Record(dt, self.world.entities, comp_package, comp_frame, comp_physics)
+		record = Record(dt, self.world.entities, game_comp_package, master_comp_frame, master_comp_physics)
 		for eid, comp_tuple in component_tuples:
 			record.entities[eid] = RecordEntity(*comp_tuple)
-		comp_record.records.append(record)
+		game_comp_record.records.append(record)
 		# rollback
-		if not comp_record.check_rollback:
+		if not master_comp_transform.server_modified:
 			return
-		while comp_record.server_frame > comp_record.records[0].component_frame.frame:
-			comp_record.records.pop(0)  # pop confirmed record
-		comp_transform = self.world.master_component(ecs.LABEL_TRANSFORM)
-		record_transform = comp_record.records[0].entities[self.world.master_eid()].component_transform
-		if not transform_near(comp_transform, record_transform):
-			for record in comp_record.records:
-				if record == comp_record.records[0]:
+		while master_comp_frame.server_frame > game_comp_record.records[0].component_frame.frame:
+			game_comp_record.records.pop(0)  # pop confirmed record
+		record_transform = game_comp_record.records[0].entities[self.world.master_eid()].component_transform
+		if not transform_near(master_comp_transform, record_transform):
+			for record in game_comp_record.records:
+				if record == game_comp_record.records[0]:
 					# roll-back record
-					record_transform.position = comp_transform.server_position
-					record_transform.velocity = comp_transform.server_velocity
+					record_transform.position = master_comp_transform.server_position
+					record_transform.velocity = master_comp_transform.server_velocity
 					# roll-back world
 					self.world.entities = [en for en in self.world.entities if en.eid in record.eids]
 					for en in self.world.entities:
@@ -54,7 +54,6 @@ class SystemRollback(ecs.System):
 							continue
 						record_entity = record.entities[en.eid]
 						record_entity.component_transform = copy.deepcopy(en.get_component(ecs.LABEL_TRANSFORM))
-		comp_record.check_rollback = False
 
 
 def transform_near(server_trans, record_trans):

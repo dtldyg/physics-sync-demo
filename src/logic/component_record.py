@@ -7,5 +7,3 @@ class ComponentRecord(ecs.Component):
 	def __init__(self):
 		super(ComponentRecord, self).__init__(ecs.LABEL_RECORD)
 		self.records = []
-		self.server_frame = 0
-		self.check_rollback = False
