@@ -7,6 +7,9 @@
     }
   },
   "label": {
+    "colours": {
+      "dark_bg": "#1e1e1e"
+    },
     "font": {
       "name": "msyh",
       "size": "14",

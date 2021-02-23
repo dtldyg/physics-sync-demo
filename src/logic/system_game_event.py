@@ -44,12 +44,14 @@ class SystemGameEvent(ecs.System):
 					elif event.user_type == pygame_gui.UI_BUTTON_PRESSED:
 						if event.ui_element == comp_gui.show_server:
 							const.SHOW_SERVER = btn_checkbox_event(event)
+						elif event.ui_element == comp_gui.input_buffer:
+							const.INPUT_BUFFER = btn_checkbox_event(event)
 						elif event.ui_element == comp_gui.master_predict:
 							const.MASTER_PREDICT = btn_checkbox_event(event)
-						elif event.ui_element == comp_gui.replica_buffer:
-							const.REPLICA_BUFFER = btn_checkbox_event(event)
 						elif event.ui_element == comp_gui.replica_interpolation:
 							const.REPLICA_INTERPOLATION = btn_checkbox_event(event)
+						elif event.ui_element == comp_gui.replica_dead_reckoning:
+							const.REPLICA_DEAD_RECKONING = btn_checkbox_event(event)
 						elif event.ui_element == comp_gui.replica_extrapolation:
 							const.REPLICA_EXTRAPOLATION = btn_checkbox_event(event)
 				comp_gui.ui_manager.process_events(event)

@@ -15,7 +15,7 @@ class ComponentGUI(ecs.Component):
 		self.control_mod = None
 		self.show_server = None
 		self.master_predict = None
-		self.replica_buffer = None
+		self.input_buffer = None
 		self.replica_interpolation = None
 		self.replica_extrapolation = None
 
@@ -25,6 +25,14 @@ class ComponentGUI(ecs.Component):
 
 		# ui elements
 		ui_num = 0
+
+		ui_num, y = next_ui_y(ui_num)
+		pygame_gui.elements.UILabel(
+			relative_rect=pygame.Rect((const.GUI_MARGIN[0], y), (const.GUI_MARGIN[3] + const.GUI_SIZE[0] + const.GUI_SIZE[1], const.GUI_SIZE[2])),
+			text='全局设置',
+			manager=self.ui_manager
+		)
+
 		ui_num, y = next_ui_y(ui_num)
 		pygame_gui.elements.UILabel(
 			relative_rect=pygame.Rect((const.GUI_MARGIN[0], y), (const.GUI_SIZE[0], const.GUI_SIZE[2])),
@@ -56,7 +64,28 @@ class ComponentGUI(ecs.Component):
 		ui_num, y = next_ui_y(ui_num)
 		pygame_gui.elements.UILabel(
 			relative_rect=pygame.Rect((const.GUI_MARGIN[0], y), (const.GUI_SIZE[0], const.GUI_SIZE[2])),
-			text='主控预测',
+			text='输入缓冲',
+			manager=self.ui_manager
+		)
+		self.input_buffer = pygame_gui.elements.UIButton(
+			relative_rect=pygame.Rect(
+				(const.GUI_MARGIN[0] + const.GUI_MARGIN[3] + const.GUI_SIZE[0], y), (const.GUI_SIZE[1], const.GUI_SIZE[2])),
+			text=const.INPUT_BUFFER.__str__(),
+			manager=self.ui_manager)
+		if const.INPUT_BUFFER:
+			self.input_buffer.select()
+
+		ui_num, y = next_ui_y(ui_num)
+		pygame_gui.elements.UILabel(
+			relative_rect=pygame.Rect((const.GUI_MARGIN[0], y), (const.GUI_MARGIN[3] + const.GUI_SIZE[0] + const.GUI_SIZE[1], const.GUI_SIZE[2])),
+			text='主机设置',
+			manager=self.ui_manager
+		)
+
+		ui_num, y = next_ui_y(ui_num)
+		pygame_gui.elements.UILabel(
+			relative_rect=pygame.Rect((const.GUI_MARGIN[0], y), (const.GUI_SIZE[0], const.GUI_SIZE[2])),
+			text='预测',
 			manager=self.ui_manager
 		)
 		self.master_predict = pygame_gui.elements.UIButton(
@@ -69,22 +98,15 @@ class ComponentGUI(ecs.Component):
 
 		ui_num, y = next_ui_y(ui_num)
 		pygame_gui.elements.UILabel(
-			relative_rect=pygame.Rect((const.GUI_MARGIN[0], y), (const.GUI_SIZE[0], const.GUI_SIZE[2])),
-			text='副本缓冲',
+			relative_rect=pygame.Rect((const.GUI_MARGIN[0], y), (const.GUI_MARGIN[3] + const.GUI_SIZE[0] + const.GUI_SIZE[1], const.GUI_SIZE[2])),
+			text='客机设置',
 			manager=self.ui_manager
 		)
-		self.replica_buffer = pygame_gui.elements.UIButton(
-			relative_rect=pygame.Rect(
-				(const.GUI_MARGIN[0] + const.GUI_MARGIN[3] + const.GUI_SIZE[0], y), (const.GUI_SIZE[1], const.GUI_SIZE[2])),
-			text=const.REPLICA_BUFFER.__str__(),
-			manager=self.ui_manager)
-		if const.REPLICA_BUFFER:
-			self.replica_buffer.select()
 
 		ui_num, y = next_ui_y(ui_num)
 		pygame_gui.elements.UILabel(
 			relative_rect=pygame.Rect((const.GUI_MARGIN[0], y), (const.GUI_SIZE[0], const.GUI_SIZE[2])),
-			text='副本内插值',
+			text='内插值',
 			manager=self.ui_manager
 		)
 		self.replica_interpolation = pygame_gui.elements.UIButton(
@@ -98,7 +120,21 @@ class ComponentGUI(ecs.Component):
 		ui_num, y = next_ui_y(ui_num)
 		pygame_gui.elements.UILabel(
 			relative_rect=pygame.Rect((const.GUI_MARGIN[0], y), (const.GUI_SIZE[0], const.GUI_SIZE[2])),
-			text='副本外插值',
+			text='航位推算',
+			manager=self.ui_manager
+		)
+		self.replica_dead_reckoning = pygame_gui.elements.UIButton(
+			relative_rect=pygame.Rect(
+				(const.GUI_MARGIN[0] + const.GUI_MARGIN[3] + const.GUI_SIZE[0], y), (const.GUI_SIZE[1], const.GUI_SIZE[2])),
+			text=const.REPLICA_DEAD_RECKONING.__str__(),
+			manager=self.ui_manager)
+		if const.REPLICA_DEAD_RECKONING:
+			self.replica_interpolation.select()
+
+		ui_num, y = next_ui_y(ui_num)
+		pygame_gui.elements.UILabel(
+			relative_rect=pygame.Rect((const.GUI_MARGIN[0], y), (const.GUI_SIZE[0], const.GUI_SIZE[2])),
+			text='外插值',
 			manager=self.ui_manager
 		)
 		self.replica_extrapolation = pygame_gui.elements.UIButton(
