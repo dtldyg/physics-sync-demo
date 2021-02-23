@@ -15,6 +15,7 @@ SCREEN_BACKGROUND = (0, 0, 0, 255)  # black
 GUI_WIDTH = 260
 GUI_BACKGROUND = (30, 30, 30, 255)  # gray
 GUI_MARGIN = (10, 10, 8, 2)
+# GUI_SIZE = (84, 120, 24)  # when need show scroll-bar
 GUI_SIZE = (90, 140, 24)
 
 # Game
