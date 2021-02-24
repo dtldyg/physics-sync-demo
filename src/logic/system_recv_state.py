@@ -15,7 +15,3 @@ class SystemRecvState(ecs.System):
 				comp_transform.server_position = math.Vector(**pkg['p'])
 				comp_transform.server_velocity = math.Vector(**pkg['v'])
 				comp_transform.server_modified = True
-				if eid != self.world.master_eid():
-					comp_transform.position = comp_transform.server_position
-					comp_transform.velocity = comp_transform.server_velocity
-					comp_transform.modified = True

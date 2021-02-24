@@ -91,7 +91,7 @@ class ComponentGUI(ecs.Component):
 		ui_num, y = next_ui_y(ui_num)
 		pygame_gui.elements.UILabel(
 			relative_rect=pygame.Rect((const.GUI_MARGIN[0], y), (const.GUI_MARGIN[3] + const.GUI_SIZE[0] + const.GUI_SIZE[1], const.GUI_SIZE[2])),
-			text='主机设置',
+			text='主控设置',
 			manager=self.ui_manager,
 			container=container,
 		)
@@ -116,7 +116,7 @@ class ComponentGUI(ecs.Component):
 		ui_num, y = next_ui_y(ui_num)
 		pygame_gui.elements.UILabel(
 			relative_rect=pygame.Rect((const.GUI_MARGIN[0], y), (const.GUI_MARGIN[3] + const.GUI_SIZE[0] + const.GUI_SIZE[1], const.GUI_SIZE[2])),
-			text='客机设置',
+			text='副本设置',
 			manager=self.ui_manager,
 			container=container,
 		)
@@ -141,19 +141,18 @@ class ComponentGUI(ecs.Component):
 		ui_num, y = next_ui_y(ui_num)
 		pygame_gui.elements.UILabel(
 			relative_rect=pygame.Rect((const.GUI_MARGIN[0], y), (const.GUI_SIZE[0], const.GUI_SIZE[2])),
-			text='航位推算',
+			text='- 算法',
 			manager=self.ui_manager,
 			container=container,
 		)
-		self.replica_dead_reckoning = pygame_gui.elements.UIButton(
+		self.replica_interpolation_mod = pygame_gui.elements.UIDropDownMenu(
 			relative_rect=pygame.Rect(
 				(const.GUI_MARGIN[0] + const.GUI_MARGIN[3] + const.GUI_SIZE[0], y), (const.GUI_SIZE[1], const.GUI_SIZE[2])),
-			text=const.REPLICA_DEAD_RECKONING.__str__(),
+			options_list=const.REPLICA_INTERPOLATION_LIST,
+			starting_option=const.REPLICA_INTERPOLATION_MODE,
 			manager=self.ui_manager,
 			container=container,
 		)
-		if const.REPLICA_DEAD_RECKONING:
-			self.replica_interpolation.select()
 
 		ui_num, y = next_ui_y(ui_num)
 		pygame_gui.elements.UILabel(

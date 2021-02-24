@@ -33,6 +33,7 @@ LABEL_RENDER = 1 << 8
 LABEL_RECORD = 1 << 9
 LABEL_SURFACE = 1 << 10
 LABEL_INFO = 1 << 11
+LABEL_INTERPOLATION = 1 << 12
 
 
 class Component(object):
