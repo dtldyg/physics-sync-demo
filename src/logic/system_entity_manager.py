@@ -20,9 +20,10 @@ class SystemEntityManager(ecs.System):
 				init_p = entity.get_component(ecs.LABEL_TRANSFORM).position.dict()
 				comp_connection = entity.get_component(ecs.LABEL_CONNECTION)
 				comp_connection.send_q.put({'pid': net.PID_ADD_MASTER, 'eid': entity.eid, 'p': init_p})
-				# for _, comp_tuple in component_tuples:
-				# 	_, comp_transform = comp_tuple
-				# 	comp_connection.send_q.put({'pid': net.PID_ADD_REPLICA, 'eid': entity.eid, 'p': comp_transform.position.dict()})
+				for eid, comp_tuple in component_tuples:
+					_, comp_transform = comp_tuple
+					print(eid)
+					comp_connection.send_q.put({'pid': net.PID_ADD_REPLICA, 'eid': eid, 'p': comp_transform.position.dict()})
 				# broadcast
 				broadcast_pkg = {'pid': net.PID_ADD_REPLICA, 'eid': entity.eid, 'p': init_p}
 				for _, comp_tuple in component_tuples:

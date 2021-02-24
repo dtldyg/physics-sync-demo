@@ -11,4 +11,4 @@ class EntityPlayerReplica(ecs.Entity):
 		super(EntityPlayerReplica, self).__init__(eid)
 		self.add_component(component_package.ComponentPackage())
 		self.add_component(component_transform.ComponentTransform(pos))
-		self.add_component(component_render.ComponentRender(pos))
+		self.add_component(component_render.ComponentRender())

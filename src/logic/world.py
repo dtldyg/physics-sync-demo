@@ -18,6 +18,7 @@ import logic.system_sync_cmd as system_sync_cmd
 import logic.system_game_event as system_game_event
 import logic.system_render_logic as system_render_logic
 import logic.system_rollback as system_rollback
+import logic.system_parabolic_spline as system_parabolic_spline
 import logic.system_dead_reckoning as system_dead_reckoning
 import logic.system_render as system_render
 import logic.system_sync_state as system_sync_state
@@ -41,6 +42,7 @@ class World(object):
 			self.add_system(system_sync_cmd.SystemSyncCmd())
 			self.add_system(system_physics.SystemPhysics())
 			self.add_system(system_rollback.SystemRollback())
+			self.add_system(system_parabolic_spline.SystemParabolicSpline())
 			self.add_system(system_dead_reckoning.SystemDeadReckoning())
 			self.add_system(system_render_logic.SystemRenderLogic())
 			# render

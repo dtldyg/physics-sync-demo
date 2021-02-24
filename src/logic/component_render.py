@@ -7,7 +7,7 @@ import base.ecs as ecs
 
 
 class ComponentRender(ecs.Component):
-	def __init__(self, pos):
+	def __init__(self):
 		super(ComponentRender, self).__init__(ecs.LABEL_RENDER)
 		self.client_surface = None
 		self.server_surface = None
