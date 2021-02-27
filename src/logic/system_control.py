@@ -31,7 +31,7 @@ class SystemControl(ecs.System):
 					comp_physics.force_normal = math.Vector(x, y).normal()
 			# follow mouse
 			elif const.CONTROL_MODE == const.CONTROL_MOUSE:
-				if game_comp_input.mouse_state['active'] and pygame.K_SPACE not in game_comp_input.key_down:
+				if game_comp_input.mouse_state['active'] and pygame.K_SPACE in game_comp_input.key_down:
 					cur_pos = int(comp_transform.position.x), int(comp_transform.position.y)
 					mouse_pos = pygame.mouse.get_pos()
 					if mouse_pos[0] - cur_pos[0] != 0 or mouse_pos[1] - cur_pos[1] != 0:
