@@ -11,10 +11,10 @@ import logic.component_transform as component_transform
 
 
 class EntityPlayer(ecs.Entity):
-	def __init__(self, eid, send_q):
+	def __init__(self, eid, init_pos, send_q):
 		super(EntityPlayer, self).__init__(eid)
 		self.add_component(component_connection.ComponentConnection(send_q))
 		self.add_component(component_package.ComponentPackage())
 		self.add_component(component_physics.ComponentPhysics())
 		self.add_component(component_frame.ComponentFrame())
-		self.add_component(component_transform.ComponentTransform(math.Vector(*const.MASTER_INIT_POS)))
+		self.add_component(component_transform.ComponentTransform(math.Vector(*init_pos)))

@@ -48,7 +48,6 @@ ENTITY_FLAG_LOCAL = (1 << 1, 0)
 ENTITY_FLAG_SHADOW = (1 << 1, 1)
 
 # EntityInit
-MASTER_INIT_POS = (50, SCREEN_SIZE[1] / 2)
 MASTER_CLIENT_COLOR = (255, 0, 0, 255)  # red
 MASTER_SERVER_COLOR = (255, 0, 0, 127)  # red-half
 REPLICA_COLOR = (255, 255, 0, 255)  # yellow
