@@ -58,8 +58,8 @@ REPLICA_SHADOW_COLOR = (255, 255, 0, 127)  # yellow-half
 
 # FPS
 RENDER_FPS = 120
-LOGIC_FPS = 30  # 逻辑频率(cpu)，命令(上行带宽)
-STATES_FPS = 4  # 状态(下行带宽)
+LOGIC_FPS = 60  # 逻辑频率(cpu)，命令(上行带宽)
+STATES_FPS = 30  # 状态(下行带宽)
 
 # ControlMod
 CONTROL_WASD = 'wasd'

@@ -45,14 +45,14 @@ class SystemPhysics(ecs.System):
 				trans_a = component_tuples[i][1][1]
 				trans_b = component_tuples[j][1][1]
 				p_ab = trans_b.position - trans_a.position
-				if p_ab.length_sqr < (const.ENTITY_RADIUS * 2) ** 2:
+				if p_ab.length_sqr() < (const.ENTITY_RADIUS * 2) ** 2:
 					if trans_a not in manifolds:
 						manifolds[trans_a] = [math.vector_zero, math.vector_zero]  # position_fix, impulse_fix
 					if trans_b not in manifolds:
 						manifolds[trans_b] = [math.vector_zero, math.vector_zero]
 					n_b = p_ab.normal()
 					n_a = -n_b
-					p_fix = const.ENTITY_RADIUS - p_ab.length / 2
+					p_fix = const.ENTITY_RADIUS - p_ab.length() / 2
 					# position fix
 					manifolds[trans_a][0] += n_a * p_fix
 					manifolds[trans_b][0] += n_b * p_fix
