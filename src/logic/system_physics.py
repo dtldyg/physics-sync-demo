@@ -59,7 +59,7 @@ class SystemPhysics(ecs.System):
 					# velocity fix https://github.com/phenomLi/Blog/issues/35
 					e = const.ENTITY_RESTITUTION
 					p_ab = trans_b.velocity - trans_a.velocity
-					j = -(1 + e) * p_ab.dot(n_a) / (1 / const.ENTITY_MASS * 2)
+					j = (1 + e) * p_ab.dot(n_a) / (1 / const.ENTITY_MASS * 2)
 					manifolds[trans_a][1] += n_a * j
 					manifolds[trans_b][1] += n_b * j
 		for comp_transform, fix in manifolds.items():
