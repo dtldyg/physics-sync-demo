@@ -17,6 +17,9 @@ class Vector(object):
 	def __truediv__(self, other):
 		return Vector(self.x / other, self.y / other)
 
+	def __neg__(self):
+		return Vector(-self.x, -self.y)
+
 	def __eq__(self, other):
 		return abs(self.x - other.x) < 1e-6 and abs(self.y - other.y) < 1e-6
 
@@ -26,6 +29,9 @@ class Vector(object):
 	def __repr__(self):
 		return '({},{})'.format(self.x, self.y)
 
+	def dot(self, other):
+		return self.x * other.x + self.y * other.y
+
 	def tuple(self):
 		return self.x, self.y
 
@@ -34,6 +40,9 @@ class Vector(object):
 
 	def length(self):
 		return (self.x ** 2 + self.y ** 2) ** 0.5
+
+	def length_sqr(self):
+		return self.x ** 2 + self.y ** 2
 
 	def zero(self):
 		return abs(self.x) < 1e-6 and abs(self.y) < 1e-6

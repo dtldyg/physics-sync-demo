@@ -34,7 +34,7 @@ WORLD_G = 1  # const
 # Physics
 COLLISION_ITERATION = 5
 
-# Entity
+# EntityPhysics
 ENTITY_RADIUS = 20
 ENTITY_MASS = 1  # const
 ENTITY_FRICTION = 400

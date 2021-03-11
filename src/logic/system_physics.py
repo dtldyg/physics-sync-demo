@@ -1,5 +1,6 @@
 # coding=utf-8
 
+import itertools
 import base.const as const
 import base.math as math
 import base.ecs as ecs
@@ -12,13 +13,14 @@ class SystemPhysics(ecs.System):
 
 	def update(self, dt, component_tuples):
 		# move
-		for _, comp_tuple in component_tuples:
+		last_position = {}
+		for eid, comp_tuple in component_tuples:
 			comp_physics, comp_transform = comp_tuple
+			last_position[eid] = comp_transform.position
 			f_nor = comp_physics.force_normal
 			p, v = comp_transform.position, comp_transform.velocity
 			if f_nor.zero() and v.zero():
 				continue
-			# --- 1.force analysis: Euler‘s Method ---
 			# f = f - μ·mg·v_dir
 			f_join = f_nor * const.ENTITY_FORCE - v.normal() * const.ENTITY_FRICTION * const.ENTITY_MASS * const.WORLD_G
 			# a = f/m
@@ -33,15 +35,39 @@ class SystemPhysics(ecs.System):
 				v = v.normal() * const.ENTITY_MAX_V
 			# s = v·t - similar to uniform motion
 			s = v * dt
-			# --- 2.v/p update ---
 			comp_transform.position = p + s
 			comp_transform.velocity = v
 			comp_transform.modified = True
 		# collision
+		# --- with others
+		manifolds = {}
+		for i in range(len(component_tuples)):
+			for j in range(i + 1, len(component_tuples)):
+				trans_a = component_tuples[i][1][1]
+				trans_b = component_tuples[j][1][1]
+				p_ab = trans_b.position - trans_a.position
+				if p_ab.length_sqr < (const.ENTITY_RADIUS * 2) ** 2:
+					if trans_a not in manifolds:
+						manifolds[trans_a] = [math.vector_zero, math.vector_zero]  # position_fix, velocity_fix
+					if trans_b not in manifolds:
+						manifolds[trans_b] = [math.vector_zero, math.vector_zero]
+					n_b = p_ab.normal()
+					n_a = -n_b
+					p_fix = const.ENTITY_RADIUS - p_ab.length / 2
+					# position fix
+					manifolds[trans_a][0] += n_a * p_fix
+					manifolds[trans_b][0] += n_b * p_fix
+					# velocity fix
+					manifolds[trans_a][1] += n_a * 2 * trans_a.velocity.dot(n_a)
+					manifolds[trans_b][1] += n_b * 2 * trans_b.velocity.dot(n_b)
+		for comp_transform, fix in manifolds.items():
+			comp_transform.position += fix[0]
+			comp_transform.velocity += fix[1]
+			comp_transform.modified = True
+		# --- with wall
 		for _, comp_tuple in component_tuples:
 			_, comp_transform = comp_tuple
 			p, v = comp_transform.position, comp_transform.velocity
-			# --- 3.collision check ---
 			collide = False
 			if p.x + const.ENTITY_RADIUS > const.SCREEN_SIZE[0]:
 				v.x = -v.x
@@ -59,7 +85,6 @@ class SystemPhysics(ecs.System):
 				v.y = -v.y
 				p.y = const.ENTITY_RADIUS * 2 - p.y
 				collide = True
-			# --- 4.result show ---
 			if collide:
 				comp_transform.position = p
 				comp_transform.velocity = v
