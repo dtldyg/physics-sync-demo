@@ -33,22 +33,22 @@ class World(object):
 			pygame.init()
 			pygame.display.set_caption('Physics Sync - Demo')
 			# system
-			self.add_system(system_modified_reset.SystemModifiedReset())
-			self.add_system(system_package_dispatch.SystemPackageDispatch())
-			self.add_system(system_entity_manager.SystemEntityManager())
-			self.add_system(system_recv_state.SystemRecvState())
+			# self.add_system(system_modified_reset.SystemModifiedReset())
+			# self.add_system(system_package_dispatch.SystemPackageDispatch())
+			# self.add_system(system_entity_manager.SystemEntityManager())
+			# self.add_system(system_recv_state.SystemRecvState())
 			self.add_system(system_game_event.SystemGameEvent())
 			self.add_system(system_control.SystemControl())
-			self.add_system(system_sync_cmd.SystemSyncCmd())
+			# self.add_system(system_sync_cmd.SystemSyncCmd())
 			self.add_system(system_physics.SystemPhysics())
-			self.add_system(system_rollback.SystemRollback())
-			self.add_system(system_interpolation.SystemInterpolation())
-			self.add_system(system_dead_reckoning.SystemDeadReckoning())
+			# self.add_system(system_rollback.SystemRollback())
+			# self.add_system(system_interpolation.SystemInterpolation())
+			# self.add_system(system_dead_reckoning.SystemDeadReckoning())
 			self.add_system(system_render_logic.SystemRenderLogic())
 			# render
 			self.system_render = self.init_system(system_render.SystemRender())
 			# join server
-			net.send_client_pkg({'pid': net.PID_JOIN})
+			# net.send_client_pkg({'pid': net.PID_JOIN})
 		else:
 			# system
 			self.add_system(system_package_dispatch.SystemPackageDispatch())
@@ -58,6 +58,15 @@ class World(object):
 			# state
 			self.system_sync_state = self.init_system(system_sync_state.SystemSyncState())
 		self.entities.append(entity_game.EntityGame())
+		# test add 2 entities
+		import base.math as math
+		import logic.entity_player_master as entity_player_master
+		import logic.entity_player_replica as entity_player_replica
+		entity = entity_player_master.EntityPlayerMaster(1, math.Vector(40, 40))
+		self.game_component(ecs.LABEL_INFO).master_entity_id = entity.eid
+		self.add_entity(entity)
+		entity = entity_player_replica.EntityPlayerReplica(2, math.Vector(40, 100))
+		self.add_entity(entity)
 
 	def run(self):
 		c = clock.Clock()
