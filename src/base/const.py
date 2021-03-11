@@ -51,15 +51,15 @@ ENTITY_FLAG_SHADOW = (1 << 1, 1)
 # EntityInit
 MASTER_CLIENT_COLOR = (255, 0, 0, 255)  # red
 MASTER_SERVER_COLOR = (255, 0, 0, 127)  # red-half
-REPLICA_COLOR = (255, 255, 0, 255)  # yellow
-REPLICA_SHADOW_COLOR = (255, 255, 0, 127)  # yellow-half
+REPLICA_CLIENT_COLOR = (0, 0, 255, 255)  # blue
+REPLICA_SERVER_COLOR = (0, 0, 255, 127)  # blue-half
 
 # --------- dynamic ---------
 
 # FPS
 RENDER_FPS = 120
 LOGIC_FPS = 60  # 逻辑频率(cpu)，命令(上行带宽)
-STATES_FPS = 30  # 状态(下行带宽)
+STATES_FPS = 10  # 状态(下行带宽)
 
 # ControlMod
 CONTROL_WASD = 'wasd'
