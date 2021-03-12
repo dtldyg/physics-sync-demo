@@ -12,7 +12,6 @@ class SystemRenderLogic(ecs.System):
 	def update(self, dt, component_tuples):
 		for _, comp_tuple in component_tuples:
 			comp_transform, comp_render = comp_tuple
-			comp_render.other_renders.clear()
 			# interpolation
 			if comp_transform.modified:
 				interpolation = comp_render.interpolation

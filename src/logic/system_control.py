@@ -8,12 +8,12 @@ import base.ecs as ecs
 
 class SystemControl(ecs.System):
 	def __init__(self):
-		super(SystemControl, self).__init__((ecs.LABEL_CONTROL, ecs.LABEL_PHYSICS, ecs.LABEL_TRANSFORM))
+		super(SystemControl, self).__init__((ecs.LABEL_CONTROL, ecs.LABEL_PHYSICS, ecs.LABEL_TRANSFORM, ecs.LABEL_RENDER))
 
 	def update(self, dt, component_tuples):
 		game_comp_input = self.world.game_component(ecs.LABEL_INPUT)
 		for _, comp_tuple in component_tuples:
-			comp_control, comp_physics, comp_transform = comp_tuple
+			comp_control, comp_physics, comp_transform, comp_render = comp_tuple
 			comp_physics.force_normal = math.vector_zero
 
 			# wasd
@@ -32,7 +32,10 @@ class SystemControl(ecs.System):
 			# follow mouse
 			elif const.CONTROL_MODE == const.CONTROL_MOUSE:
 				if game_comp_input.mouse_state['active'] and pygame.K_SPACE in game_comp_input.key_down:
-					cur_pos = int(comp_transform.position.x), int(comp_transform.position.y)
+					if const.MASTER_PREDICT:
+						cur_pos = int(comp_transform.position.x), int(comp_transform.position.y)
+					else:
+						cur_pos = int(comp_transform.server_position.x), int(comp_transform.server_position.y)
 					mouse_pos = pygame.mouse.get_pos()
 					if mouse_pos[0] - cur_pos[0] != 0 or mouse_pos[1] - cur_pos[1] != 0:
 						comp_physics.force_normal = (math.Vector(*mouse_pos) - math.Vector(*cur_pos)).normal()
@@ -46,9 +49,9 @@ class SystemControl(ecs.System):
 						comp_control.line_stage = 1
 						comp_control.line_start = cur_pos
 						comp_control.line_end = mouse_pos
-					# line over
-					else:
-						line_reset(comp_control)
+				# line cancel
+				if 3 in game_comp_input.mouse_state['trigger_down']:
+					line_reset(comp_control)
 				# line drawing
 				if comp_control.line_stage == 1:
 					comp_control.line_start = cur_pos
@@ -57,7 +60,7 @@ class SystemControl(ecs.System):
 				if comp_control.line_stage == 1 and 1 in game_comp_input.mouse_state['trigger_up']:
 					comp_control.line_stage = 2
 				# line begin trigger
-				if comp_control.line_stage == 2 and 3 in game_comp_input.mouse_state['trigger_up']:
+				if comp_control.line_stage == 2 and 1 in game_comp_input.mouse_state['trigger_down']:
 					f_dir = math.Vector(*comp_control.line_end) - comp_control.line_start
 					f_k = f_dir.length() / const.CONTROL_LINE_RADIUS
 					comp_control.line_f_dir = f_dir.normal()
@@ -73,13 +76,11 @@ class SystemControl(ecs.System):
 						line_reset(comp_control)
 				# draw line
 				if comp_control.line_stage == 1 or comp_control.line_stage == 2:
-					# TODO draw to entity's render
-					comp_render = comp_control.entity.get_comp('comp_render')
 					args_line = const.CONTROL_LINE_COLOR, comp_control.line_start.tuple(), comp_control.line_end
-					comp_render.add_render(pygame.draw.aaline, args_line)
+					comp_render.other_renders.append((pygame.draw.aaline, args_line))
 					if comp_control.line_stage == 1:
 						args_circle = const.CONTROL_LINE_COLOR, comp_control.line_start.tuple(), const.CONTROL_LINE_RADIUS, const.CONTROL_LINE_WIDTH
-						comp_render.add_render(pygame.draw.circle, args_circle)
+						comp_render.other_renders.append((pygame.draw.circle, args_circle))
 
 
 def line_reset(component_control):
