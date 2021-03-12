@@ -73,19 +73,19 @@ class SystemPhysics(ecs.System):
 			collide = False
 			if p.x + const.ENTITY_RADIUS > const.SCREEN_SIZE[0]:
 				v.x = -v.x
-				p.x = const.SCREEN_SIZE[0] * 2 - const.ENTITY_RADIUS * 2 - p.x
+				p.x = const.SCREEN_SIZE[0] - const.ENTITY_RADIUS
 				collide = True
 			if p.y + const.ENTITY_RADIUS > const.SCREEN_SIZE[1]:
 				v.y = -v.y
-				p.y = const.SCREEN_SIZE[1] * 2 - const.ENTITY_RADIUS * 2 - p.y
+				p.y = const.SCREEN_SIZE[1] - const.ENTITY_RADIUS
 				collide = True
 			if p.x < const.ENTITY_RADIUS:
 				v.x = -v.x
-				p.x = const.ENTITY_RADIUS * 2 - p.x
+				p.x = const.ENTITY_RADIUS
 				collide = True
 			if p.y < const.ENTITY_RADIUS:
 				v.y = -v.y
-				p.y = const.ENTITY_RADIUS * 2 - p.y
+				p.y = const.ENTITY_RADIUS
 				collide = True
 			if collide:
 				comp_transform.position = p
