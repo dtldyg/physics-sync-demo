@@ -10,9 +10,13 @@ class SystemInterpolation(ecs.System):
 
 	def update(self, dt, component_tuples):
 		for eid, comp_tuple in component_tuples:
+			if eid == self.world.master_eid() and const.MASTER_PREDICT:
+				continue
 			comp_transform, comp_interpolation = comp_tuple
 			if comp_transform.server_modified:
 				comp_interpolation.mode = const.REPLICA_INTERPOLATION_MODE
+				if eid == self.world.master_eid():
+					comp_interpolation.mode = const.REPLICA_INTERPOLATION_LINEAR
 				comp_interpolation.pass_t = 0
 				comp_interpolation.remain_t = 1 / const.STATES_FPS
 				if comp_interpolation.mode == const.REPLICA_INTERPOLATION_LINEAR:

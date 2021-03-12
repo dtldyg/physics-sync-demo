@@ -50,6 +50,8 @@ class SystemGameEvent(ecs.System):
 							const.INPUT_BUFFER = btn_checkbox_event(event)
 						elif event.ui_element == comp_gui.master_predict:
 							const.MASTER_PREDICT = btn_checkbox_event(event)
+						elif event.ui_element == comp_gui.master_interpolation:
+							const.MASTER_INTERPOLATION = btn_checkbox_event(event)
 						elif event.ui_element == comp_gui.replica_interpolation:
 							const.REPLICA_INTERPOLATION = btn_checkbox_event(event)
 						elif event.ui_element == comp_gui.replica_extrapolation:
