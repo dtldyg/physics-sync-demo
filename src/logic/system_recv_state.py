@@ -6,11 +6,11 @@ import base.ecs as ecs
 
 class SystemRecvState(ecs.System):
 	def __init__(self):
-		super(SystemRecvState, self).__init__((ecs.LABEL_PACKAGE, ecs.LABEL_TRANSFORM, ecs.LABEL_RENDER))
+		super(SystemRecvState, self).__init__((ecs.LABEL_PACKAGE, ecs.LABEL_TRANSFORM))
 
 	def update(self, dt, component_tuples):
 		for eid, comp_tuple in component_tuples:
-			comp_package, comp_transform, comp_render = comp_tuple
+			comp_package, comp_transform = comp_tuple
 			for pkg in comp_package.packages:
 				comp_transform.server_position = math.Vector(**pkg['p'])
 				comp_transform.server_velocity = math.Vector(**pkg['v'])

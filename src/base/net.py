@@ -15,12 +15,8 @@ client_rtt = [0, 0]
 
 # --------- interface ---------
 def iter_recv_pkg():
-	while True:
-		try:
-			pkg = global_recv_q.get_nowait()
-			yield pkg
-		except queue.Empty:
-			break
+	while global_recv_q.qsize() > 0:
+		yield global_recv_q.get()
 
 
 def send_client_pkg(pkg):
