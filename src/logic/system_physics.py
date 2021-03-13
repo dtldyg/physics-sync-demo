@@ -14,6 +14,8 @@ class SystemPhysics(ecs.System):
 		# move
 		last_position = {}
 		for eid, comp_tuple in component_tuples:
+			if eid == self.world.master_eid() and const.MASTER_BEHAVIOR == const.MASTER_INTERPOLATION:
+				continue
 			comp_physics, comp_transform = comp_tuple
 			last_position[eid] = comp_transform.position
 			f_nor = comp_physics.force_normal
@@ -67,7 +69,9 @@ class SystemPhysics(ecs.System):
 			comp_transform.velocity += fix[1] / const.ENTITY_MASS
 			comp_transform.modified = True
 		# --- with wall
-		for _, comp_tuple in component_tuples:
+		for eid, comp_tuple in component_tuples:
+			if eid == self.world.master_eid() and const.MASTER_BEHAVIOR == const.MASTER_INTERPOLATION:
+				continue
 			_, comp_transform = comp_tuple
 			p, v = comp_transform.position, comp_transform.velocity
 			collide = False

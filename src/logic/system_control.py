@@ -32,7 +32,7 @@ class SystemControl(ecs.System):
 			# follow mouse
 			elif const.CONTROL_MODE == const.CONTROL_MOUSE:
 				if game_comp_input.mouse_state['active'] and pygame.K_SPACE in game_comp_input.key_down:
-					if const.MASTER_PREDICT:
+					if const.MASTER_BEHAVIOR != const.MASTER_NONE:
 						cur_pos = int(comp_transform.position.x), int(comp_transform.position.y)
 					else:
 						cur_pos = int(comp_transform.server_position.x), int(comp_transform.server_position.y)

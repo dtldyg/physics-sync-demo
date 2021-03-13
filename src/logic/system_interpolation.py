@@ -10,7 +10,7 @@ class SystemInterpolation(ecs.System):
 
 	def update(self, dt, component_tuples):
 		for eid, comp_tuple in component_tuples:
-			if eid == self.world.master_eid() and const.MASTER_PREDICT:
+			if eid == self.world.master_eid() and const.MASTER_BEHAVIOR == const.MASTER_PREDICT:
 				continue
 			comp_transform, comp_interpolation = comp_tuple
 			if comp_transform.server_modified:

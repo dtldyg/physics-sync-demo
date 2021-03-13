@@ -23,7 +23,7 @@ class SystemRender(ecs.System):
 			comp_transform, comp_render, = comp_tuple
 			# draw client
 			if eid == self.world.master_eid():
-				if const.MASTER_PREDICT or const.MASTER_INTERPOLATION:
+				if const.MASTER_BEHAVIOR != const.MASTER_NONE:
 					client_position = position_interpolation(*comp_render.interpolation)
 				else:
 					client_position = comp_transform.server_position

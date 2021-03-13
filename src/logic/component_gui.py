@@ -99,36 +99,19 @@ class ComponentGUI(ecs.Component):
 		ui_num, y = next_ui_y(ui_num)
 		pygame_gui.elements.UILabel(
 			relative_rect=pygame.Rect((const.GUI_MARGIN[0], y), (const.GUI_SIZE[0], const.GUI_SIZE[2])),
-			text='预测',
+			text='行为控制',
 			manager=self.ui_manager,
 			container=container,
 		)
-		self.master_predict = pygame_gui.elements.UIButton(
+		self.master_behavior = pygame_gui.elements.UIDropDownMenu(
 			relative_rect=pygame.Rect(
-				(const.GUI_MARGIN[0] + const.GUI_MARGIN[3] + const.GUI_SIZE[0], y), (const.GUI_SIZE[1], const.GUI_SIZE[2])),
-			text=const.MASTER_PREDICT.__str__(),
+				(const.GUI_MARGIN[0] + const.GUI_MARGIN[3] + const.GUI_SIZE[0], y),
+				(const.GUI_SIZE[1], const.GUI_SIZE[2])),
+			options_list=const.MASTER_BEHAVIOR_LIST,
+			starting_option=const.MASTER_BEHAVIOR,
 			manager=self.ui_manager,
 			container=container,
 		)
-		if const.MASTER_PREDICT:
-			self.master_predict.select()
-
-		ui_num, y = next_ui_y(ui_num)
-		pygame_gui.elements.UILabel(
-			relative_rect=pygame.Rect((const.GUI_MARGIN[0], y), (const.GUI_SIZE[0], const.GUI_SIZE[2])),
-			text='内插值',
-			manager=self.ui_manager,
-			container=container,
-		)
-		self.master_interpolation = pygame_gui.elements.UIButton(
-			relative_rect=pygame.Rect(
-				(const.GUI_MARGIN[0] + const.GUI_MARGIN[3] + const.GUI_SIZE[0], y), (const.GUI_SIZE[1], const.GUI_SIZE[2])),
-			text=const.MASTER_INTERPOLATION.__str__(),
-			manager=self.ui_manager,
-			container=container,
-		)
-		if const.MASTER_INTERPOLATION:
-			self.master_interpolation.select()
 
 		ui_num, y = next_ui_y(ui_num)
 		pygame_gui.elements.UILabel(

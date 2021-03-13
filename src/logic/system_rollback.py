@@ -11,7 +11,7 @@ class SystemRollback(ecs.System):
 
 	def update(self, dt, component_tuples):
 		game_comp_record = self.world.game_component(ecs.LABEL_RECORD)
-		if not const.MASTER_PREDICT:
+		if const.MASTER_BEHAVIOR != const.MASTER_PREDICT:
 			game_comp_record.records.clear()
 			return
 		game_comp_package = self.world.game_component(ecs.LABEL_PACKAGE)

@@ -41,6 +41,8 @@ class SystemGameEvent(ecs.System):
 					if event.user_type == pygame_gui.UI_DROP_DOWN_MENU_CHANGED:
 						if event.ui_element == comp_gui.control_mod:
 							const.CONTROL_MODE = event.text
+						if event.ui_element == comp_gui.master_behavior:
+							const.MASTER_BEHAVIOR = event.text
 						elif event.ui_element == comp_gui.replica_interpolation_mod:
 							const.REPLICA_INTERPOLATION_MODE = event.text
 					elif event.user_type == pygame_gui.UI_BUTTON_PRESSED:
@@ -48,10 +50,6 @@ class SystemGameEvent(ecs.System):
 							const.SHOW_SERVER = btn_checkbox_event(event)
 						elif event.ui_element == comp_gui.input_buffer:
 							const.INPUT_BUFFER = btn_checkbox_event(event)
-						elif event.ui_element == comp_gui.master_predict:
-							const.MASTER_PREDICT = btn_checkbox_event(event)
-						elif event.ui_element == comp_gui.master_interpolation:
-							const.MASTER_INTERPOLATION = btn_checkbox_event(event)
 						elif event.ui_element == comp_gui.replica_interpolation:
 							const.REPLICA_INTERPOLATION = btn_checkbox_event(event)
 						elif event.ui_element == comp_gui.replica_extrapolation:
