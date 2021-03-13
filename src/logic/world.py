@@ -124,10 +124,16 @@ class World(object):
 
 	# ---------- master single entity ----------
 	def master_eid(self):
+		if const.IS_SERVER:
+			return -1
 		return self.game_component(ecs.LABEL_INFO).master_entity_id
 
 	def master_component(self, component_label):
+		if const.IS_SERVER:
+			return None
 		return self.get_entity(self.master_eid()).get_component(component_label)
 
 	def master_component_rollback(self, component_obj):
+		if const.IS_SERVER:
+			return
 		return self.get_entity(self.master_eid()).add_component(component_obj)
