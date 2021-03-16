@@ -10,6 +10,8 @@ class SystemRenderLogic(ecs.System):
 		self.roll_forward = True
 
 	def update(self, dt, component_tuples):
+		game_comp_info = self.world.game_component(ecs.LABEL_INFO)
+		game_comp_info.logic_fps += 1
 		for _, comp_tuple in component_tuples:
 			comp_transform, comp_render = comp_tuple
 			# interpolation

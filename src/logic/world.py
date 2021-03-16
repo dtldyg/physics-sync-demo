@@ -27,6 +27,7 @@ import logic.entity_game as entity_game
 
 class World(object):
 	def __init__(self):
+		self.clock = None
 		self.systems = []
 		self.entities = []
 		if const.IS_CLIENT:
@@ -60,14 +61,14 @@ class World(object):
 		self.entities.append(entity_game.EntityGame())
 
 	def run(self):
-		c = clock.Clock()
-		c.add(const.LOGIC_FPS, self.update)
+		self.clock = clock.Clock()
+		self.clock.add(const.LOGIC_FPS, self.update)
 		if const.IS_CLIENT:
-			c.add(const.RENDER_FPS, self.update_render)
+			self.clock.add(const.RENDER_FPS, self.update_render)
 		else:
-			c.add(const.STATES_FPS, self.update_state)
+			self.clock.add(const.STATES_FPS, self.update_state)
 		print('world run')
-		c.run()
+		self.clock.run()
 
 	# ---------- update ----------
 	def update(self, dt):
@@ -122,7 +123,7 @@ class World(object):
 	def game_component_rollback(self, component_obj):
 		self.get_entity(const.ENTITY_GAME_ID).add_component(component_obj)
 
-	# ---------- master single entity ----------
+	# ---------- master single entity (only client) ----------
 	def master_eid(self):
 		if const.IS_SERVER:
 			return -1
@@ -137,3 +138,16 @@ class World(object):
 		if const.IS_SERVER:
 			return
 		return self.get_entity(self.master_eid()).add_component(component_obj)
+
+	# ---------- buffer adjust (only client) ----------
+	def buffer_up(self):
+		fps = const.LOGIC_FPS + const.NETWORK_SERVER_BUFFER // 2
+		self.clock.set_fps(0, fps)
+
+	def buffer_down(self):
+		fps = const.LOGIC_FPS - const.NETWORK_SERVER_BUFFER // 2
+		self.clock.set_fps(0, fps)
+
+	def buffer_reset(self):
+		fps = const.LOGIC_FPS
+		self.clock.set_fps(0, fps)

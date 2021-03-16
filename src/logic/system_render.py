@@ -42,17 +42,21 @@ class SystemRender(ecs.System):
 			for other_render in comp_render.other_renders:
 				other_render[0](game_comp_surface.game, *other_render[1])
 		# game - info
+		game_comp_info.render_fps += 1
 		now = time.time()
-		game_comp_info.fps_frame += 1
 		if now - game_comp_info.fps_lt >= 1:
-			fps = game_comp_info.fps_frame / (now - game_comp_info.fps_lt)
-			game_comp_info.fps_txt = game_comp_info.font.render('fps:{:.1f}'.format(fps), True, const.FPS_COLOR)
+			render_fps = game_comp_info.render_fps / (now - game_comp_info.fps_lt)
+			logic_fps = game_comp_info.logic_fps / (now - game_comp_info.fps_lt)
+			game_comp_info.render_fps = 0
+			game_comp_info.logic_fps = 0
 			game_comp_info.fps_lt = now
-			game_comp_info.fps_frame = 0
-		game_comp_surface.game.blit(game_comp_info.fps_txt, (0, 0))
+			game_comp_info.render_fps_txt = game_comp_info.font.render('render_fps:{:.1f}'.format(render_fps), True, const.FPS_COLOR)
+			game_comp_info.logic_fps_txt = game_comp_info.font.render('logic_fps:{:.1f}'.format(logic_fps), True, const.FPS_COLOR)
+		game_comp_surface.game.blit(game_comp_info.render_fps_txt, (0, 0))
+		game_comp_surface.game.blit(game_comp_info.logic_fps_txt, (0, 18))
 		rtt_info = 'rtt:{:.0f}ms,c-s:{:+.0f}ms'.format(net.client_rtt[0] * 1000, net.client_rtt[1] * 1000)
 		rtt_txt = game_comp_info.font.render(rtt_info, True, const.FPS_COLOR)
-		game_comp_surface.game.blit(rtt_txt, (0, 18))
+		game_comp_surface.game.blit(rtt_txt, (0, 36))
 
 		# gui
 		game_comp_surface.gui.blit(game_comp_gui.ui_bg, (const.SCREEN_SIZE[0], 0))

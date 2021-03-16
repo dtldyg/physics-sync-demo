@@ -15,6 +15,10 @@ class Clock(object):
 		dt = 1 / fps
 		self.blocks.append([dt, func, 0])
 
+	def set_fps(self, idx, fps):
+		dt = 1 / fps
+		self.blocks[idx][0] = dt
+
 	def run(self):
 		b = 0
 		while True:
@@ -28,9 +32,13 @@ class Clock(object):
 					b = n
 				else:
 					for block in self.blocks:
-						if t / block[0] >= block[2]:
+						# f = t // block[0]
+						# if f != block[2]:
+						# 	block[1](block[0])
+						# 	block[2] = f
+						if 1 / block[0] >= block[2]:
 							block[1](block[0])
-							block[2] = block[2] + 1
+							block[2] += 1
 			except QuitError:
 				return
 			time.sleep(0.001)

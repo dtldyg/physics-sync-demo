@@ -10,5 +10,5 @@ class ComponentPackage(ecs.Component):
 		super(ComponentPackage, self).__init__(ecs.LABEL_PACKAGE)
 		self.packages = []
 		if const.IS_SERVER:
-			self.buffer_init = False
+			self.buffer_state = 0
 			self.buffer = queue.Queue(1024)

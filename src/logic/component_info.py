@@ -11,6 +11,8 @@ class ComponentInfo(ecs.Component):
 		super(ComponentInfo, self).__init__(ecs.LABEL_INFO)
 		self.master_entity_id = 0
 		self.font = pygame.font.SysFont('arial', 16)
-		self.fps_frame = 0
 		self.fps_lt = time.time()
-		self.fps_txt = self.font.render('fps:0', True, const.FPS_COLOR)
+		self.render_fps = 0
+		self.logic_fps = 0
+		self.render_fps_txt = self.font.render('render_fps:0', True, const.FPS_COLOR)
+		self.logic_fps_txt = self.font.render('logic_fps:0', True, const.FPS_COLOR)

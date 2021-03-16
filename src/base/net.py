@@ -110,6 +110,7 @@ PID_JOIN = 12
 PID_ADD_MASTER = 13
 PID_ADD_REPLICA = 14
 PID_DEL_REPLICA = 15
+PID_BUFFER = 16
 # inner
 PID_DEL = 99
 
@@ -123,5 +124,6 @@ example_pkg_add_master = {'pid': 0, 'eid': 0, 'p': {'x': 0, 'y': 0, }}
 example_pkg_add_replica = {'pid': 0, 'eid': 0, 'p': {'x': 0, 'y': 0, }}
 example_pkg_del_replica = {'pid': 0, 'eid': 0}
 example_pkg_states = {'pid': 0, 'fr': 0, 'states': [{'eid': 0, 'p': {'x': 0, 'y': 0, }, 'v': {'x': 0, 'y': 0, }}]}
+example_buffer = {'pid': 0, 'opt': 0}  # opt: 0-reset, 1-up, 2-down
 # inner
 example_pkg_del = {'pid': 0, 'eid': 0}
