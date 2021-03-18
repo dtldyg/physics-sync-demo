@@ -59,7 +59,7 @@ REPLICA_SERVER_COLOR = (0, 0, 255, 127)  # blue-half
 # FPS
 RENDER_FPS = 120
 LOGIC_FPS = 60  # 逻辑频率(cpu)，命令(上行带宽)
-STATES_FPS = 10  # 状态(下行带宽)
+STATES_FPS = 20  # 状态(下行带宽)
 
 # ControlMod
 CONTROL_WASD = 'wasd'
@@ -85,8 +85,8 @@ REPLICA_EXTRAPOLATION = True
 
 # Network
 NETWORK_CLIENT_BUFFER = 1  # only replica
-NETWORK_SERVER_BUFFER = 6  # 60fps: 100ms delay
-NETWORK_SERVER_BUFFER_MIN = 2
+NETWORK_SERVER_BUFFER = 8  # 60fps: 133ms delay
+NETWORK_SERVER_BUFFER_MIN = 4
 
 # Physics
 PHYSICS_BLEND_FRAMES = 60

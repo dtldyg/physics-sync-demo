@@ -32,13 +32,10 @@ class Clock(object):
 					b = n
 				else:
 					for block in self.blocks:
-						# f = t // block[0]
-						# if f != block[2]:
-						# 	block[1](block[0])
-						# 	block[2] = f
-						if 1 / block[0] >= block[2]:
+						f = t // block[0]
+						if f != block[2]:
 							block[1](block[0])
-							block[2] += 1
+							block[2] = f
 			except QuitError:
 				return
 			time.sleep(0.001)

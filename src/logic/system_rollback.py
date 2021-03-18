@@ -30,7 +30,6 @@ class SystemRollback(ecs.System):
 			game_comp_record.records.pop(0)  # pop confirmed record
 		record_transform = game_comp_record.records[0].entities[self.world.master_eid()].component_transform
 		if not transform_near(master_comp_transform, record_transform):
-			print('rollback')
 			for record in game_comp_record.records:
 				if record == game_comp_record.records[0]:
 					# roll-back record

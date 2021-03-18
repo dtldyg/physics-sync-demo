@@ -17,28 +17,21 @@ class SystemRecvCmd(ecs.System):
 				comp_package.buffer.put(pkg)
 			buffer_size = comp_package.buffer.qsize()
 			# buffer adjust
-			if buffer_size == 0:
-				print('0')
-			# print(buffer_size, end='|')
 			if comp_package.buffer_state == 0:
 				if buffer_size <= const.NETWORK_SERVER_BUFFER_MIN:
 					comp_package.buffer_state = 1
 					comp_connection.send_q.put({'pid': net.PID_BUFFER, 'opt': 1})
-					print('up')
-				elif buffer_size >= const.NETWORK_SERVER_BUFFER * 2:
+				elif buffer_size >= const.NETWORK_SERVER_BUFFER * 2 - const.NETWORK_SERVER_BUFFER_MIN:
 					comp_package.buffer_state = 2
 					comp_connection.send_q.put({'pid': net.PID_BUFFER, 'opt': 2})
-					print('down')
 			elif comp_package.buffer_state == 1:
 				if buffer_size >= const.NETWORK_SERVER_BUFFER:
 					comp_package.buffer_state = 0
 					comp_connection.send_q.put({'pid': net.PID_BUFFER, 'opt': 0})
-					print('reset')
 			elif comp_package.buffer_state == 2:
 				if buffer_size <= const.NETWORK_SERVER_BUFFER:
 					comp_package.buffer_state = 0
 					comp_connection.send_q.put({'pid': net.PID_BUFFER, 'opt': 0})
-					print('reset')
 			# pop one pkg
 			pkg = None
 			if comp_package.buffer.qsize() > 0:

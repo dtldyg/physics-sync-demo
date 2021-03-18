@@ -26,7 +26,6 @@ class SystemPackageDispatch(ecs.System):
 				comp_package_dict[const.ENTITY_GAME_ID].packages.append(pkg)
 			elif pkg['pid'] == net.PID_BUFFER:
 				opt = pkg['opt']
-				print('opt', opt)
 				if opt == 0:
 					self.world.buffer_reset()
 				elif opt == 1:
