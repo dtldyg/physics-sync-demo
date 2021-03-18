@@ -8,6 +8,7 @@ class SystemReset(ecs.System):
 		super(SystemReset, self).__init__((ecs.LABEL_TRANSFORM, ecs.LABEL_RENDER))
 
 	def update(self, dt, component_tuples):
+		self.world.game_component(ecs.LABEL_RECORD).rollback_notify = False
 		for _, comp_tuple in component_tuples:
 			comp_transform, comp_render = comp_tuple
 			comp_transform.modified = False

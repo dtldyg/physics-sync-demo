@@ -8,6 +8,7 @@ IS_SERVER = False
 
 # Screen
 FPS_COLOR = (0, 255, 0, 255)  # green
+ROLLBACK_COLOR = (255, 0, 0, 255)  # red
 SCREEN_SIZE = (400, 400)
 SCREEN_BACKGROUND = (0, 0, 0, 255)  # black
 

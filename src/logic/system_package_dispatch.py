@@ -25,13 +25,7 @@ class SystemPackageDispatch(ecs.System):
 					pkg['pid'] == net.PID_DEL_REPLICA:
 				comp_package_dict[const.ENTITY_GAME_ID].packages.append(pkg)
 			elif pkg['pid'] == net.PID_BUFFER:
-				opt = pkg['opt']
-				if opt == 0:
-					self.world.buffer_reset()
-				elif opt == 1:
-					self.world.buffer_up()
-				elif opt == 2:
-					self.world.buffer_down()
+				self.world.buffer_adjust(pkg['opt'])
 			elif pkg['pid'] == net.PID_CMD:
 				comp_package_dict[pkg['eid']].packages.append(pkg)
 			elif pkg['pid'] == net.PID_STATES:

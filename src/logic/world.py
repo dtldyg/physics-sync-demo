@@ -125,29 +125,19 @@ class World(object):
 
 	# ---------- master single entity (only client) ----------
 	def master_eid(self):
-		if const.IS_SERVER:
-			return -1
 		return self.game_component(ecs.LABEL_INFO).master_entity_id
 
 	def master_component(self, component_label):
-		if const.IS_SERVER:
-			return None
 		return self.get_entity(self.master_eid()).get_component(component_label)
 
 	def master_component_rollback(self, component_obj):
-		if const.IS_SERVER:
-			return
 		return self.get_entity(self.master_eid()).add_component(component_obj)
 
 	# ---------- buffer adjust (only client) ----------
-	def buffer_up(self):
-		fps = const.LOGIC_FPS + const.NETWORK_SERVER_BUFFER // 2
-		self.clock.set_fps(0, fps)
-
-	def buffer_down(self):
-		fps = const.LOGIC_FPS - const.NETWORK_SERVER_BUFFER // 2
-		self.clock.set_fps(0, fps)
-
-	def buffer_reset(self):
+	def buffer_adjust(self, opt):
 		fps = const.LOGIC_FPS
+		if opt == 1:
+			fps += const.NETWORK_SERVER_BUFFER // 2
+		elif opt == 2:
+			fps -= const.NETWORK_SERVER_BUFFER // 2
 		self.clock.set_fps(0, fps)

@@ -17,21 +17,19 @@ class SystemRecvCmd(ecs.System):
 				comp_package.buffer.put(pkg)
 			buffer_size = comp_package.buffer.qsize()
 			# buffer adjust
+			opt = -1
 			if comp_package.buffer_state == 0:
 				if buffer_size <= const.NETWORK_SERVER_BUFFER_MIN:
-					comp_package.buffer_state = 1
-					comp_connection.send_q.put({'pid': net.PID_BUFFER, 'opt': 1})
+					opt = 1
 				elif buffer_size >= const.NETWORK_SERVER_BUFFER * 2 - const.NETWORK_SERVER_BUFFER_MIN:
-					comp_package.buffer_state = 2
-					comp_connection.send_q.put({'pid': net.PID_BUFFER, 'opt': 2})
-			elif comp_package.buffer_state == 1:
-				if buffer_size >= const.NETWORK_SERVER_BUFFER:
-					comp_package.buffer_state = 0
-					comp_connection.send_q.put({'pid': net.PID_BUFFER, 'opt': 0})
-			elif comp_package.buffer_state == 2:
-				if buffer_size <= const.NETWORK_SERVER_BUFFER:
-					comp_package.buffer_state = 0
-					comp_connection.send_q.put({'pid': net.PID_BUFFER, 'opt': 0})
+					opt = 2
+			else:
+				if (comp_package.buffer_state == 1 and buffer_size >= const.NETWORK_SERVER_BUFFER) or \
+						(comp_package.buffer_state == 2 and buffer_size <= const.NETWORK_SERVER_BUFFER):
+					opt = 0
+			if opt >= 0:
+				comp_package.buffer_state = opt
+				comp_connection.send_q.put({'pid': net.PID_BUFFER, 'opt': opt})
 			# pop one pkg
 			pkg = None
 			if comp_package.buffer.qsize() > 0:

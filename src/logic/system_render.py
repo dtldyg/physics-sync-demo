@@ -57,6 +57,9 @@ class SystemRender(ecs.System):
 		rtt_info = 'rtt:{:.0f}ms,c-s:{:+.0f}ms'.format(net.client_rtt[0] * 1000, net.client_rtt[1] * 1000)
 		rtt_txt = game_comp_info.font.render(rtt_info, True, const.FPS_COLOR)
 		game_comp_surface.game.blit(rtt_txt, (0, 36))
+		if self.world.game_component(ecs.LABEL_RECORD).rollback_notify:
+			rollback_txt = game_comp_info.font.render('rollback', True, const.ROLLBACK_COLOR)
+			game_comp_surface.game.blit(rollback_txt, (0, 54))
 
 		# gui
 		game_comp_surface.gui.blit(game_comp_gui.ui_bg, (const.SCREEN_SIZE[0], 0))

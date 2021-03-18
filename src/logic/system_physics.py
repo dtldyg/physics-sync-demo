@@ -14,7 +14,7 @@ class SystemPhysics(ecs.System):
 		# move
 		last_position = {}
 		for eid, comp_tuple in component_tuples:
-			if eid == self.world.master_eid() and const.MASTER_BEHAVIOR == const.MASTER_INTERPOLATION:
+			if const.IS_CLIENT and eid == self.world.master_eid() and const.MASTER_BEHAVIOR == const.MASTER_INTERPOLATION:
 				continue
 			comp_physics, comp_transform = comp_tuple
 			last_position[eid] = comp_transform.position
@@ -70,7 +70,7 @@ class SystemPhysics(ecs.System):
 			comp_transform.modified = True
 		# --- with wall
 		for eid, comp_tuple in component_tuples:
-			if eid == self.world.master_eid() and const.MASTER_BEHAVIOR == const.MASTER_INTERPOLATION:
+			if const.IS_CLIENT and eid == self.world.master_eid() and const.MASTER_BEHAVIOR == const.MASTER_INTERPOLATION:
 				continue
 			_, comp_transform = comp_tuple
 			p, v = comp_transform.position, comp_transform.velocity
