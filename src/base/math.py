@@ -2,7 +2,7 @@
 
 
 class Vector(object):
-	def __init__(self, x=0, y=0):
+	def __init__(self, x: float = 0, y: float = 0):
 		self.x, self.y = x, y
 
 	def __add__(self, other):
@@ -56,6 +56,12 @@ class Vector(object):
 			return Vector(self.x / length, self.y / length)
 		else:
 			return vector_zero
+
+	def to_fixed(self):
+		return Vector(int(self.x * 1e9), int(self.y * 1e9))
+
+	def to_float(self):
+		return Vector(self.x / 1e9, self.y / 1e9)
 
 
 vector_zero = Vector()

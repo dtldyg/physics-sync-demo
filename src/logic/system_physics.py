@@ -17,6 +17,8 @@ class SystemPhysics(ecs.System):
 			if const.IS_CLIENT and eid == self.world.master_eid() and const.MASTER_BEHAVIOR == const.MASTER_INTERPOLATION:
 				continue
 			comp_physics, comp_transform = comp_tuple
+			if const.IS_SERVER:
+				dt = comp_physics.dt
 			last_position[eid] = comp_transform.position
 			f_nor = comp_physics.force_normal
 			p, v = comp_transform.position, comp_transform.velocity

@@ -36,7 +36,8 @@ class SystemRecvCmd(ecs.System):
 				pkg = comp_package.buffer.get()
 			if pkg is not None:
 				comp_frame.frame = pkg['fr']
+				comp_physics.dt_fixed = pkg['dt']
 				if pkg['f']['x'] == 0 and pkg['f']['y'] == 0:
-					comp_physics.force_normal = math.vector_zero
+					comp_physics.force_normal_fixed = math.vector_zero
 				else:
-					comp_physics.force_normal = math.Vector(**pkg['f']).normal()
+					comp_physics.force_normal_fixed = math.Vector(**pkg['f'])

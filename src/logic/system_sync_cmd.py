@@ -12,5 +12,5 @@ class SystemSyncCmd(ecs.System):
 		for eid, comp_tuple in component_tuples:
 			comp_frame, comp_physics = comp_tuple
 			comp_frame.frame += 1
-			sync_package = {'pid': net.PID_CMD, 'eid': eid, 'fr': comp_frame.frame, 'f': comp_physics.force_normal.dict()}
+			sync_package = {'pid': net.PID_CMD, 'eid': eid, 'fr': comp_frame.frame, 'dt': int(dt * 1e9), 'f': comp_physics.force_normal_fixed.dict()}
 			net.send_client_pkg(sync_package)
