@@ -5,6 +5,7 @@ import pygame_gui
 import base.clock as clock
 import base.const as const
 import base.ecs as ecs
+import base.net as net
 
 
 class SystemGameEvent(ecs.System):
@@ -48,13 +49,17 @@ class SystemGameEvent(ecs.System):
 					elif event.user_type == pygame_gui.UI_BUTTON_PRESSED:
 						if event.ui_element == comp_gui.show_server:
 							const.SHOW_SERVER = btn_checkbox_event(event)
-						elif event.ui_element == comp_gui.input_buffer:
-							const.INPUT_BUFFER = btn_checkbox_event(event)
+						elif event.ui_element == comp_gui.server_input_buffer:
+							sync_to_server('SERVER_INPUT_BUFFER', not event.ui_element.is_selected)  # wait for server broad
 						elif event.ui_element == comp_gui.replica_interpolation:
 							const.REPLICA_INTERPOLATION = btn_checkbox_event(event)
 						elif event.ui_element == comp_gui.replica_extrapolation:
 							const.REPLICA_EXTRAPOLATION = btn_checkbox_event(event)
 				comp_gui.ui_manager.process_events(event)
+
+
+def sync_to_server(k, v):
+	net.send_client_pkg({'pid': net.PID_SYNC_CONF, 'k': k, 'v': v})
 
 
 def btn_checkbox_event(event):

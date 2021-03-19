@@ -29,8 +29,8 @@ class SystemEntityManager(ecs.System):
 				comp_connection.send_q.put({'pid': net.PID_ADD_MASTER, 'eid': entity.eid, 'p': init_p})
 				for eid, comp_tuple in component_tuples:
 					_, comp_transform = comp_tuple
-					print(eid)
 					comp_connection.send_q.put({'pid': net.PID_ADD_REPLICA, 'eid': eid, 'p': comp_transform.position.dict()})
+					comp_connection.send_q.put({'pid': net.PID_BROAD_CONF, 'k': 'SERVER_INPUT_BUFFER', 'v': const.SERVER_INPUT_BUFFER})
 				# broadcast
 				broadcast_pkg = {'pid': net.PID_ADD_REPLICA, 'eid': entity.eid, 'p': init_p}
 				for _, comp_tuple in component_tuples:
@@ -63,6 +63,21 @@ class SystemEntityManager(ecs.System):
 				entity = self.world.get_entity(pkg['eid'])
 				self.world.del_entity(entity)
 				print('del replica:', entity.eid)
+			elif pkg['pid'] == net.PID_BUFFER:
+				self.world.buffer_adjust(pkg['opt'])
+			elif pkg['pid'] == net.PID_SYNC_CONF:
+				setattr(const, pkg['k'], pkg['v'])
+				pkg['pid'] = net.PID_BROAD_CONF
+				for _, comp_tuple in component_tuples:
+					comp_connection, _ = comp_tuple
+					comp_connection.send_q.put(pkg)
+			elif pkg['pid'] == net.PID_BROAD_CONF:
+				setattr(const, pkg['k'], pkg['v'])
+				if pkg['k'] == 'SERVER_INPUT_BUFFER':
+					if const.SERVER_INPUT_BUFFER:
+						self.world.game_component(ecs.LABEL_GUI).server_input_buffer.select()
+					else:
+						self.world.game_component(ecs.LABEL_GUI).server_input_buffer.unselect()
 
 
 def add_grid(entity_grid, position):

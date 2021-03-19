@@ -15,7 +15,7 @@ class ComponentGUI(ecs.Component):
 		self.control_mod = None
 		self.show_server = None
 		self.master_predict = None
-		self.input_buffer = None
+		self.server_input_buffer = None
 		self.replica_interpolation = None
 		self.replica_extrapolation = None
 
@@ -74,19 +74,19 @@ class ComponentGUI(ecs.Component):
 		ui_num, y = next_ui_y(ui_num)
 		pygame_gui.elements.UILabel(
 			relative_rect=pygame.Rect((const.GUI_MARGIN[0], y), (const.GUI_SIZE[0], const.GUI_SIZE[2])),
-			text='输入缓冲',
+			text='服务端缓冲',
 			manager=self.ui_manager,
 			container=container,
 		)
-		self.input_buffer = pygame_gui.elements.UIButton(
+		self.server_input_buffer = pygame_gui.elements.UIButton(
 			relative_rect=pygame.Rect(
 				(const.GUI_MARGIN[0] + const.GUI_MARGIN[3] + const.GUI_SIZE[0], y), (const.GUI_SIZE[1], const.GUI_SIZE[2])),
-			text=const.INPUT_BUFFER.__str__(),
+			text=const.SERVER_INPUT_BUFFER.__str__(),
 			manager=self.ui_manager,
 			container=container,
 		)
-		if const.INPUT_BUFFER:
-			self.input_buffer.select()
+		if const.SERVER_INPUT_BUFFER:
+			self.server_input_buffer.select()
 
 		ui_num, y = next_ui_y(ui_num)
 		pygame_gui.elements.UILabel(

@@ -15,18 +15,23 @@ class SystemRecvCmd(ecs.System):
 			comp_package, comp_physics, comp_frame, comp_connection = comp_tuple
 			for pkg in comp_package.packages:
 				comp_package.buffer.put(pkg)
-			buffer_size = comp_package.buffer.qsize()
-			# buffer adjust
 			opt = -1
-			if comp_package.buffer_state == 0:
-				if buffer_size <= const.NETWORK_SERVER_BUFFER_MIN:
-					opt = 1
-				elif buffer_size >= const.NETWORK_SERVER_BUFFER * 2 - const.NETWORK_SERVER_BUFFER_MIN:
-					opt = 2
+			if const.SERVER_INPUT_BUFFER:
+				# buffer adjust
+				buffer_size = comp_package.buffer.qsize()
+				if comp_package.buffer_state == 0:
+					if buffer_size <= const.NETWORK_SERVER_BUFFER_MIN:
+						opt = 1
+					elif buffer_size >= const.NETWORK_SERVER_BUFFER * 2 - const.NETWORK_SERVER_BUFFER_MIN:
+						opt = 2
+				else:
+					if (comp_package.buffer_state == 1 and buffer_size >= const.NETWORK_SERVER_BUFFER) or \
+							(comp_package.buffer_state == 2 and buffer_size <= const.NETWORK_SERVER_BUFFER):
+						opt = 0
 			else:
-				if (comp_package.buffer_state == 1 and buffer_size >= const.NETWORK_SERVER_BUFFER) or \
-						(comp_package.buffer_state == 2 and buffer_size <= const.NETWORK_SERVER_BUFFER):
-					opt = 0
+				# buffer down, ensure client is lower than server
+				if comp_package.buffer_state != 2:
+					opt = 2
 			if opt >= 0:
 				comp_package.buffer_state = opt
 				comp_connection.send_q.put({'pid': net.PID_BUFFER, 'opt': opt})

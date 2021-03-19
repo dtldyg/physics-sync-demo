@@ -113,6 +113,8 @@ PID_ADD_MASTER = 13
 PID_ADD_REPLICA = 14
 PID_DEL_REPLICA = 15
 PID_BUFFER = 16
+PID_SYNC_CONF = 17
+PID_BROAD_CONF = 18
 # inner
 PID_DEL = 99
 
@@ -120,6 +122,7 @@ PID_DEL = 99
 example_pkg_ping = {'pid': 0, 't1': 0}
 example_pkg_join = {'pid': 0, 'eid': 0, 'send_q': None}  # eid、send_q仅server内部使用
 example_pkg_cmd = {'pid': 0, 'eid': 0, 'fr': 0, 'dt': 0, 'f': {'x': 0, 'y': 0}}
+example_pkg_sync_conf = {'pid': 0, 'k': '', 'v': ''}
 # down
 example_pkg_pong = {'pid': 0, 't1': 0, 't2': 0}
 example_pkg_add_master = {'pid': 0, 'eid': 0, 'p': {'x': 0, 'y': 0, }}
@@ -127,5 +130,6 @@ example_pkg_add_replica = {'pid': 0, 'eid': 0, 'p': {'x': 0, 'y': 0, }}
 example_pkg_del_replica = {'pid': 0, 'eid': 0}
 example_pkg_states = {'pid': 0, 'fr': 0, 'states': [{'eid': 0, 'p': {'x': 0, 'y': 0, }, 'v': {'x': 0, 'y': 0, }}]}
 example_buffer = {'pid': 0, 'opt': 0}  # opt: 0-reset, 1-up, 2-down
+example_pkg_broad_conf = {'pid': 0, 'k': '', 'v': ''}
 # inner
 example_pkg_del = {'pid': 0, 'eid': 0}
