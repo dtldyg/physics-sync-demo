@@ -36,6 +36,8 @@ class Clock(object):
 						if f != block[2]:
 							block[1](block[0])
 							block[2] = f
+				time.sleep(0.001)
 			except QuitError:
 				return
-			time.sleep(0.001)
+			except KeyboardInterrupt:
+				return

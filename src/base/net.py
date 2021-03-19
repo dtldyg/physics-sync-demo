@@ -80,8 +80,8 @@ def _run_listen(sock):
 		conn, addr = sock.accept()
 		eid = eid + 1
 		local_send_q = queue.Queue(1024)
-		threading.Thread(target=_run_conn_recv, args=(global_recv_q, conn, eid, local_send_q)).start()
-		threading.Thread(target=_run_conn_send, args=(local_send_q, conn)).start()
+		threading.Thread(target=_run_conn_recv, args=(global_recv_q, conn, eid, local_send_q), daemon=True).start()
+		threading.Thread(target=_run_conn_send, args=(local_send_q, conn), daemon=True).start()
 
 
 # socket client
@@ -90,13 +90,15 @@ def run_client_socket():
 	conn.connect(('127.0.0.1', 9999))
 	threading.Thread(target=_run_conn_recv, args=(global_recv_q, conn,), daemon=True).start()
 	threading.Thread(target=_run_conn_send, args=(global_send_q, conn,), daemon=True).start()
+	return conn
 
 
 # socket server
 def run_server_socket():
 	sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 	sock.bind(('127.0.0.1', 9999))
-	threading.Thread(target=_run_listen, args=(sock,)).start()
+	threading.Thread(target=_run_listen, args=(sock,), daemon=True).start()
+	return sock
 
 
 # --------- pkg ---------

@@ -7,9 +7,12 @@ import logic.world as world
 
 def main():
 	const.IS_SERVER = True
-	net.run_server_socket()
+	sock = net.run_server_socket()
+
 	w = world.World()
 	w.run()
+
+	sock.close()
 
 
 if __name__ == "__main__":

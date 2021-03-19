@@ -69,6 +69,7 @@ class World(object):
 			self.clock.add(const.STATES_FPS, self.update_state)
 		print('world run')
 		self.clock.run()
+		print('world over')
 
 	# ---------- update ----------
 	def update(self, dt):
