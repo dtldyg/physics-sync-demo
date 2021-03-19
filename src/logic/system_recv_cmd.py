@@ -16,9 +16,9 @@ class SystemRecvCmd(ecs.System):
 			for pkg in comp_package.packages:
 				comp_package.buffer.put(pkg)
 			opt = -1
+			buffer_size = comp_package.buffer.qsize()
 			if const.SERVER_INPUT_BUFFER:
 				# buffer adjust
-				buffer_size = comp_package.buffer.qsize()
 				if comp_package.buffer_state == 0:
 					if buffer_size <= const.NETWORK_SERVER_BUFFER_MIN:
 						opt = 1
@@ -35,6 +35,9 @@ class SystemRecvCmd(ecs.System):
 			if opt >= 0:
 				comp_package.buffer_state = opt
 				comp_connection.send_q.put({'pid': net.PID_BUFFER, 'opt': opt})
+			if buffer_size != comp_package.last_buffer_size:
+				comp_package.last_buffer_size = buffer_size
+				comp_connection.send_q.put({'pid': net.PID_SYNC_BUFFER, 'v': buffer_size})
 			# pop one pkg
 			pkg = None
 			if comp_package.buffer.qsize() > 0:

@@ -90,6 +90,22 @@ class ComponentGUI(ecs.Component):
 
 		ui_num, y = next_ui_y(ui_num)
 		pygame_gui.elements.UILabel(
+			relative_rect=pygame.Rect((const.GUI_MARGIN[0], y), (const.GUI_SIZE[0], const.GUI_SIZE[2])),
+			text='- 缓冲值',
+			manager=self.ui_manager,
+			container=container,
+		)
+		self.server_input_buffer_value = ServerInputBufferValue(const.NETWORK_SERVER_BUFFER * 2)
+		pygame_gui.elements.UIScreenSpaceHealthBar(
+			relative_rect=pygame.Rect(
+				(const.GUI_MARGIN[0] + const.GUI_MARGIN[3] + const.GUI_SIZE[0], y), (const.GUI_SIZE[1], const.GUI_SIZE[2])),
+			manager=self.ui_manager,
+			sprite_to_monitor=self.server_input_buffer_value,
+			container=container,
+		)
+
+		ui_num, y = next_ui_y(ui_num)
+		pygame_gui.elements.UILabel(
 			relative_rect=pygame.Rect((const.GUI_MARGIN[0], y), (const.GUI_MARGIN[3] + const.GUI_SIZE[0] + const.GUI_SIZE[1], const.GUI_SIZE[2])),
 			text='主控设置',
 			manager=self.ui_manager,
@@ -173,6 +189,13 @@ class ComponentGUI(ecs.Component):
 
 		_, y = next_ui_y(ui_num)
 		container.set_scrollable_area_dimensions((const.GUI_MARGIN[0] + const.GUI_MARGIN[3] + const.GUI_SIZE[0] + const.GUI_SIZE[1], y + const.GUI_MARGIN[1]))
+
+
+class ServerInputBufferValue(pygame.sprite.Sprite):
+	def __init__(self, double_buffer):
+		super().__init__()
+		self.health_capacity = double_buffer
+		self.current_health = 0
 
 
 def next_ui_y(ui_num):

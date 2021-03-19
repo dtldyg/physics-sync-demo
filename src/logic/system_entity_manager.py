@@ -78,6 +78,8 @@ class SystemEntityManager(ecs.System):
 						self.world.game_component(ecs.LABEL_GUI).server_input_buffer.select()
 					else:
 						self.world.game_component(ecs.LABEL_GUI).server_input_buffer.unselect()
+			elif pkg['pid'] == net.PID_SYNC_BUFFER:
+				self.world.game_component(ecs.LABEL_GUI).server_input_buffer_value.current_health = pkg['v']
 
 
 def add_grid(entity_grid, position):

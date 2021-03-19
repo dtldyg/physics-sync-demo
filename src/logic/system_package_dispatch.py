@@ -25,7 +25,8 @@ class SystemPackageDispatch(ecs.System):
 					pkg['pid'] == net.PID_DEL_REPLICA or \
 					pkg['pid'] == net.PID_BUFFER or \
 					pkg['pid'] == net.PID_SYNC_CONF or \
-					pkg['pid'] == net.PID_BROAD_CONF:
+					pkg['pid'] == net.PID_BROAD_CONF or \
+					pkg['pid'] == net.PID_SYNC_BUFFER:
 				comp_package_dict[const.ENTITY_GAME_ID].packages.append(pkg)
 			elif pkg['pid'] == net.PID_CMD:
 				comp_package_dict[pkg['eid']].packages.append(pkg)

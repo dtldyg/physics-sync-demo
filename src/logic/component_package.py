@@ -12,3 +12,4 @@ class ComponentPackage(ecs.Component):
 		if const.IS_SERVER:
 			self.buffer_state = 0
 			self.buffer = queue.Queue(1024)
+			self.last_buffer_size = 0

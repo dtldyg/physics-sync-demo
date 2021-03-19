@@ -15,5 +15,17 @@
       "size": "14",
       "regular_path": "res/msyh.ttc"
     }
+  },
+  "screen_space_health_bar": {
+    "colours": {
+      "filled_bar": "#555555",
+      "unfilled_bar": "#1e1e1e"
+    },
+    "font": {
+      "name": "msyh",
+      "size": "12",
+      "bold": "0",
+      "regular_path": "res/msyh.ttc"
+    }
   }
 }

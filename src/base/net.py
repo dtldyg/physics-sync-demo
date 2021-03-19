@@ -115,6 +115,7 @@ PID_DEL_REPLICA = 15
 PID_BUFFER = 16
 PID_SYNC_CONF = 17
 PID_BROAD_CONF = 18
+PID_SYNC_BUFFER = 19
 # inner
 PID_DEL = 99
 
@@ -129,7 +130,8 @@ example_pkg_add_master = {'pid': 0, 'eid': 0, 'p': {'x': 0, 'y': 0, }}
 example_pkg_add_replica = {'pid': 0, 'eid': 0, 'p': {'x': 0, 'y': 0, }}
 example_pkg_del_replica = {'pid': 0, 'eid': 0}
 example_pkg_states = {'pid': 0, 'fr': 0, 'states': [{'eid': 0, 'p': {'x': 0, 'y': 0, }, 'v': {'x': 0, 'y': 0, }}]}
-example_buffer = {'pid': 0, 'opt': 0}  # opt: 0-reset, 1-up, 2-down
+example_pkg_buffer = {'pid': 0, 'opt': 0}  # opt: 0-reset, 1-up, 2-down
 example_pkg_broad_conf = {'pid': 0, 'k': '', 'v': ''}
+example_pkg_sync_buffer = {'pid': 0, 'v': 0}
 # inner
 example_pkg_del = {'pid': 0, 'eid': 0}
