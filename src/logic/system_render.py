@@ -28,7 +28,7 @@ class SystemRender(ecs.System):
 				else:
 					client_position = comp_transform.server_position
 			else:
-				if const.REPLICA_INTERPOLATION:
+				if const.REPLICA_BEHAVIOR != const.REPLICA_NONE:
 					client_position = position_interpolation(*comp_render.interpolation)
 				else:
 					client_position = comp_transform.server_position

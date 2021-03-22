@@ -14,10 +14,11 @@ class ComponentGUI(ecs.Component):
 
 		self.control_mod = None
 		self.show_server = None
-		self.master_predict = None
 		self.server_input_buffer = None
-		self.replica_interpolation = None
-		self.replica_extrapolation = None
+		self.server_input_buffer_value = None
+		self.master_behavior = None
+		self.replica_behavior = None
+		self.replica_interpolation_mod = None
 
 		# init
 		self.ui_manager.get_root_container().set_position((const.SCREEN_SIZE[0], 0))
@@ -26,7 +27,7 @@ class ComponentGUI(ecs.Component):
 		# ui elements
 		ui_num = 0
 		container = pygame_gui.elements.UIScrollingContainer(
-			relative_rect=pygame.Rect((0, 0), (const.GUI_WIDTH, const.SCREEN_SIZE[1])),
+			relative_rect=pygame.Rect((0, 0), (const.GUI_WIDTH, const.SCREEN_SIZE[1])),  # show
 			manager=self.ui_manager
 		)
 
@@ -140,19 +141,19 @@ class ComponentGUI(ecs.Component):
 		ui_num, y = next_ui_y(ui_num)
 		pygame_gui.elements.UILabel(
 			relative_rect=pygame.Rect((const.GUI_MARGIN[0], y), (const.GUI_SIZE[0], const.GUI_SIZE[2])),
-			text='内插值',
+			text='行为控制',
 			manager=self.ui_manager,
 			container=container,
 		)
-		self.replica_interpolation = pygame_gui.elements.UIButton(
+		self.replica_behavior = pygame_gui.elements.UIDropDownMenu(
 			relative_rect=pygame.Rect(
-				(const.GUI_MARGIN[0] + const.GUI_MARGIN[3] + const.GUI_SIZE[0], y), (const.GUI_SIZE[1], const.GUI_SIZE[2])),
-			text=const.REPLICA_INTERPOLATION.__str__(),
+				(const.GUI_MARGIN[0] + const.GUI_MARGIN[3] + const.GUI_SIZE[0], y),
+				(const.GUI_SIZE[1], const.GUI_SIZE[2])),
+			options_list=const.REPLICA_BEHAVIOR_LIST,
+			starting_option=const.REPLICA_BEHAVIOR,
 			manager=self.ui_manager,
 			container=container,
 		)
-		if const.REPLICA_INTERPOLATION:
-			self.replica_interpolation.select()
 
 		ui_num, y = next_ui_y(ui_num)
 		pygame_gui.elements.UILabel(
@@ -170,25 +171,7 @@ class ComponentGUI(ecs.Component):
 			container=container,
 		)
 
-		ui_num, y = next_ui_y(ui_num)
-		pygame_gui.elements.UILabel(
-			relative_rect=pygame.Rect((const.GUI_MARGIN[0], y), (const.GUI_SIZE[0], const.GUI_SIZE[2])),
-			text='外插值',
-			manager=self.ui_manager,
-			container=container,
-		)
-		self.replica_extrapolation = pygame_gui.elements.UIButton(
-			relative_rect=pygame.Rect(
-				(const.GUI_MARGIN[0] + const.GUI_MARGIN[3] + const.GUI_SIZE[0], y), (const.GUI_SIZE[1], const.GUI_SIZE[2])),
-			text=const.REPLICA_EXTRAPOLATION.__str__(),
-			manager=self.ui_manager,
-			container=container,
-		)
-		if const.REPLICA_EXTRAPOLATION:
-			self.replica_extrapolation.select()
-
-		_, y = next_ui_y(ui_num)
-		container.set_scrollable_area_dimensions((const.GUI_MARGIN[0] + const.GUI_MARGIN[3] + const.GUI_SIZE[0] + const.GUI_SIZE[1], y + const.GUI_MARGIN[1]))
+		container.set_scrollable_area_dimensions((const.GUI_WIDTH, const.SCREEN_SIZE[1]))  # all
 
 
 class ServerInputBufferValue(pygame.sprite.Sprite):
