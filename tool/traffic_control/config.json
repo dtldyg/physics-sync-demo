@@ -1,0 +1,15 @@
+{
+	"back_ip": "127.0.0.1",
+	"back_port": 9999,
+	"range_cd": 1,
+	"preset_ports": [
+		{
+			"port": 9998,
+			"front_delay": 50,
+			"back_delay": 50,
+			"range": 0
+		}
+	],
+	"need_handshake": false,
+	"handshake_uids": {}
+}

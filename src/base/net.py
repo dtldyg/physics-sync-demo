@@ -7,13 +7,13 @@ import threading
 import queue
 import time
 
-global_recv_q = queue.Queue(1024)
-global_send_q = queue.Queue(1024)
+global_recv_q = queue.Queue(1024)  # thread-safety
+global_send_q = queue.Queue(1024)  # thread-safety
 
 client_rtt = [0, 0]
 
 
-# --------- interface ---------
+# --------- interface (in game thread) ---------
 def iter_recv_pkg():
 	while global_recv_q.qsize() > 0:
 		yield global_recv_q.get()
@@ -23,7 +23,7 @@ def send_client_pkg(pkg):
 	global_send_q.put(pkg)
 
 
-# --------- network ---------
+# --------- network (in network thread) ---------
 def _run_conn_recv(recv_q, conn, eid=None, send_q=None):
 	while True:
 		try:
