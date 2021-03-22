@@ -15,3 +15,4 @@ class ComponentTransform(ecs.Component):
 			self.server_position = pos
 			self.server_velocity = math.vector_zero
 			self.server_modified = True
+			self.extrapolation_position = pos

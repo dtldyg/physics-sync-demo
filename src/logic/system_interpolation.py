@@ -9,17 +9,20 @@ class SystemInterpolation(ecs.System):
 		super(SystemInterpolation, self).__init__((ecs.LABEL_TRANSFORM, ecs.LABEL_INTERPOLATION))
 
 	def update(self, dt, component_tuples):
+		master_eid = self.world.master_eid()
 		for eid, comp_tuple in component_tuples:
-			is_master = eid == self.world.master_eid()
+			is_master = eid == master_eid
 			if is_master:
 				if const.MASTER_BEHAVIOR != const.MASTER_INTERPOLATION:
 					continue
 			else:
-				if const.REPLICA_BEHAVIOR != const.REPLICA_INTERPOLATION and const.REPLICA_BEHAVIOR != const.REPLICA_PHYSIC_BLEND:
+				if const.REPLICA_BEHAVIOR == const.REPLICA_NONE:
 					continue
 			comp_transform, comp_interpolation = comp_tuple
 			target_velocity = comp_transform.server_velocity
 			target_position = comp_transform.server_position
+			if not is_master and const.REPLICA_BEHAVIOR == const.REPLICA_EXTRAPOLATION:
+				target_position = comp_transform.extrapolation_position
 			if comp_transform.server_modified:
 				comp_interpolation.mode = const.REPLICA_INTERPOLATION_LINEAR if is_master else const.REPLICA_INTERPOLATION_MODE
 				comp_interpolation.pass_t = 0

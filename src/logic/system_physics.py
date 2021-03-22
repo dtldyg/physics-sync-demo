@@ -14,8 +14,10 @@ class SystemPhysics(ecs.System):
 		# move
 		last_position = {}
 		for eid, comp_tuple in component_tuples:
-			if const.IS_CLIENT and eid == self.world.master_eid() and const.MASTER_BEHAVIOR == const.MASTER_INTERPOLATION:
-				continue
+			if const.IS_CLIENT:
+				if eid == self.world.master_eid():
+					if const.MASTER_BEHAVIOR != const.MASTER_PREDICT:
+						continue
 			comp_physics, comp_transform = comp_tuple
 			if const.IS_SERVER:
 				dt = comp_physics.dt
