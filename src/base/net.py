@@ -10,7 +10,8 @@ import time
 global_recv_q = queue.Queue(1024)  # thread-safety
 global_send_q = queue.Queue(1024)  # thread-safety
 
-client_rtt = [0, 0]
+rtt = [.0, .0]  # in game thread
+rtt_q = queue.Queue(8)  # thread-safety
 
 
 # --------- interface (in game thread) ---------
@@ -21,6 +22,22 @@ def iter_recv_pkg():
 
 def send_client_pkg(pkg):
 	global_send_q.put(pkg)
+
+
+def do_ping():
+	rtt1 = 0
+	rtt2 = 0
+	count = 0
+	while rtt_q.qsize() > 0:
+		pkg = rtt_q.get()
+		r = pkg['t3'] - pkg['t1']
+		rtt1 += r
+		rtt2 += pkg['t1'] + r / 2 - pkg['t2']
+		count += 1
+	if count > 0:
+		rtt[0] = rtt1 / count
+		rtt[1] = rtt2 / count
+	send_client_pkg({'pid': PID_PING, 't1': time.time()})
 
 
 # --------- network (in network thread) ---------
@@ -45,9 +62,8 @@ def _run_conn_recv(recv_q, conn, eid=None, send_q=None):
 				send_q.put(pkg)
 				continue
 			elif pkg['pid'] == PID_PONG:
-				# calc rtt
-				client_rtt[0] = time.time() - pkg['t1']
-				client_rtt[1] = pkg['t1'] + client_rtt[0] / 2 - pkg['t2']
+				pkg['t3'] = time.time()
+				rtt_q.put(pkg)
 				continue
 			recv_q.put(pkg)
 		except (socket.error, struct.error):

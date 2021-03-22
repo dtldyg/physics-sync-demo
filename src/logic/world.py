@@ -1,5 +1,6 @@
 # coding=utf-8
 
+import time
 import pygame
 
 import base.const as const
@@ -65,6 +66,7 @@ class World(object):
 		self.clock.add(const.LOGIC_FPS, self.update)
 		if const.IS_CLIENT:
 			self.clock.add(const.RENDER_FPS, self.update_render)
+			self.clock.add(1, lambda _: net.do_ping())
 		else:
 			self.clock.add(const.STATES_FPS, self.update_state)
 		print('world run')

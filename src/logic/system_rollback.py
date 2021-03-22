@@ -10,6 +10,8 @@ class SystemRollback(ecs.System):
 		super(SystemRollback, self).__init__((ecs.LABEL_TRANSFORM,))
 
 	def update(self, dt, component_tuples):
+		if self.world.master_eid() == 0:
+			return
 		game_comp_record = self.world.game_component(ecs.LABEL_RECORD)
 		if const.MASTER_BEHAVIOR != const.MASTER_PREDICT:
 			game_comp_record.records.clear()
