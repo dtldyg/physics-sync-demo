@@ -31,8 +31,8 @@ class World(object):
 		self.clock = None
 		self.systems = []
 		self.entities = []
-		pygame.init()
 		if const.IS_CLIENT:
+			pygame.init()
 			pygame.display.set_caption('Physics Sync - Demo [Client]')
 			# system
 			self.add_system(system_reset.SystemReset())
@@ -52,14 +52,17 @@ class World(object):
 			# join server
 			net.send_client_pkg({'pid': net.PID_JOIN})
 		else:
-			pygame.display.set_caption('Physics Sync - Demo [Server]')
+			if const.SERVER_DO_RENDER:
+				pygame.init()
+				pygame.display.set_caption('Physics Sync - Demo [Server]')
 			# system
 			self.add_system(system_package_dispatch.SystemPackageDispatch())
 			self.add_system(system_entity_manager.SystemEntityManager())
 			self.add_system(system_recv_cmd.SystemRecvCmd())
 			self.add_system(system_physics.SystemPhysics())
-			self.add_system(system_game_event.SystemGameEvent())
-			self.add_system(system_render.SystemRender())
+			if const.SERVER_DO_RENDER:
+				self.add_system(system_game_event.SystemGameEvent())
+				self.add_system(system_render.SystemRender())
 			# state
 			self.system_sync_state = self.init_system(system_sync_state.SystemSyncState())
 		self.entities.append(entity_game.EntityGame())

@@ -2,6 +2,7 @@
 
 import base.math as math
 import base.ecs as ecs
+import base.const as const
 import logic.component_connection as component_connection
 import logic.component_package as component_package
 import logic.component_physics as component_physics
@@ -18,4 +19,5 @@ class EntityPlayer(ecs.Entity):
 		self.add_component(component_physics.ComponentPhysics())
 		self.add_component(component_frame.ComponentFrame())
 		self.add_component(component_transform.ComponentTransform(math.Vector(*init_pos)))
-		self.add_component(component_render.ComponentRender())
+		if const.SERVER_DO_RENDER:
+			self.add_component(component_render.ComponentRender())
