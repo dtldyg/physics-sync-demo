@@ -11,17 +11,19 @@ class SystemPhysics(ecs.System):
 		self.roll_forward = True
 
 	def update(self, dt, component_tuples):
+		master_eid = self.world.master_eid() if const.IS_CLIENT else -1
 		# move
-		last_position = {}
 		for eid, comp_tuple in component_tuples:
+			comp_physics, comp_transform = comp_tuple
 			if const.IS_CLIENT:
-				if eid == self.world.master_eid():
+				if eid == master_eid:
 					if const.MASTER_BEHAVIOR != const.MASTER_PREDICT:
 						continue
-			comp_physics, comp_transform = comp_tuple
+				else:
+					if const.REPLICA_BEHAVIOR != const.REPLICA_PHYSIC_BLEND or not comp_physics.blending:
+						continue
 			if const.IS_SERVER:
 				dt = comp_physics.dt
-			last_position[eid] = comp_transform.position
 			f_nor = comp_physics.force_normal
 			p, v = comp_transform.position, comp_transform.velocity
 			if f_nor.zero() and v.zero():
@@ -45,38 +47,57 @@ class SystemPhysics(ecs.System):
 			comp_transform.modified = True
 		# collision
 		# --- with others
-		manifolds = {}
-		for i in range(len(component_tuples)):
-			for j in range(i + 1, len(component_tuples)):
-				trans_a = component_tuples[i][1][1]
-				trans_b = component_tuples[j][1][1]
-				p_ab = trans_b.position - trans_a.position
-				if p_ab.length_sqr() < (const.ENTITY_RADIUS * 2) ** 2:
-					if trans_a not in manifolds:
-						manifolds[trans_a] = [math.vector_zero, math.vector_zero]  # position_fix, impulse_fix
-					if trans_b not in manifolds:
-						manifolds[trans_b] = [math.vector_zero, math.vector_zero]
-					n_b = p_ab.normal()
-					n_a = -n_b
-					p_fix = const.ENTITY_RADIUS - p_ab.length() / 2
-					# position fix
-					manifolds[trans_a][0] += n_a * p_fix
-					manifolds[trans_b][0] += n_b * p_fix
-					# velocity fix https://github.com/phenomLi/Blog/issues/35
-					e = const.ENTITY_RESTITUTION
-					p_ab = trans_b.velocity - trans_a.velocity
-					j = (1 + e) * p_ab.dot(n_a) / (1 / const.ENTITY_MASS * 2)
-					manifolds[trans_a][1] += n_a * j
-					manifolds[trans_b][1] += n_b * j
-		for comp_transform, fix in manifolds.items():
-			comp_transform.position += fix[0]
-			comp_transform.velocity += fix[1] / const.ENTITY_MASS
-			comp_transform.modified = True
+		if const.IS_SERVER or const.REPLICA_BEHAVIOR == const.REPLICA_PHYSIC_BLEND:
+			#  is_client and not physic_blend, not check collision with others
+			manifolds = {}
+			for a in range(len(component_tuples)):
+				for b in range(a + 1, len(component_tuples)):
+					trans_a = component_tuples[a][1][1]
+					trans_b = component_tuples[b][1][1]
+					p_ab = trans_b.position - trans_a.position
+					if p_ab.length_sqr() < (const.ENTITY_RADIUS * 2) ** 2:
+						if trans_a not in manifolds:
+							manifolds[trans_a] = [math.vector_zero, math.vector_zero]  # position_fix, impulse_fix
+						if trans_b not in manifolds:
+							manifolds[trans_b] = [math.vector_zero, math.vector_zero]
+						n_b = p_ab.normal()
+						n_a = -n_b
+						p_fix = const.ENTITY_RADIUS - p_ab.length() / 2
+						# position fix
+						manifolds[trans_a][0] += n_a * p_fix
+						manifolds[trans_b][0] += n_b * p_fix
+						# velocity fix https://github.com/phenomLi/Blog/issues/35
+						e = const.ENTITY_RESTITUTION
+						p_ab = trans_b.velocity - trans_a.velocity
+						j = (1 + e) * p_ab.dot(n_a) / (1 / const.ENTITY_MASS * 2)
+						manifolds[trans_a][1] += n_a * j
+						manifolds[trans_b][1] += n_b * j
+						# enable replica physics blend
+						if const.IS_CLIENT:
+							eid_a = component_tuples[a][0]
+							if eid_a != master_eid:
+								physics_a = component_tuples[a][1][0]
+								physics_a.blending = True
+								physics_a.blend_time = 0
+							eid_b = component_tuples[b][0]
+							if eid_b != master_eid:
+								physics_b = component_tuples[b][1][0]
+								physics_b.blending = True
+								physics_b.blend_time = 0
+			for comp_transform, fix in manifolds.items():
+				comp_transform.position += fix[0]
+				comp_transform.velocity += fix[1] / const.ENTITY_MASS
+				comp_transform.modified = True
 		# --- with wall
 		for eid, comp_tuple in component_tuples:
-			if const.IS_CLIENT and eid == self.world.master_eid() and const.MASTER_BEHAVIOR == const.MASTER_INTERPOLATION:
-				continue
-			_, comp_transform = comp_tuple
+			comp_physics, comp_transform = comp_tuple
+			if const.IS_CLIENT:
+				if eid == master_eid:
+					if const.MASTER_BEHAVIOR != const.MASTER_PREDICT:
+						continue
+				else:
+					if const.REPLICA_BEHAVIOR != const.REPLICA_PHYSIC_BLEND:
+						continue
 			p, v = comp_transform.position, comp_transform.velocity
 			collide = False
 			if p.x + const.ENTITY_RADIUS > const.SCREEN_SIZE[0]:
@@ -99,3 +120,6 @@ class SystemPhysics(ecs.System):
 				comp_transform.position = p
 				comp_transform.velocity = v
 				comp_transform.modified = True
+				if const.IS_CLIENT and eid != master_eid:
+					comp_physics.blending = True
+					comp_physics.blend_time = 0

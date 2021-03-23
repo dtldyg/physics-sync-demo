@@ -6,10 +6,14 @@ import base.const as const
 
 
 class ComponentPhysics(ecs.Component):
-	def __init__(self):
+	def __init__(self, is_master=False):
 		super(ComponentPhysics, self).__init__(ecs.LABEL_PHYSICS)
 		self._force_normal_fixed = math.vector_zero
-		if const.IS_SERVER:
+		if const.IS_CLIENT:
+			if not is_master:
+				self.blending = False
+				self.blend_time = 0
+		else:
 			self._dt_fixed = 0
 
 	# --- ensure use fixed-point number in c/s sync ---

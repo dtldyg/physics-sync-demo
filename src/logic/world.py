@@ -13,6 +13,7 @@ import logic.system_package_dispatch as system_package_dispatch
 import logic.system_entity_manager as system_entity_manager
 import logic.system_recv_cmd as system_recv_cmd
 import logic.system_physics as system_physics
+import logic.system_simulate_blend as system_simulate_blend
 import logic.system_control as system_control
 import logic.system_recv_state as system_recv_state
 import logic.system_sync_cmd as system_sync_cmd
@@ -45,6 +46,7 @@ class World(object):
 			self.add_system(system_extrapolation.SystemExtrapolation())
 			self.add_system(system_interpolation.SystemInterpolation())
 			self.add_system(system_physics.SystemPhysics())
+			self.add_system(system_simulate_blend.SystemSimulateBlend())
 			self.add_system(system_rollback.SystemRollback())
 			self.add_system(system_render_logic.SystemRenderLogic())
 			# render
