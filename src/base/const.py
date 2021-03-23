@@ -62,7 +62,7 @@ REPLICA_SERVER_COLOR = (0, 0, 255, 127)  # blue-half
 # FPS
 RENDER_FPS = 120
 LOGIC_FPS = 60  # 逻辑频率(cpu)，命令(上行带宽)
-STATES_FPS = 10  # 状态(下行带宽)
+STATES_FPS = 20  # 状态(下行带宽)
 
 # ControlMod
 CONTROL_WASD = 'wasd'

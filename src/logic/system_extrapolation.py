@@ -17,5 +17,6 @@ class SystemExtrapolation(ecs.System):
 			if const.REPLICA_BEHAVIOR != const.REPLICA_EXTRAPOLATION and const.REPLICA_BEHAVIOR != const.REPLICA_PHYSIC_BLEND:
 				continue
 			comp_transform, = comp_tuple
-			extra_time = net.rtt[0] + (5 / const.LOGIC_FPS)  # TODO 确认这个
+			# TODO 确认LOGIC_FPS的倍率
+			extra_time = net.rtt[0] + (2 / const.LOGIC_FPS) + 1 / const.STATES_FPS
 			comp_transform.extrapolation_position = comp_transform.server_position + comp_transform.server_velocity * extra_time

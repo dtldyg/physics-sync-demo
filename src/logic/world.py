@@ -43,9 +43,9 @@ class World(object):
 			self.add_system(system_control.SystemControl())
 			self.add_system(system_sync_cmd.SystemSyncCmd())
 			self.add_system(system_extrapolation.SystemExtrapolation())
+			self.add_system(system_interpolation.SystemInterpolation())
 			self.add_system(system_physics.SystemPhysics())
 			self.add_system(system_rollback.SystemRollback())
-			self.add_system(system_interpolation.SystemInterpolation())
 			self.add_system(system_render_logic.SystemRenderLogic())
 			# render
 			self.system_render = self.init_system(system_render.SystemRender())

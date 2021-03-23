@@ -21,7 +21,7 @@ class SystemInterpolation(ecs.System):
 			comp_transform, comp_interpolation = comp_tuple
 			target_velocity = comp_transform.server_velocity
 			target_position = comp_transform.server_position
-			if not is_master and const.REPLICA_BEHAVIOR == const.REPLICA_EXTRAPOLATION:
+			if not is_master and (const.REPLICA_BEHAVIOR == const.REPLICA_EXTRAPOLATION or const.REPLICA_BEHAVIOR == const.REPLICA_PHYSIC_BLEND):
 				target_position = comp_transform.extrapolation_position
 			if comp_transform.server_modified:
 				comp_interpolation.mode = const.REPLICA_INTERPOLATION_LINEAR if is_master else const.REPLICA_INTERPOLATION_MODE
