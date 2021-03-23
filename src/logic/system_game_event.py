@@ -13,47 +13,53 @@ class SystemGameEvent(ecs.System):
 		super(SystemGameEvent, self).__init__((ecs.LABEL_INPUT, ecs.LABEL_GUI))
 
 	def update(self, dt, component_tuples):
-		for _, comp_tuple in component_tuples:
-			comp_input, comp_gui = comp_tuple
-			comp_input.mouse_state['trigger_down'].clear()
-			comp_input.mouse_state['trigger_up'].clear()
+		if const.IS_SERVER:
 			for event in pygame.event.get():
 				# quit
 				if event.type == pygame.QUIT:
 					raise clock.QuitError()
-				# key
-				if event.type == pygame.KEYDOWN:
-					comp_input.key_down.add(event.key)
-				elif event.type == pygame.KEYUP:
-					if event.key == pygame.K_ESCAPE:
+		else:
+			for _, comp_tuple in component_tuples:
+				comp_input, comp_gui = comp_tuple
+				comp_input.mouse_state['trigger_down'].clear()
+				comp_input.mouse_state['trigger_up'].clear()
+				for event in pygame.event.get():
+					# quit
+					if event.type == pygame.QUIT:
 						raise clock.QuitError()
-					comp_input.key_down.remove(event.key)
-				# mouse
-				elif event.type == pygame.WINDOWENTER:
-					comp_input.mouse_state['active'] = True
-				elif event.type == pygame.WINDOWLEAVE:
-					comp_input.mouse_state['active'] = False
-				elif event.type == pygame.MOUSEBUTTONDOWN:
-					comp_input.mouse_state['trigger_down'].add(event.button)
-				elif event.type == pygame.MOUSEBUTTONUP:
-					comp_input.mouse_state['trigger_up'].add(event.button)
-				# gui
-				elif event.type == pygame.USEREVENT:
-					if event.user_type == pygame_gui.UI_DROP_DOWN_MENU_CHANGED:
-						if event.ui_element == comp_gui.control_mod:
-							const.CONTROL_MODE = event.text
-						elif event.ui_element == comp_gui.master_behavior:
-							const.MASTER_BEHAVIOR = event.text
-						elif event.ui_element == comp_gui.replica_behavior:
-							const.REPLICA_BEHAVIOR = event.text
-						elif event.ui_element == comp_gui.replica_interpolation_mod:
-							const.REPLICA_INTERPOLATION_MODE = event.text
-					elif event.user_type == pygame_gui.UI_BUTTON_PRESSED:
-						if event.ui_element == comp_gui.show_server:
-							const.SHOW_SERVER = btn_checkbox_event(event)
-						elif event.ui_element == comp_gui.server_input_buffer:
-							sync_to_server('SERVER_INPUT_BUFFER', not event.ui_element.is_selected)  # wait for server broad
-				comp_gui.ui_manager.process_events(event)
+					# key
+					if event.type == pygame.KEYDOWN:
+						comp_input.key_down.add(event.key)
+					elif event.type == pygame.KEYUP:
+						if event.key == pygame.K_ESCAPE:
+							raise clock.QuitError()
+						comp_input.key_down.remove(event.key)
+					# mouse
+					elif event.type == pygame.WINDOWENTER:
+						comp_input.mouse_state['active'] = True
+					elif event.type == pygame.WINDOWLEAVE:
+						comp_input.mouse_state['active'] = False
+					elif event.type == pygame.MOUSEBUTTONDOWN:
+						comp_input.mouse_state['trigger_down'].add(event.button)
+					elif event.type == pygame.MOUSEBUTTONUP:
+						comp_input.mouse_state['trigger_up'].add(event.button)
+					# gui
+					elif event.type == pygame.USEREVENT:
+						if event.user_type == pygame_gui.UI_DROP_DOWN_MENU_CHANGED:
+							if event.ui_element == comp_gui.control_mod:
+								const.CONTROL_MODE = event.text
+							elif event.ui_element == comp_gui.master_behavior:
+								const.MASTER_BEHAVIOR = event.text
+							elif event.ui_element == comp_gui.replica_behavior:
+								const.REPLICA_BEHAVIOR = event.text
+							elif event.ui_element == comp_gui.replica_interpolation_mod:
+								const.REPLICA_INTERPOLATION_MODE = event.text
+						elif event.user_type == pygame_gui.UI_BUTTON_PRESSED:
+							if event.ui_element == comp_gui.show_server:
+								const.SHOW_SERVER = btn_checkbox_event(event)
+							elif event.ui_element == comp_gui.server_input_buffer:
+								sync_to_server('SERVER_INPUT_BUFFER', not event.ui_element.is_selected)  # wait for server broad
+					comp_gui.ui_manager.process_events(event)
 
 
 def sync_to_server(k, v):

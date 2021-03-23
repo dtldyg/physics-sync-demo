@@ -15,8 +15,8 @@ class EntityGame(ecs.Entity):
 	def __init__(self):
 		super(EntityGame, self).__init__(const.ENTITY_GAME_ID)
 		self.add_component(component_package.ComponentPackage())
+		self.add_component(component_surface.ComponentSurface())
 		if const.IS_CLIENT:
-			self.add_component(component_surface.ComponentSurface())
 			self.add_component(component_gui.ComponentGUI())
 			self.add_component(component_info.ComponentInfo())
 			self.add_component(component_input.ComponentInput())

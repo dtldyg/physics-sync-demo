@@ -93,7 +93,10 @@ def _run_listen(sock):
 	print('net run')
 	eid = 0
 	while True:
-		conn, addr = sock.accept()
+		try:
+			conn, addr = sock.accept()
+		except socket.error:
+			return
 		eid = eid + 1
 		local_send_q = queue.Queue(1024)
 		threading.Thread(target=_run_conn_recv, args=(global_recv_q, conn, eid, local_send_q), daemon=True).start()
