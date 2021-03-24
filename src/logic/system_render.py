@@ -62,7 +62,7 @@ class SystemRender(ecs.System):
 				game_comp_info.logic_fps_txt = game_comp_info.font.render('logic_fps: {:.1f}'.format(logic_fps), True, const.FPS_COLOR)
 			game_comp_surface.game.blit(game_comp_info.render_fps_txt, (0, 0))
 			game_comp_surface.game.blit(game_comp_info.logic_fps_txt, (0, 18))
-			rtt_info = 'rtt: {:.0f}ms, c-s: {:+.0f}ms'.format(net.rtt[0] * 1000, net.rtt[1] * 1000)
+			rtt_info = 'rtt: {:.1f}ms'.format(net.rtt[0] * 1000)
 			rtt_txt = game_comp_info.font.render(rtt_info, True, const.FPS_COLOR)
 			game_comp_surface.game.blit(rtt_txt, (0, 36))
 			if self.world.game_component(ecs.LABEL_RECORD).rollback_notify:
