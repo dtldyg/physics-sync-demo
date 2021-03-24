@@ -12,7 +12,7 @@ class SystemExtrapolation(ecs.System):
 
 	def update(self, dt, component_tuples):
 		master_eid = self.world.master_eid()
-		master_comp_transform = self.world.master_component(ecs.LABEL_TRANSFORM)
+		master_comp_transform = self.world.master_component(ecs.LABEL_TRANSFORM) if master_eid > 0 else None
 		for eid, comp_tuple in component_tuples:
 			if eid == master_eid:
 				continue
@@ -21,7 +21,7 @@ class SystemExtrapolation(ecs.System):
 			comp_transform, = comp_tuple
 			need_extra = True
 			if const.REPLICA_BEHAVIOR == const.REPLICA_PHYSIC_BLEND:
-				if (master_comp_transform.position - comp_transform.position).length_sqr() > const.EXTRAPOLATION_AOI_SQR:
+				if master_comp_transform is None or (master_comp_transform.position - comp_transform.position).length_sqr() > const.EXTRAPOLATION_AOI_SQR:
 					need_extra = False
 			if need_extra:
 				extra_time = net.rtt[0] + (2 / const.LOGIC_FPS) + 1 / const.STATES_FPS
