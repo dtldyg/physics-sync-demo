@@ -8,6 +8,7 @@ import base.const as const
 class SystemRecvState(ecs.System):
 	def __init__(self):
 		super(SystemRecvState, self).__init__((ecs.LABEL_PACKAGE, ecs.LABEL_TRANSFORM))
+		self.roll_forward = True
 
 	def update(self, dt, component_tuples):
 		master_eid = self.world.master_eid()

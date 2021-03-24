@@ -12,7 +12,7 @@ ROLLBACK_TXT_COLOR = (255, 255, 255, 255)  # white
 ROLLBACK_BG_COLOR = (255, 0, 0, 255)  # red
 SCREEN_SIZE = (400, 400)
 SCREEN_BACKGROUND = (0, 0, 0, 255)  # black
-SERVER_DO_RENDER = True
+SERVER_DO_RENDER = False
 
 # GUI
 GUI_WIDTH = 260
@@ -68,7 +68,8 @@ NETWORK_SERVER_BUFFER = 4  # 60fps: 66ms delay
 NETWORK_SERVER_BUFFER_MIN = 2
 
 # Physics
-PHYSICS_BLEND_CURVE = [(0, 1), (1, 0)]  # sample point (time, ratio)
+PHYSICS_BLEND_CURVE = [(0, 1), (0.25, 1), (1, 0)]  # sample point (time, ratio)
+EXTRAPOLATION_AOI_SQR = ((ENTITY_MAX_V * 2 / STATES_FPS + ENTITY_RADIUS * 2) * 2) ** 2
 
 # --------- dynamic ---------
 

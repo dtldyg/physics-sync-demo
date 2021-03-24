@@ -7,6 +7,7 @@ import base.ecs as ecs
 class SystemInterpolation(ecs.System):
 	def __init__(self):
 		super(SystemInterpolation, self).__init__((ecs.LABEL_TRANSFORM, ecs.LABEL_INTERPOLATION))
+		self.roll_forward = True
 
 	def update(self, dt, component_tuples):
 		master_eid = self.world.master_eid()

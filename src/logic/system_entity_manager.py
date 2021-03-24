@@ -76,10 +76,12 @@ class SystemEntityManager(ecs.System):
 			elif pkg['pid'] == net.PID_BROAD_CONF:
 				setattr(const, pkg['k'], pkg['v'])
 				if pkg['k'] == 'SERVER_INPUT_BUFFER':
+					server_input_buffer = self.world.game_component(ecs.LABEL_GUI).server_input_buffer
 					if const.SERVER_INPUT_BUFFER:
-						self.world.game_component(ecs.LABEL_GUI).server_input_buffer.select()
+						server_input_buffer.select()
 					else:
-						self.world.game_component(ecs.LABEL_GUI).server_input_buffer.unselect()
+						server_input_buffer.unselect()
+					server_input_buffer.set_text(const.SERVER_INPUT_BUFFER.__str__())
 			elif pkg['pid'] == net.PID_SYNC_BUFFER:
 				self.world.game_component(ecs.LABEL_GUI).server_input_buffer_value.current_health = pkg['v']
 
@@ -108,5 +110,5 @@ def choose_grid_to_pos(entity_grid):
 	for x in range(1, x_num - 1):
 		for y in range(1, y_num - 1):
 			if x not in entity_grid or y not in entity_grid[x]:
-				return [x * grid_len + const.ENTITY_RADIUS, y * grid_len + const.ENTITY_RADIUS]
-	return [const.ENTITY_RADIUS, const.ENTITY_RADIUS]
+				return x * grid_len + const.ENTITY_RADIUS, y * grid_len + const.ENTITY_RADIUS
+	return const.ENTITY_RADIUS, const.ENTITY_RADIUS

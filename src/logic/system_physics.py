@@ -62,14 +62,14 @@ class SystemPhysics(ecs.System):
 							manifolds[trans_b] = [math.vector_zero, math.vector_zero]
 						n_b = p_ab.normal()
 						n_a = -n_b
-						p_fix = const.ENTITY_RADIUS - p_ab.length() / 2
+						p_fix = const.ENTITY_RADIUS - p_ab.length() / 2 + 1  # extra 1 pixel
 						# position fix
 						manifolds[trans_a][0] += n_a * p_fix
 						manifolds[trans_b][0] += n_b * p_fix
 						# velocity fix https://github.com/phenomLi/Blog/issues/35
 						e = const.ENTITY_RESTITUTION
-						p_ab = trans_b.velocity - trans_a.velocity
-						j = (1 + e) * p_ab.dot(n_a) / (1 / const.ENTITY_MASS * 2)
+						v_ab = trans_b.velocity - trans_a.velocity  # describe relative motion, see extrapolation for details
+						j = (1 + e) * v_ab.dot(n_a) / (1 / const.ENTITY_MASS * 2)
 						manifolds[trans_a][1] += n_a * j
 						manifolds[trans_b][1] += n_b * j
 						# enable replica physics blend
