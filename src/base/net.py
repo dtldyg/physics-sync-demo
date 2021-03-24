@@ -115,7 +115,7 @@ def run_client_socket():
 # socket server
 def run_server_socket():
 	sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-	sock.bind(('127.0.0.1', 9999))
+	sock.bind(('0.0.0.0', 9999))
 	threading.Thread(target=_run_listen, args=(sock,), daemon=True).start()
 	return sock
 
