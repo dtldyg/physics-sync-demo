@@ -27,12 +27,12 @@ class SystemInterpolation(ecs.System):
 				target_position = comp_transform.extrapolation_position
 			# re-calc interpolation params
 			if comp_transform.server_modified:
-				comp_interpolation.mode = const.REPLICA_INTERPOLATION_LINEAR if is_master else const.REPLICA_INTERPOLATION_MODE
+				comp_interpolation.mode = const.INTERPOLATION_MODE_LINEAR if is_master else const.REPLICA_INTERPOLATION_MODE
 				comp_interpolation.pass_t = 0
 				comp_interpolation.remain_t = 1 / const.STATES_FPS
-				if comp_interpolation.mode == const.REPLICA_INTERPOLATION_LINEAR:
+				if comp_interpolation.mode == const.INTERPOLATION_MODE_LINEAR:
 					pass
-				elif comp_interpolation.mode == const.REPLICA_INTERPOLATION_CUBIC:
+				elif comp_interpolation.mode == const.INTERPOLATION_MODE_CUBIC:
 					t = comp_interpolation.remain_t
 					h = target_position - comp_transform.interpolation_position
 					comp_interpolation.cubic_args[0] = comp_transform.interpolation_position
@@ -45,11 +45,11 @@ class SystemInterpolation(ecs.System):
 				velocity = target_velocity
 				position = target_position
 			else:
-				if comp_interpolation.mode == const.REPLICA_INTERPOLATION_LINEAR:
+				if comp_interpolation.mode == const.INTERPOLATION_MODE_LINEAR:
 					# 线性插值: 位置:连续, 速度:突变, 加速度:恒0
 					# p(t) = p0 + (p1 - p0) / (t1 - t0) * (t - t0)
 					velocity = (target_position - comp_transform.interpolation_position) / comp_interpolation.remain_t
-					position = comp_transform.interpolation_position + comp_transform.interpolation_velocity * dt
+					position = comp_transform.interpolation_position + velocity * dt
 				else:
 					# 三次插值: 位置:平滑, 速度:平滑, 加速度:连续
 					# p(t) = a0 + a1 * (t - t0) + a2 * (t - t0)^2 + a3 * (t - t0)^3
