@@ -2,6 +2,11 @@
 
 # --------- static ---------
 
+# Title
+TITLE_CLIENT_INIT = 'Physics Sync - Demo [Client]'
+TITLE_CLIENT_PARAM = 'Physics Sync - Demo [Client: {}]'
+TITLE_SERVER = 'Physics Sync - Demo [Server]'
+
 # Env
 IS_CLIENT = False
 IS_SERVER = False
@@ -74,11 +79,11 @@ EXTRAPOLATION_AOI_SQR = ((ENTITY_MAX_V * 2 / STATES_FPS + ENTITY_RADIUS * 2) * 2
 # --------- dynamic ---------
 
 # ControlMod
-CONTROL_WASD = 'wasd'
 CONTROL_MOUSE = '跟随鼠标'
+CONTROL_WASD = 'wasd'
 CONTROL_LINE = '冲量'
-CONTROL_MODE_LIST = [CONTROL_WASD, CONTROL_MOUSE, CONTROL_LINE]
-CONTROL_MODE = CONTROL_WASD
+CONTROL_MODE_LIST = [CONTROL_MOUSE, CONTROL_WASD, CONTROL_LINE]
+CONTROL_MODE = CONTROL_MOUSE
 
 # SyncMode
 SHOW_SERVER = True

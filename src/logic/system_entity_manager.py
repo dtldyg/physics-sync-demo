@@ -54,7 +54,7 @@ class SystemEntityManager(ecs.System):
 				entity = entity_player_master.EntityPlayerMaster(pkg['eid'], init_p)
 				self.world.game_component(ecs.LABEL_INFO).master_entity_id = entity.eid
 				self.world.add_entity(entity)
-				pygame.display.set_caption('Physics Sync - Demo [Client: {}]'.format(entity.eid))
+				pygame.display.set_caption(const.TITLE_CLIENT_PARAM.format(entity.eid))
 				print('add master:', entity.eid)
 			elif pkg['pid'] == net.PID_ADD_REPLICA:
 				init_p = math.Vector(**pkg['p'])

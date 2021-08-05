@@ -34,7 +34,7 @@ class World(object):
 		self.entities = []
 		if const.IS_CLIENT:
 			pygame.init()
-			pygame.display.set_caption('Physics Sync - Demo [Client]')
+			pygame.display.set_caption(const.TITLE_CLIENT_INIT)
 			# system
 			self.add_system(system_reset.SystemReset())
 			self.add_system(system_package_dispatch.SystemPackageDispatch())
@@ -56,7 +56,7 @@ class World(object):
 		else:
 			if const.SERVER_DO_RENDER:
 				pygame.init()
-				pygame.display.set_caption('Physics Sync - Demo [Server]')
+				pygame.display.set_caption(const.TITLE_SERVER)
 			# system
 			self.add_system(system_package_dispatch.SystemPackageDispatch())
 			self.add_system(system_entity_manager.SystemEntityManager())
