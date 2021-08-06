@@ -15,4 +15,5 @@ class SystemReset(ecs.System):
 			comp_transform, comp_render = comp_tuple
 			comp_transform.modified = False
 			comp_transform.server_modified = False
+			comp_transform.target_modified = False
 			comp_render.other_renders.clear()

@@ -17,6 +17,6 @@ class EntityPlayerMaster(ecs.Entity):
 		self.add_component(component_control.ComponentControl())
 		self.add_component(component_frame.ComponentFrame())
 		self.add_component(component_physics.ComponentPhysics(True))
-		self.add_component(component_transform.ComponentTransform(pos, True))
-		self.add_component(component_interpolation.ComponentInterpolation())
+		self.add_component(component_transform.ComponentTransform(pos))
+		self.add_component(component_interpolation.ComponentInterpolation(pos))
 		self.add_component(component_render.ComponentRender(True))

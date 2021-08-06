@@ -80,6 +80,7 @@ class SystemRender(ecs.System):
 		pygame.display.flip()
 
 
+# 与内插值相比，渲染插值会突变：不对延时、物理真实性等负责
 def position_interpolation(a_p, a_t, b_p, b_t):
 	if a_p is None:
 		return b_p

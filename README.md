@@ -101,3 +101,25 @@
   - system_recv_cmd 系统_接收指令
   - system_physics 系统_物理
   - system_sync_state 系统_同步状态
+
+### 副本位置修正相关
+- extrapolation: server -> target（20fps）（根据最后一个服务器的'过时'位置，推算主控时间下的位置）
+  - 外插值 | 物理混合&AOI内：target > server
+  - 其他：target = server
+  - tips：碰撞发生后，target的推算是错误且大偏差的
+- interpolation: real + target -> real（60fps）（平滑网络离散状态，本质是real追赶target）
+  - 无：real = target
+  - 其他：real < target
+  - tips：物理混合期间，不工作，平滑工作交给物理+混合系统
+- physics: real -> real（对当前位置的驱动、碰撞检测、修正。注意，永远从当前位置开始，这才符合'看见的真实'）
+  - 物理混合 & 碰撞|混合中：real > real
+  - 其他：real = real
+- simulate: real + target -> real（将物理修正的位置，和外推的位置，）
+  - 物理混合 & 混合中：real > real
+  - 其他：real = real
+  - tips：整个副本运动分两种：物理和追随，都是基于当前位置进行推进的，而且不处于碰撞或混合时，物理等于只走个碰撞检测过场
+  - tips：混合时，先根据当前位置物理模拟，然后等于有个外力（target）再对它进行修正
+  - tips：混合时间：系数1的时间要大于等于（外插时间+状态间隔）：这么多时间之后，server端碰撞之后的状态一定会到来，之后逐渐衰减
+- render: real -> render（120fps）（平滑逻辑离散状态）
+  - 无：render = real
+  - 其他：render < real

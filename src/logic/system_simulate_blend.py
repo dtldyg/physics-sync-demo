@@ -6,7 +6,7 @@ import base.const as const
 
 class SystemSimulateBlend(ecs.System):
 	def __init__(self):
-		super(SystemSimulateBlend, self).__init__((ecs.LABEL_PHYSICS, ecs.LABEL_TRANSFORM))
+		super(SystemSimulateBlend, self).__init__((ecs.LABEL_PHYSICS, ecs.LABEL_TRANSFORM, ecs.LABEL_EXTRAPOLATION))
 		self.roll_forward = True
 
 	def update(self, dt, component_tuples):

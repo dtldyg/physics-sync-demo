@@ -43,11 +43,11 @@ class World(object):
 			self.add_system(system_game_event.SystemGameEvent())
 			self.add_system(system_control.SystemControl())
 			self.add_system(system_sync_cmd.SystemSyncCmd())
-			self.add_system(system_extrapolation.SystemExtrapolation())
-			self.add_system(system_interpolation.SystemInterpolation())
-			self.add_system(system_physics.SystemPhysics())
-			self.add_system(system_simulate_blend.SystemSimulateBlend())
-			self.add_system(system_rollback.SystemRollback())
+			# self.add_system(system_rollback.SystemRollback())  # 回滚重放
+			# self.add_system(system_extrapolation.SystemExtrapolation())  # 外插
+			# self.add_system(system_physics.SystemPhysics())  # 物理
+			# self.add_system(system_simulate_blend.SystemSimulateBlend())  # 混合
+			self.add_system(system_interpolation.SystemInterpolation())  # 内插
 			self.add_system(system_render_logic.SystemRenderLogic())
 			# render
 			self.system_render = self.init_system(system_render.SystemRender())
