@@ -5,8 +5,8 @@ import base.ecs as ecs
 
 
 class SystemRenderLogic(ecs.System):
-	def __init__(self):
-		super(SystemRenderLogic, self).__init__((ecs.LABEL_TRANSFORM, ecs.LABEL_RENDER))
+	def __init__(self, world):
+		super(SystemRenderLogic, self).__init__(world, (ecs.LABEL_TRANSFORM, ecs.LABEL_RENDER))
 		self.roll_forward = True
 
 	def update(self, dt, component_tuples):

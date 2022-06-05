@@ -5,6 +5,7 @@ import pygame
 import base.net as net
 import base.ecs as ecs
 import base.math as math
+import base.log as log
 import base.const as const
 import logic.entity_player as entity_player
 import logic.entity_player_master as entity_player_master
@@ -12,15 +13,17 @@ import logic.entity_player_replica as entity_player_replica
 
 
 class SystemEntityManager(ecs.System):
-	def __init__(self):
-		super(SystemEntityManager, self).__init__((ecs.LABEL_CONNECTION, ecs.LABEL_TRANSFORM))
+	def __init__(self, world):
+		super(SystemEntityManager, self).__init__(world, (ecs.LABEL_CONNECTION, ecs.LABEL_TRANSFORM))
 		self.roll_forward = True
 
 	def update(self, dt, component_tuples):
-		entity_grid = None
-		for pkg in self.world.game_component(ecs.LABEL_PACKAGE).packages:
+		game_comp_package = self.world.game_component(ecs.LABEL_PACKAGE)
+		# deal packages from game
+		for pkg in game_comp_package.packages:
 			if pkg['pid'] == net.PID_JOIN:
-				entity_grid = entity_grid or {}
+				# only server
+				entity_grid = {}
 				for eid, comp_tuple in component_tuples:
 					_, comp_transform = comp_tuple
 					add_grid(entity_grid, comp_transform.position)
@@ -38,8 +41,9 @@ class SystemEntityManager(ecs.System):
 					comp_connection, _ = comp_tuple
 					comp_connection.send_q.put(broadcast_pkg)
 				self.world.add_entity(entity)
-				print('join:', entity.eid)
+				log.info('join:', entity.eid)
 			elif pkg['pid'] == net.PID_DEL:
+				# only server
 				entity = self.world.get_entity(pkg['eid'])
 				entity.get_component(ecs.LABEL_CONNECTION).send_q.put(pkg)
 				self.world.del_entity(entity)
@@ -48,24 +52,28 @@ class SystemEntityManager(ecs.System):
 				for _, comp_tuple in component_tuples:
 					comp_connection, _ = comp_tuple
 					comp_connection.send_q.put(broadcast_pkg)
-				print('del:', entity.eid)
+				log.info('del:', entity.eid)
 			elif pkg['pid'] == net.PID_ADD_MASTER:
+				# only client
 				init_p = math.Vector(**pkg['p'])
 				entity = entity_player_master.EntityPlayerMaster(pkg['eid'], init_p)
 				self.world.game_component(ecs.LABEL_INFO).master_entity_id = entity.eid
 				self.world.add_entity(entity)
 				pygame.display.set_caption(const.TITLE_CLIENT_PARAM.format(entity.eid))
-				print('add master:', entity.eid)
+				log.info('add master:', entity.eid)
 			elif pkg['pid'] == net.PID_ADD_REPLICA:
+				# only client
 				init_p = math.Vector(**pkg['p'])
 				entity = entity_player_replica.EntityPlayerReplica(pkg['eid'], init_p)
 				self.world.add_entity(entity)
-				print('add replica:', entity.eid)
+				log.info('add replica:', entity.eid)
 			elif pkg['pid'] == net.PID_DEL_REPLICA:
+				# only client
 				entity = self.world.get_entity(pkg['eid'])
 				self.world.del_entity(entity)
-				print('del replica:', entity.eid)
+				log.info('del replica:', entity.eid)
 			elif pkg['pid'] == net.PID_BUFFER:
+				# only client
 				self.world.buffer_adjust(pkg['opt'])
 			elif pkg['pid'] == net.PID_SYNC_CONF:
 				setattr(const, pkg['k'], pkg['v'])

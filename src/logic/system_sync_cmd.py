@@ -5,8 +5,8 @@ import base.ecs as ecs
 
 
 class SystemSyncCmd(ecs.System):
-	def __init__(self):
-		super(SystemSyncCmd, self).__init__((ecs.LABEL_FRAME, ecs.LABEL_PHYSICS))
+	def __init__(self, world):
+		super(SystemSyncCmd, self).__init__(world, (ecs.LABEL_FRAME, ecs.LABEL_PHYSICS))
 
 	def update(self, dt, component_tuples):
 		for eid, comp_tuple in component_tuples:

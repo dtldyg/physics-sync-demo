@@ -8,6 +8,7 @@ import logic.world as world
 def main():
 	const.IS_CLIENT = True
 	conn = net.run_client_socket()
+	const.ONLY_CLIENT = conn is None
 
 	w = world.World()
 	w.run()

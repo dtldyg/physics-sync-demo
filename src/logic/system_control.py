@@ -7,8 +7,8 @@ import base.ecs as ecs
 
 
 class SystemControl(ecs.System):
-	def __init__(self):
-		super(SystemControl, self).__init__((ecs.LABEL_CONTROL, ecs.LABEL_PHYSICS, ecs.LABEL_TRANSFORM, ecs.LABEL_RENDER))
+	def __init__(self, world):
+		super(SystemControl, self).__init__(world, (ecs.LABEL_CONTROL, ecs.LABEL_PHYSICS, ecs.LABEL_TRANSFORM, ecs.LABEL_RENDER))
 
 	def update(self, dt, component_tuples):
 		game_comp_input = self.world.game_component(ecs.LABEL_INPUT)
@@ -32,7 +32,7 @@ class SystemControl(ecs.System):
 			# follow mouse
 			elif const.CONTROL_MODE == const.CONTROL_MOUSE:
 				if game_comp_input.mouse_state['active'] and pygame.K_SPACE in game_comp_input.key_down:
-					if const.MASTER_BEHAVIOR != const.MASTER_NONE:
+					if const.MASTER_BEHAVIOR != const.MASTER_SERVER:
 						cur_pos = int(comp_transform.position.x), int(comp_transform.position.y)
 					else:
 						cur_pos = int(comp_transform.server_position.x), int(comp_transform.server_position.y)

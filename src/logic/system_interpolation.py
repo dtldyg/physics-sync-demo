@@ -5,8 +5,8 @@ import base.ecs as ecs
 
 
 class SystemInterpolation(ecs.System):
-	def __init__(self):
-		super(SystemInterpolation, self).__init__((ecs.LABEL_TRANSFORM, ecs.LABEL_INTERPOLATION))
+	def __init__(self, world):
+		super(SystemInterpolation, self).__init__(world, (ecs.LABEL_TRANSFORM, ecs.LABEL_INTERPOLATION))
 		self.roll_forward = True
 
 	def update(self, dt, component_tuples):

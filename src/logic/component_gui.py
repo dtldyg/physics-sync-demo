@@ -18,7 +18,10 @@ class ComponentGUI(ecs.Component):
 		self.server_input_buffer_value = None
 		self.master_behavior = None
 		self.replica_behavior = None
-		self.replica_interpolation_mod = None
+		self.replica_follow_label = None
+		self.replica_follow_mode = None
+		self.replica_predict_label = None
+		self.replica_predict_mode = None
 
 		# init
 		self.ui_manager.get_root_container().set_position((const.SCREEN_SIZE[0], 0))
@@ -34,7 +37,7 @@ class ComponentGUI(ecs.Component):
 		ui_num, y = next_ui_y(ui_num)
 		pygame_gui.elements.UILabel(
 			relative_rect=pygame.Rect((const.GUI_MARGIN[0], y), (const.GUI_MARGIN[3] + const.GUI_SIZE[0] + const.GUI_SIZE[1], const.GUI_SIZE[2])),
-			text='全局设置',
+			text='全局',
 			manager=self.ui_manager,
 			container=container,
 		)
@@ -108,7 +111,7 @@ class ComponentGUI(ecs.Component):
 		ui_num, y = next_ui_y(ui_num)
 		pygame_gui.elements.UILabel(
 			relative_rect=pygame.Rect((const.GUI_MARGIN[0], y), (const.GUI_MARGIN[3] + const.GUI_SIZE[0] + const.GUI_SIZE[1], const.GUI_SIZE[2])),
-			text='主控设置',
+			text='主控',
 			manager=self.ui_manager,
 			container=container,
 		)
@@ -116,7 +119,7 @@ class ComponentGUI(ecs.Component):
 		ui_num, y = next_ui_y(ui_num)
 		pygame_gui.elements.UILabel(
 			relative_rect=pygame.Rect((const.GUI_MARGIN[0], y), (const.GUI_SIZE[0], const.GUI_SIZE[2])),
-			text='行为控制',
+			text='行为',
 			manager=self.ui_manager,
 			container=container,
 		)
@@ -133,7 +136,7 @@ class ComponentGUI(ecs.Component):
 		ui_num, y = next_ui_y(ui_num)
 		pygame_gui.elements.UILabel(
 			relative_rect=pygame.Rect((const.GUI_MARGIN[0], y), (const.GUI_MARGIN[3] + const.GUI_SIZE[0] + const.GUI_SIZE[1], const.GUI_SIZE[2])),
-			text='副本设置',
+			text='副本',
 			manager=self.ui_manager,
 			container=container,
 		)
@@ -141,7 +144,7 @@ class ComponentGUI(ecs.Component):
 		ui_num, y = next_ui_y(ui_num)
 		pygame_gui.elements.UILabel(
 			relative_rect=pygame.Rect((const.GUI_MARGIN[0], y), (const.GUI_SIZE[0], const.GUI_SIZE[2])),
-			text='行为控制',
+			text='行为',
 			manager=self.ui_manager,
 			container=container,
 		)
@@ -156,22 +159,50 @@ class ComponentGUI(ecs.Component):
 		)
 
 		ui_num, y = next_ui_y(ui_num)
-		pygame_gui.elements.UILabel(
+		self.replica_follow_label = pygame_gui.elements.UILabel(
 			relative_rect=pygame.Rect((const.GUI_MARGIN[0], y), (const.GUI_SIZE[0], const.GUI_SIZE[2])),
-			text='- 算法',
+			text='插值算法',
 			manager=self.ui_manager,
 			container=container,
 		)
-		self.replica_interpolation_mod = pygame_gui.elements.UIDropDownMenu(
+		self.replica_follow_mod = pygame_gui.elements.UIDropDownMenu(
 			relative_rect=pygame.Rect(
 				(const.GUI_MARGIN[0] + const.GUI_MARGIN[3] + const.GUI_SIZE[0], y), (const.GUI_SIZE[1], const.GUI_SIZE[2])),
-			options_list=const.REPLICA_INTERPOLATION_LIST,
-			starting_option=const.REPLICA_INTERPOLATION_MODE,
+			options_list=const.REPLICA_FOLLOW_LIST,
+			starting_option=const.REPLICA_FOLLOW_MODE,
 			manager=self.ui_manager,
 			container=container,
 		)
 
+		self.replica_predict_label = pygame_gui.elements.UILabel(
+			relative_rect=pygame.Rect((const.GUI_MARGIN[0], y), (const.GUI_SIZE[0], const.GUI_SIZE[2])),
+			text='混合算法',
+			manager=self.ui_manager,
+			container=container,
+		)
+		self.replica_predict_mod = pygame_gui.elements.UIDropDownMenu(
+			relative_rect=pygame.Rect(
+				(const.GUI_MARGIN[0] + const.GUI_MARGIN[3] + const.GUI_SIZE[0], y), (const.GUI_SIZE[1], const.GUI_SIZE[2])),
+			options_list=const.REPLICA_PREDICT_LIST,
+			starting_option=const.REPLICA_PREDICT_MODE,
+			manager=self.ui_manager,
+			container=container,
+		)
+		self.flush_replica_behavior_gui()
+
 		container.set_scrollable_area_dimensions((const.GUI_WIDTH, const.SCREEN_SIZE[1]))  # all
+
+	def flush_replica_behavior_gui(self):
+		self.replica_follow_label.hide()
+		self.replica_follow_mod.hide()
+		self.replica_predict_label.hide()
+		self.replica_predict_mod.hide()
+		if const.REPLICA_BEHAVIOR == const.REPLICA_FOLLOW:
+			self.replica_follow_label.show()
+			self.replica_follow_mod.show()
+		elif const.REPLICA_BEHAVIOR == const.REPLICA_PREDICT:
+			self.replica_predict_label.show()
+			self.replica_predict_mod.show()
 
 
 class ServerInputBufferValue(pygame.sprite.Sprite):

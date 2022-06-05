@@ -8,8 +8,8 @@ import base.ecs as ecs
 
 
 class SystemRender(ecs.System):
-	def __init__(self):
-		super(SystemRender, self).__init__((ecs.LABEL_TRANSFORM, ecs.LABEL_RENDER))
+	def __init__(self, world):
+		super(SystemRender, self).__init__(world, (ecs.LABEL_TRANSFORM, ecs.LABEL_RENDER))
 
 	def update(self, dt, component_tuples):
 		game_comp_surface = self.world.game_component(ecs.LABEL_SURFACE)
@@ -27,10 +27,8 @@ class SystemRender(ecs.System):
 			# draw client
 			if const.IS_CLIENT:
 				if eid == self.world.master_eid():
-					if const.MASTER_BEHAVIOR != const.MASTER_NONE:
-						client_position = position_interpolation(*comp_render.interpolation)
-					else:
-						client_position = comp_transform.server_position
+					# 默认进行本地渲染插值，只不过加开关，渲染位置，物理位置，服务端位置
+					client_position = position_interpolation(*comp_render.interpolation)
 				else:
 					if const.REPLICA_BEHAVIOR != const.REPLICA_NONE:
 						client_position = position_interpolation(*comp_render.interpolation)

@@ -90,7 +90,6 @@ def _run_conn_send(send_q, conn):
 
 def _run_listen(sock):
 	sock.listen()
-	print('net run')
 	eid = 0
 	while True:
 		try:
@@ -106,11 +105,14 @@ def _run_listen(sock):
 # socket client
 def run_client_socket():
 	conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-	# conn.connect(('149.129.82.53', 9999))
-	conn.connect(('127.0.0.1', 9999))
-	threading.Thread(target=_run_conn_recv, args=(global_recv_q, conn,), daemon=True).start()
-	threading.Thread(target=_run_conn_send, args=(global_send_q, conn,), daemon=True).start()
-	return conn
+	conn.settimeout(1)
+	try:
+		conn.connect(('127.0.0.1', 9999))
+		threading.Thread(target=_run_conn_recv, args=(global_recv_q, conn,), daemon=True).start()
+		threading.Thread(target=_run_conn_send, args=(global_send_q, conn,), daemon=True).start()
+		return conn
+	except OSError:
+		return None
 
 
 # socket server

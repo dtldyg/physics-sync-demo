@@ -7,8 +7,8 @@ import base.const as const
 
 
 class SystemRecvCmd(ecs.System):
-	def __init__(self):
-		super(SystemRecvCmd, self).__init__((ecs.LABEL_PACKAGE, ecs.LABEL_PHYSICS, ecs.LABEL_FRAME, ecs.LABEL_CONNECTION))
+	def __init__(self, world):
+		super(SystemRecvCmd, self).__init__(world, (ecs.LABEL_PACKAGE, ecs.LABEL_PHYSICS, ecs.LABEL_FRAME, ecs.LABEL_CONNECTION))
 
 	def update(self, dt, component_tuples):
 		for eid, comp_tuple in component_tuples:

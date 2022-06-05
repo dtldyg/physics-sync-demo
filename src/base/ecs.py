@@ -43,16 +43,13 @@ class Component(object):
 
 
 class System(object):
-	def __init__(self, component_labels):
-		self.world = None
+	def __init__(self, world, component_labels):
+		self.world = world
 		self.roll_forward = False
 		self.component_labels = component_labels
 		self.component_label_mask = 0
 		for label in component_labels:
 			self.component_label_mask |= label
-
-	def init(self, world):
-		self.world = world
 
 	def update(self, dt, component_tuples):
 		pass

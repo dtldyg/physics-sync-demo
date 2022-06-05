@@ -6,8 +6,8 @@ import base.ecs as ecs
 
 
 class SystemPackageDispatch(ecs.System):
-	def __init__(self):
-		super(SystemPackageDispatch, self).__init__((ecs.LABEL_PACKAGE,))
+	def __init__(self, world):
+		super(SystemPackageDispatch, self).__init__(world, (ecs.LABEL_PACKAGE,))
 		self.roll_forward = True
 
 	def update(self, dt, component_tuples):

@@ -6,8 +6,8 @@ import base.ecs as ecs
 
 
 class SystemRollback(ecs.System):
-	def __init__(self):
-		super(SystemRollback, self).__init__((ecs.LABEL_PHYSICS, ecs.LABEL_TRANSFORM, ecs.LABEL_INTERPOLATION))
+	def __init__(self, world):
+		super(SystemRollback, self).__init__(world, (ecs.LABEL_PHYSICS, ecs.LABEL_TRANSFORM, ecs.LABEL_INTERPOLATION))
 
 	def update(self, dt, component_tuples):
 		master_eid = self.world.master_eid()

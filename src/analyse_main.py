@@ -14,7 +14,7 @@ def main():
 	const.IS_CLIENT = True
 	w = world.World()
 	print('------client------')
-	for sys in w.systems:
+	for sys in w.system_logic:
 		print(sys.__class__.__name__)
 		for label in sys.component_labels:
 			print('\t{}'.format(component_list[label]))
@@ -22,7 +22,7 @@ def main():
 	const.IS_SERVER = True
 	w = world.World()
 	print('------server------')
-	for sys in w.systems:
+	for sys in w.system_logic:
 		print(sys.__class__.__name__)
 		for label in sys.component_labels:
 			print('\t{}'.format(component_list[label]))

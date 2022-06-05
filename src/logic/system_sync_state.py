@@ -5,8 +5,8 @@ import base.ecs as ecs
 
 
 class SystemSyncState(ecs.System):
-	def __init__(self):
-		super(SystemSyncState, self).__init__((ecs.LABEL_CONNECTION, ecs.LABEL_PHYSICS, ecs.LABEL_TRANSFORM, ecs.LABEL_FRAME))
+	def __init__(self, world):
+		super(SystemSyncState, self).__init__(world, (ecs.LABEL_CONNECTION, ecs.LABEL_PHYSICS, ecs.LABEL_TRANSFORM, ecs.LABEL_FRAME))
 
 	def update(self, dt, component_tuples):
 		states = []

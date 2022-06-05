@@ -9,8 +9,8 @@ import base.net as net
 
 
 class SystemGameEvent(ecs.System):
-	def __init__(self):
-		super(SystemGameEvent, self).__init__((ecs.LABEL_INPUT, ecs.LABEL_GUI))
+	def __init__(self, world):
+		super(SystemGameEvent, self).__init__(world, (ecs.LABEL_INPUT, ecs.LABEL_GUI))
 
 	def update(self, dt, component_tuples):
 		if const.IS_SERVER:
@@ -52,8 +52,11 @@ class SystemGameEvent(ecs.System):
 								const.MASTER_BEHAVIOR = event.text
 							elif event.ui_element == comp_gui.replica_behavior:
 								const.REPLICA_BEHAVIOR = event.text
-							elif event.ui_element == comp_gui.replica_interpolation_mod:
-								const.REPLICA_INTERPOLATION_MODE = event.text
+								comp_gui.flush_replica_behavior_gui()
+							elif event.ui_element == comp_gui.replica_follow_mode:
+								const.REPLICA_FOLLOW_MODE = event.text
+							elif event.ui_element == comp_gui.replica_predict_mode:
+								const.REPLICA_PREDICT_MODE = event.text
 						elif event.user_type == pygame_gui.UI_BUTTON_PRESSED:
 							if event.ui_element == comp_gui.show_server:
 								const.SHOW_SERVER = btn_checkbox_event(event)

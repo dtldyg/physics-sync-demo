@@ -6,8 +6,8 @@ import base.ecs as ecs
 
 
 class SystemPhysics(ecs.System):
-	def __init__(self):
-		super(SystemPhysics, self).__init__((ecs.LABEL_PHYSICS, ecs.LABEL_TRANSFORM))
+	def __init__(self, world):
+		super(SystemPhysics, self).__init__(world, (ecs.LABEL_PHYSICS, ecs.LABEL_TRANSFORM))
 		self.roll_forward = True
 
 	def update(self, dt, component_tuples):
